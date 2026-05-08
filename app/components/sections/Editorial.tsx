@@ -1,6 +1,6 @@
 export default function Editorial() {
   return (
-    <section className="max-w-6xl mx-auto px-8 py-20 grid md:grid-cols-2 gap-16 items-center">
+    <section className="max-w-6xl mx-auto px-4 md:px-8 py-20 grid md:grid-cols-2 gap-16 items-center">
       <div className="overflow-hidden bg-neutral-200 relative aspect-4/3">
         <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
           <span className="text-xs font-body text-neutral-500">Editorial photo</span>

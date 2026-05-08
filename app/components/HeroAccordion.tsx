@@ -13,60 +13,62 @@ export default function HeroAccordion({ artworks }: Props) {
   if (!artworks.length) return null;
 
   return (
-    <div className="flex h-screen min-h-130 overflow-hidden scroll-snap-align-start">
-      {artworks.map((aw, i) => {
-        const isActive = i === activeIdx;
-        const imgSrc = aw.image
-          ? urlFor(aw.image).width(1400).height(900).fit("crop").url()
-          : null;
+<div className="max-w-6xl mx-auto px-4 md:px-8 flex gap-2 w-full min-h-125">
+        {artworks.map((aw, i) => {
+          const isActive = i === activeIdx;
+          const imgSrc = aw.image
+            ? urlFor(aw.image).width(1200).height(800).fit("crop").url()
+            : null;
 
-        return (
-          <div
-            key={aw._id}
-            onClick={() => setActiveIdx(i)}
-            className={`relative overflow-hidden cursor-pointer select-none transition-all duration-500 ease-in-out min-w-0 ${
-              isActive ? "flex-5" : "flex-[0.4] hover:flex-[0.55]"
-            }`}
-          >
-            {imgSrc ? (
-              <Image
-                src={imgSrc}
-                alt={aw.title ?? ""}
-                fill
-                className="object-cover transition-transform duration-700 ease-in-out"
-                sizes="(max-width: 768px) 100vw, 80vw"
-                priority={i === 0}
-              />
-            ) : (
-              <div className="absolute inset-0 bg-neutral-800" />
-            )}
-
-            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-
+          return (
             <div
-              className={`absolute bottom-5 left-5 text-white transition-opacity duration-300 ${
-                isActive ? "opacity-100" : "opacity-0"
+              key={aw._id}
+              onClick={() => setActiveIdx(i)}
+              className={`relative overflow-hidden cursor-pointer select-none transition-all duration-500 ease-in-out min-w-0 rounded-xs self-stretch ${
+    isActive ? "flex-5" : "flex-[0.4] hover:flex-[0.55]"
               }`}
             >
-              <p className="text-[10px] uppercase tracking-widest font-body mb-1 opacity-80">
-                {aw.location}
-              </p>
-              <p className="text-xl font-heading font-bold leading-tight">{aw.title}</p>
-            </div>
+              {imgSrc ? (
+                <Image
+                  src={imgSrc}
+                  alt={aw.title ?? ""}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-in-out"
+                  sizes="(max-width: 1024px) 100vw, 800px"
+                  priority={i === 0}
+                />
+              ) : (
+                <div className="absolute inset-0 bg-neutral-800" />
+              )}
 
-            {!isActive && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p
-                  className="text-white text-lg uppercase tracking-widest font-body font-medium whitespace-nowrap"
-                  style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-                >
-                  {aw.title}
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+
+              {/* Active: title + location bottom-left */}
+              <div
+                className={`absolute bottom-4 left-4 text-white transition-opacity duration-300 ${
+                  isActive ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <p className="text-[10px] uppercase tracking-widest font-body mb-1 opacity-70">
+                  {aw.location}
                 </p>
+                <p className="text-lg font-heading font-bold leading-tight">{aw.title}</p>
               </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+
+              {/* Inactive: vertical label */}
+              {!isActive && (
+                <div className="absolute inset-0 flex items-end justify-center pb-4">
+                  <p
+                    className="text-white text-[11px] uppercase tracking-widest font-body font-medium whitespace-nowrap opacity-80"
+                    style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                  >
+                    {aw.location ?? aw.title}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
   );
 }

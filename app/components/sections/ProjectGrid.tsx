@@ -1,21 +1,20 @@
 import Image from "next/image";
-import { getAllArtworks } from "../../../sanity/lib/queries";
+import { getGalleryArtworks } from "../../../sanity/lib/queries";
 import { urlFor } from "../../../sanity/lib/image";
 
 export default async function ProjectGrid() {
-  const artworks = await getAllArtworks().catch(() => []);
-  const displayed = artworks.slice(0, 6);
+  const artworks = await getGalleryArtworks().catch(() => []);
 
-  if (!displayed.length) return null;
+  if (!artworks.length) return null;
 
-  const rows: Array<{ items: typeof displayed; cols: string }> = [
-    { items: displayed.slice(0, 1), cols: "grid-cols-1" },
-    { items: displayed.slice(1, 3), cols: "grid-cols-2" },
-    { items: displayed.slice(3, 6), cols: "grid-cols-3" },
+  const rows: Array<{ items: typeof artworks; cols: string }> = [
+    { items: artworks.slice(0, 1), cols: "grid-cols-1" },
+    { items: artworks.slice(1, 3), cols: "grid-cols-2" },
+    { items: artworks.slice(3, 6), cols: "grid-cols-3" },
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-8 py-16 space-y-4">
+    <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 space-y-4">
       {rows.map((row, ri) => (
         <div key={ri} className={`grid ${row.cols} gap-4`}>
           {row.items.map((aw) => {

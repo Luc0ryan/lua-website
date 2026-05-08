@@ -8,22 +8,32 @@ export type Artwork = {
   image: { asset: { _ref: string }; hotspot?: object };
   description?: string;
   year?: number;
-  featured?: boolean;
+  role?: "hero" | "gallery";
+  heroOrder?: number;
+  galleryOrder?: number;
   order?: number;
 };
 
-export async function getAllArtworks(): Promise<Artwork[]> {
+export async function getHeroArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork"] | order(order asc, _createdAt asc) {
-      _id, title, location, category, image, description, year, featured, order
+    `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) [0...5] {
+      _id, title, location, category, image
     }`
   );
 }
 
-export async function getFeaturedArtworks(): Promise<Artwork[]> {
+export async function getGalleryArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork" && featured == true] | order(order asc) [0...5] {
+    `*[_type == "artwork" && role == "gallery"] | order(galleryOrder asc) [0...6] {
       _id, title, location, category, image
+    }`
+  );
+}
+
+export async function getAllArtworks(): Promise<Artwork[]> {
+  return client.fetch(
+    `*[_type == "artwork" && role != "hero" && role != "gallery"] | order(order asc, _createdAt asc) {
+      _id, title, location, category, image, description, year, order
     }`
   );
 }
