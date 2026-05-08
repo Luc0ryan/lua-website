@@ -13,7 +13,7 @@ export default function HeroAccordion({ artworks }: Props) {
   if (!artworks.length) return null;
 
   return (
-    <div className="flex h-[90vh] min-h-[520px] overflow-hidden">
+    <div className="flex h-screen min-h-130 overflow-hidden scroll-snap-align-start">
       {artworks.map((aw, i) => {
         const isActive = i === activeIdx;
         const imgSrc = aw.image
@@ -24,12 +24,10 @@ export default function HeroAccordion({ artworks }: Props) {
           <div
             key={aw._id}
             onClick={() => setActiveIdx(i)}
-            className={`relative overflow-hidden cursor-pointer select-none transition-all duration-500 ease-in-out ${
-              isActive ? "flex-[5]" : "flex-[0.4] hover:flex-[0.55]"
+            className={`relative overflow-hidden cursor-pointer select-none transition-all duration-500 ease-in-out min-w-0 ${
+              isActive ? "flex-5" : "flex-[0.4] hover:flex-[0.55]"
             }`}
-            style={{ minWidth: 0 }}
           >
-            {/* Image */}
             {imgSrc ? (
               <Image
                 src={imgSrc}
@@ -43,10 +41,8 @@ export default function HeroAccordion({ artworks }: Props) {
               <div className="absolute inset-0 bg-neutral-800" />
             )}
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
-            {/* Label — always visible on active, hidden on strips */}
             <div
               className={`absolute bottom-5 left-5 text-white transition-opacity duration-300 ${
                 isActive ? "opacity-100" : "opacity-0"
@@ -58,11 +54,10 @@ export default function HeroAccordion({ artworks }: Props) {
               <p className="text-xl font-heading font-bold leading-tight">{aw.title}</p>
             </div>
 
-            {/* Rotated label on strips */}
             {!isActive && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <p
-                  className="text-white text-[10px] uppercase tracking-widest font-body whitespace-nowrap"
+                  className="text-white text-lg uppercase tracking-widest font-body font-medium whitespace-nowrap"
                   style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                 >
                   {aw.title}

@@ -161,7 +161,7 @@ The mechanic is pure CSS flexbox — no animation library needed:
 
 ```tsx
 // Active panel: takes up most of the space
-className={isActive ? "flex-[5]" : "flex-[0.4] hover:flex-[0.55]"}
+className={isActive ? "flex-5" : "flex-[0.4] hover:flex-[0.55]"}
 ```
 
 `flex-[5]` means "grow to 5x the base unit." `flex-[0.4]` means "shrink to a narrow strip."

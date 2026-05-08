@@ -3,7 +3,7 @@
 :root {
   --bg: #F2EFEA;
   --fg: #111111;
-  --magenta: #E8197D;
+  --magenta: #C91F6E;
   --gray-label: #888;
   --footer-bg: #E8E4DF;
 }
@@ -25,6 +25,8 @@
 html {
   background: var(--bg);
   color: var(--fg);
+  scroll-snap-type: y proximity;
+
 }
 
 body {

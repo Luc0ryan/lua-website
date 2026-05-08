@@ -28,8 +28,8 @@ async function ProjectGrid() {
               : null;
             return (
               <div key={aw._id} className="group cursor-pointer">
-                <div className="overflow-hidden bg-neutral-200 relative"
-                  style={{ aspectRatio: "4/3" }}>
+                <div className="overflow-hidden bg-neutral-200 relative aspect-auto"
+                  >
                   {src ? (
                     <Image
                       src={src}
@@ -65,25 +65,20 @@ export default async function HomePage() {
       <Nav />
 
       {/* Hero */}
-      {featured.length > 0 ? (
+      
+      
+<section className="px-8 pt-28 pb-8 w-full max-w-6xl mx-auto">
+    <h1 className="text-7xl font-heading font-bold text-black leading-tight">
+    Interactive art made<br />
+    <span className="text-[#E8197D]">together</span>, for everyone
+  </h1>
+</section>
+
         <HeroAccordion artworks={featured} />
-      ) : (
-        <div className="h-[90vh] min-h-[520px] bg-neutral-800 flex items-end p-12">
-          <div>
-            <p className="text-[11px] uppercase tracking-widest text-white/60 font-body mb-2">
-              Add featured artworks in Sanity Studio
-            </p>
-            <h1 className="text-5xl font-heading font-bold text-white leading-tight">
-              Interactive art built to<br />
-              bring <span className="text-[#E8197D]">people</span> together
-            </h1>
-          </div>
-        </div>
-      )}
 
       {/* Mid — editorial section */}
       <section className="max-w-6xl mx-auto px-8 py-20 grid md:grid-cols-2 gap-16 items-center">
-        <div className="overflow-hidden bg-neutral-200 relative" style={{ aspectRatio: "4/3" }}>
+        <div className="overflow-hidden bg-neutral-200 relative aspect-4/3">
           <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
             <span className="text-xs font-body text-neutral-500">Editorial photo</span>
           </div>
@@ -110,8 +105,7 @@ export default async function HomePage() {
           {Array.from({ length: igCount }).map((_, i) => (
             <div
               key={i}
-              className="bg-neutral-200 overflow-hidden relative"
-              style={{ aspectRatio: "1" }}
+              className="bg-neutral-200 overflow-hidden relative aspect-square"
             >
               <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
                 <span className="text-xs font-body text-neutral-400">IG</span>

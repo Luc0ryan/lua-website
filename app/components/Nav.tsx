@@ -23,12 +23,12 @@ export default function Nav() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 transition-all duration-300 ${
-        scrolled ? "bg-[#F2EFEA]/95 backdrop-blur-sm border-b border-black/10" : "bg-transparent"
+        scrolled ? "bg-[#F2EFEA]/60 backdrop-blur-sm border-b border-black/10" : "bg-transparent"
       }`}
     >
-      <Link href="/" className="flex-shrink-0">
+      <Link href="/" className="shrink-0">
         {/* Swap for actual SVG logo when available */}
-        <div className="font-heading font-bold text-lg leading-tight tracking-tight uppercase text-fg border-2 border-fg rounded-xl px-2 py-1 text-xs">
+        <div className="font-heading font-bold leading-tight tracking-tight uppercase text-fg border-2 border-fg rounded-xs px-2 py-1 text-xl">
           LOOKING<br />UP ARTS
         </div>
       </Link>
