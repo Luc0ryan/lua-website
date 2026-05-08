@@ -24,8 +24,7 @@ export default async function ProjectGrid() {
               : null;
             return (
               <div key={aw._id} className="group cursor-pointer">
-                <div className="overflow-hidden bg-neutral-200 relative"
-                  style={{ aspectRatio: "4/3" }}>
+                <div className="overflow-hidden bg-neutral-200 relative aspect-auto">
                   {src ? (
                     <Image
                       src={src}

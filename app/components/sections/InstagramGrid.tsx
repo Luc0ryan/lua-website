@@ -9,8 +9,7 @@ export default function InstagramGrid() {
         {Array.from({ length: igCount }).map((_, i) => (
           <div
             key={i}
-            className="bg-neutral-200 overflow-hidden relative"
-            style={{ aspectRatio: "1" }}
+            className="bg-neutral-200 overflow-hidden relative aspect-square"
           >
             <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
               <span className="text-xs font-body text-neutral-400">IG</span>
