@@ -1,131 +1,15 @@
-import Link from "next/link";
-import Image from "next/image";
-import Nav from "./components/Nav";
-import HeroAccordion from "./components/HeroAccordion";
-import Footer from "./components/Footer";
-import { getFeaturedArtworks, getAllArtworks } from "../sanity/lib/queries";
-import { urlFor } from "../sanity/lib/image";
+import Hero from "./components/sections/Hero";
+import Editorial from "./components/sections/Editorial";
+import ProjectGrid from "./components/sections/ProjectGrid";
+import InstagramGrid from "./components/sections/InstagramGrid";
 
-async function ProjectGrid() {
-  const artworks = await getAllArtworks().catch(() => []);
-  const displayed = artworks.slice(0, 6);
-
-  if (!displayed.length) return null;
-
-  const rows: Array<{ items: typeof displayed; cols: string }> = [
-    { items: displayed.slice(0, 1), cols: "grid-cols-1" },
-    { items: displayed.slice(1, 3), cols: "grid-cols-2" },
-    { items: displayed.slice(3, 6), cols: "grid-cols-3" },
-  ];
-
-  return (
-    <section className="max-w-6xl mx-auto px-8 py-16 space-y-4">
-      {rows.map((row, ri) => (
-        <div key={ri} className={`grid ${row.cols} gap-4`}>
-          {row.items.map((aw) => {
-            const src = aw.image
-              ? urlFor(aw.image).width(800).height(600).fit("crop").url()
-              : null;
-            return (
-              <div key={aw._id} className="group cursor-pointer">
-                <div className="overflow-hidden bg-neutral-200 relative aspect-auto"
-                  >
-                  {src ? (
-                    <Image
-                      src={src}
-                      alt={aw.title ?? ""}
-                      fill
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-neutral-300" />
-                  )}
-                </div>
-                <p className="text-[10px] font-body uppercase tracking-widest text-[--color-gray-label] mt-3">
-                  {aw.location}
-                </p>
-                <p className="text-base font-heading font-bold text-fg mt-0.5">{aw.title}</p>
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </section>
-  );
-}
-
-const igCount = 8;
-
-export default async function HomePage() {
-  const featured = await getFeaturedArtworks().catch(() => []);
-
+export default function HomePage() {
   return (
     <>
-      <Nav />
-
-      {/* Hero */}
-      
-      
-<section className="px-8 pt-28 pb-8 w-full max-w-6xl mx-auto">
-    <h1 className="text-7xl font-heading font-bold text-black leading-tight">
-    Interactive art made<br />
-    <span className="text-[#E8197D]">together</span>, for everyone
-  </h1>
-</section>
-
-        <HeroAccordion artworks={featured} />
-
-      {/* Mid — editorial section */}
-      <section className="max-w-6xl mx-auto px-8 py-20 grid md:grid-cols-2 gap-16 items-center">
-        <div className="overflow-hidden bg-neutral-200 relative aspect-4/3">
-          <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
-            <span className="text-xs font-body text-neutral-500">Editorial photo</span>
-          </div>
-        </div>
-        <div>
-          <p className="text-sm font-body font-medium text-[#E8197D] mb-4">// we build local</p>
-          <h2 className="text-4xl font-heading font-bold text-fg leading-tight mb-6">
-            Transforming public space with every project
-          </h2>
-          <p className="text-base font-body text-fg/60 leading-relaxed">
-            Looking Up Arts is a nonprofit studio shaping public spaces through light, creativity,
-            and hands-on collaboration. We work with communities and cities to build work that
-            energizes and inspires connection.
-          </p>
-        </div>
-      </section>
-
-      {/* Project grid from Sanity */}
+      <Hero />
+      <Editorial />
       <ProjectGrid />
-
-      {/* Instagram grid — static placeholders */}
-      <section className="max-w-6xl mx-auto px-8 pb-16">
-        <div className="grid grid-cols-4 gap-2">
-          {Array.from({ length: igCount }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-neutral-200 overflow-hidden relative aspect-square"
-            >
-              <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
-                <span className="text-xs font-body text-neutral-400">IG</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 text-right">
-          <Link
-            href="https://www.instagram.com/lookinguparts"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-body font-medium text-fg hover:text-[#E8197D] transition-colors"
-          >
-            Follow us on instagram →
-          </Link>
-        </div>
-      </section>
-
-      <Footer />
+      <InstagramGrid />
     </>
   );
 }
