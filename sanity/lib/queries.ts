@@ -37,3 +37,26 @@ export async function getAllArtworks(): Promise<Artwork[]> {
     }`
   );
 }
+
+// ── Artworks index ────────────────────────────────────────────────────────────
+
+export type ArtworkIndex = {
+  _id: string;
+  title: string;
+  image: { asset: { _ref: string }; hotspot?: object };
+  city?: string;
+  touring?: boolean;
+  interactive?: boolean;
+  type?: "touring" | "permanent";
+  featured?: boolean;
+  displayOrder?: number;
+};
+
+export async function getArtworksIndex(): Promise<ArtworkIndex[]> {
+  return client.fetch(
+    `*[_type == "artwork"]
+      | order(displayOrder asc, _createdAt asc) {
+        _id, title, image, city, touring, interactive, type, featured, displayOrder
+      }`
+  );
+}
