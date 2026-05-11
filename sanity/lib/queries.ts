@@ -3,7 +3,7 @@ import { client } from "./client";
 export type Artwork = {
   _id: string;
   title: string;
-  location: string;
+  city?: string;
   category: string;
   image: { asset: { _ref: string }; hotspot?: object };
   description?: string;
@@ -17,7 +17,7 @@ export type Artwork = {
 export async function getHeroArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) [0...5] {
-      _id, title, location, category, image
+      _id, title, city, category, image
     }`
   );
 }
@@ -25,7 +25,7 @@ export async function getHeroArtworks(): Promise<Artwork[]> {
 export async function getGalleryArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role == "gallery"] | order(galleryOrder asc) [0...6] {
-      _id, title, location, category, image
+      _id, title, city, category, image
     }`
   );
 }
@@ -33,7 +33,7 @@ export async function getGalleryArtworks(): Promise<Artwork[]> {
 export async function getAllArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role != "hero" && role != "gallery"] | order(order asc, _createdAt asc) {
-      _id, title, location, category, image, description, year, order
+      _id, title, city, category, image, description, year, order
     }`
   );
 }
@@ -45,7 +45,6 @@ export type ArtworkIndex = {
   title: string;
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
-  touring?: boolean;
   interactive?: boolean;
   type?: "touring" | "permanent";
   featured?: boolean;
@@ -56,7 +55,7 @@ export async function getArtworksIndex(): Promise<ArtworkIndex[]> {
   return client.fetch(
     `*[_type == "artwork"]
       | order(displayOrder asc, _createdAt asc) {
-        _id, title, image, city, touring, interactive, type, featured, displayOrder
+        _id, title, image, city, interactive, type, featured, displayOrder
       }`
   );
 }
