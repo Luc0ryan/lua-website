@@ -56,13 +56,66 @@ export const artworkSchema = defineType({
     }),
     defineField({
       name: "order",
-      title: "Artworks page order",
+      title: "Artworks page order (legacy)",
       type: "number",
-      description: "Position on the Artworks page.",
+      description: "Legacy sort field. Use Display order instead.",
+    }),
+
+    // ── Artworks index fields ──────────────────────────────────────────────
+    defineField({
+      name: "displayOrder",
+      title: "Display order",
+      type: "number",
+      description: "Position on the Artworks index page (lower = first). Falls back to creation date if unset.",
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
+      initialValue: false,
+    }),
+
+    // ── Card metadata ──────────────────────────────────────────────────────
+    defineField({
+      name: "city",
+      title: "City",
+      type: "string",
+      description: 'Displayed on the card, e.g. "Jackson, TN". Ignored when Touring is checked.',
+    }),
+    defineField({
+      name: "touring",
+      title: "Touring",
+      type: "boolean",
+      description: 'If checked, the card shows "Touring" instead of a city.',
+      initialValue: false,
+    }),
+    defineField({
+      name: "interactive",
+      title: "Interactive",
+      type: "boolean",
+      description: "Marks the piece as interactive — enables the Interactive filter on the Artworks page.",
+      initialValue: false,
+    }),
+
+    // ── Filter taxonomy ────────────────────────────────────────────────────
+    defineField({
+      name: "type",
+      title: "Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Touring", value: "touring" },
+          { title: "Permanent", value: "permanent" },
+        ],
+        layout: "radio",
+      },
+      description: "Used by the Touring / Permanent filter on the Artworks page.",
     }),
   ],
   orderings: [
-    { title: "Artworks page order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
+    { title: "Artworks page order (legacy)", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
     { title: "Hero order", name: "heroOrderAsc", by: [{ field: "heroOrder", direction: "asc" }] },
     { title: "Gallery order", name: "galleryOrderAsc", by: [{ field: "galleryOrder", direction: "asc" }] },
   ],
