@@ -1,5 +1,25 @@
 import { client } from "./client";
 
+export type ArtworkIndexItem = {
+  _id: string;
+  title: string;
+  city: string | null;
+  touring: boolean;
+  interactive: boolean;
+  type: "touring" | "permanent" | null;
+  image: { asset: { _ref: string }; hotspot?: object };
+  featured: boolean;
+  displayOrder: number | null;
+};
+
+export async function getIndexArtworks(): Promise<ArtworkIndexItem[]> {
+  return client.fetch(
+    `*[_type == "artwork"] | order(displayOrder asc, _createdAt asc) {
+      _id, title, city, touring, interactive, type, image, featured, displayOrder
+    }`
+  );
+}
+
 export type Artwork = {
   _id: string;
   title: string;

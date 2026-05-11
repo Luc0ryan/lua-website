@@ -1,117 +1,72 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { urlFor } from "../../sanity/lib/image";
-import type { Artwork } from "../../sanity/lib/queries";
+import { useMemo, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { buildRows } from "./buildRows";
+import FilterBar from "./FilterBar";
+import ArtworksGrid from "./ArtworksGrid";
+import type { ArtworkIndexItem } from "../../sanity/lib/queries";
 
-const CATEGORIES = ["Interactive", "Public / Civic", "Festival / Event"];
-
-type Props = { artworks: Artwork[] };
+type Props = { artworks: ArtworkIndexItem[] };
 
 export default function ArtworksGallery({ artworks }: Props) {
-  const [active, setActive] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const filtered = active ? artworks.filter((a) => a.category === active) : artworks;
+  const interactive = searchParams.get("interactive") === "true";
+  const type = searchParams.get("type") as "touring" | "permanent" | null;
+  const city = searchParams.get("city");
 
-  // Deterministic layout pattern: 3-col, 2-col, 3-col repeating
-  function rowPattern(idx: number): string {
-    const patterns = ["grid-cols-3", "grid-cols-2", "grid-cols-3"];
-    return patterns[idx % patterns.length];
-  }
+  const filtered = useMemo(() => {
+    return artworks.filter((a) => {
+      if (interactive && !a.interactive) return false;
+      if (type && a.type !== type) return false;
+      if (city && a.city !== city) return false;
+      return true;
+    });
+  }, [artworks, interactive, type, city]);
 
-  // Chunk filtered artworks into rows of varying sizes
-  const rowSizes = [3, 2, 3];
-  const rows: Artwork[][] = [];
-  let offset = 0;
-  let rowIdx = 0;
-  while (offset < filtered.length) {
-    const size = rowSizes[rowIdx % rowSizes.length];
-    rows.push(filtered.slice(offset, offset + size));
-    offset += size;
-    rowIdx++;
-  }
+  const rows = useMemo(() => buildRows(filtered), [filtered]);
+
+  const setParam = useCallback(
+    (key: string, value: string | null) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+      const qs = params.toString();
+      router.push(qs ? `?${qs}` : "?", { scroll: false });
+    },
+    [searchParams, router]
+  );
+
+  const clearAll = useCallback(() => router.push("?", { scroll: false }), [router]);
 
   return (
-    <div className="max-w-6xl mx-auto px-8 pt-32 pb-16">
-      {/* Filter bar */}
-      <div className="mb-10">
-        <p className="text-[10px] font-body tracking-widest uppercase text-fg/50 mb-4">SHOW</p>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((cat) => {
-            const isActive = active === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActive(isActive ? null : cat)}
-                className={`px-4 py-1.5 text-xs font-body tracking-wider rounded-full border transition-all duration-200 ${
-                  isActive
-                    ? "bg-[#E8197D] border-[#E8197D] text-white"
-                    : "border-fg/30 text-fg bg-transparent hover:border-fg hover:shadow-sm"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+    <div className="max-w-6xl mx-auto px-4 md:px-8 pt-32 pb-16">
+      <FilterBar
+        artworks={artworks}
+        interactive={interactive}
+        type={type}
+        city={city}
+        setParam={setParam}
+      />
 
-      {/* Grid */}
-      <div className="space-y-6">
-        {rows.map((row, ri) => (
-          <div
-            key={ri}
-            className={`grid ${rowPattern(ri)} gap-4`}
+      {filtered.length === 0 ? (
+        <div className="py-24 text-center">
+          <p className="text-sm font-body text-fg/60">No artworks match these filters.</p>
+          <button
+            onClick={clearAll}
+            className="mt-3 text-sm font-body text-fg underline underline-offset-2 hover:text-fg/60 transition-colors"
           >
-            {row.map((aw) => {
-              const src = aw.image
-                ? urlFor(aw.image).width(700).height(530).fit("crop").url()
-                : null;
-              return (
-                <div
-                  key={aw._id}
-                  className="group cursor-pointer"
-                  style={{
-                    opacity: 1,
-                    transform: "translateY(0)",
-                    transition: "opacity 300ms ease, transform 300ms ease",
-                  }}
-                >
-                  <div
-                    className="overflow-hidden bg-neutral-200 relative"
-                    style={{ aspectRatio: "4/3" }}
-                  >
-                    {src ? (
-                      <Image
-                        src={src}
-                        alt={aw.title ?? ""}
-                        fill
-                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-neutral-300" />
-                    )}
-                  </div>
-                  <p className="text-base font-heading font-bold text-fg mt-3 leading-tight">
-                    {aw.title}
-                  </p>
-                  <p className="text-sm font-body text-fg/50 mt-0.5">
-                    {aw.location ?? "Touring Installation"}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        ))}
-
-        {filtered.length === 0 && (
-          <p className="text-sm font-body text-fg/50 py-16 text-center">
-            No artworks in this category yet.
-          </p>
-        )}
-      </div>
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        <ArtworksGrid rows={rows} />
+      )}
     </div>
   );
 }

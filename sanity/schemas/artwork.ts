@@ -6,10 +6,63 @@ export const artworkSchema = defineType({
   type: "document",
   fields: [
     defineField({ name: "title", title: "Title", type: "string" }),
-    defineField({ name: "location", title: "Location", type: "string" }),
+    defineField({
+      name: "city",
+      title: "City",
+      type: "string",
+      description: 'Display location, e.g. "Jackson, TN". Shown on card unless Touring is checked.',
+    }),
+    defineField({
+      name: "touring",
+      title: "Touring",
+      type: "boolean",
+      description: 'If checked, the card shows "Touring" instead of the city.',
+      initialValue: false,
+    }),
+    defineField({
+      name: "interactive",
+      title: "Interactive",
+      type: "boolean",
+      description: "Mark as an interactive artwork for filtering.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "type",
+      title: "Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Touring", value: "touring" },
+          { title: "Permanent", value: "permanent" },
+        ],
+        layout: "radio",
+      },
+      description: "Used for the Touring / Permanent filter.",
+    }),
+    defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      description: "Featured pieces appear in the wider 2-up rows on the Artworks index.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "displayOrder",
+      title: "Display order",
+      type: "number",
+      description: "Manual sort position on the Artworks page (lower = first). Falls back to creation date.",
+    }),
+    // Legacy fields — kept for hero/gallery homepage roles
+    defineField({ name: "location", title: "Location (legacy)", type: "string" }),
     defineField({
       name: "category",
-      title: "Category",
+      title: "Category (legacy)",
       type: "string",
       options: {
         list: [
@@ -18,12 +71,6 @@ export const artworkSchema = defineType({
           { title: "Festival / Event", value: "Festival / Event" },
         ],
       },
-    }),
-    defineField({
-      name: "image",
-      title: "Image",
-      type: "image",
-      options: { hotspot: true },
     }),
     defineField({ name: "description", title: "Description", type: "text" }),
     defineField({ name: "year", title: "Year", type: "number" }),
@@ -56,12 +103,13 @@ export const artworkSchema = defineType({
     }),
     defineField({
       name: "order",
-      title: "Artworks page order",
+      title: "Artworks page order (legacy)",
       type: "number",
-      description: "Position on the Artworks page.",
+      description: "Use Display order instead for the new Artworks index.",
     }),
   ],
   orderings: [
+    { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }, { field: "_createdAt", direction: "asc" }] },
     { title: "Artworks page order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
     { title: "Hero order", name: "heroOrderAsc", by: [{ field: "heroOrder", direction: "asc" }] },
     { title: "Gallery order", name: "galleryOrderAsc", by: [{ field: "galleryOrder", direction: "asc" }] },
