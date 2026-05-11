@@ -1,11 +1,21 @@
 import HeroAccordion from "../HeroAccordion";
+import { DotPanel } from "../dot-system";
 import { getHeroArtworks } from "../../../sanity/lib/queries";
 
 export default async function Hero() {
   const artworks = await getHeroArtworks().catch(() => []);
 
   return (
-    <>
+    // relative makes this the positioning context for the dot layer
+    <div className="relative">
+      <DotPanel
+        shape="radial-edges"
+        intensityRange={[0, 1]}
+        dotColor="#E8197D"
+        opacity={0.35}
+        className="absolute inset-0"
+      />
+
       <section className="px-4 md:px-8 pt-28 pb-8 w-full max-w-6xl mx-auto">
         <h1 className="text-7xl font-heading font-bold text-black leading-tight">
           Interactive art made<br />
@@ -14,6 +24,6 @@ export default async function Hero() {
       </section>
 
       <HeroAccordion artworks={artworks} />
-    </>
+    </div>
   );
 }
