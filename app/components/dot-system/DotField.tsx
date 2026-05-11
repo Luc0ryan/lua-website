@@ -23,19 +23,12 @@ export function DotField({
   softness = 0.4,
   className,
 }: DotFieldProps) {
-  // Express dot radius as a percentage of the background-size tile so the
-  // gradient scales correctly regardless of spacing.
-  const radiusPct = ((dotSize / 2) / spacing) * 100;
-
-  // Soft stops: solid core to 25% of radius, transparent by 65%.
-  // Widen the gap (e.g. 20% → 70%) for softer dots; narrow it for harder edges.
-  const backgroundImage = [
-    `radial-gradient(circle,`,
-    `  ${dotColor} 0%,`,
-    `  ${dotColor} ${radiusPct * 0.25}%,`,
-    `  transparent ${radiusPct * 0.65}%`,
-    `)`,
-  ].join(" ");
+  // Explicit gradient radius = dotSize/2 px. Percentage stops are now relative
+  // to the dot itself, not the tile — so dotSize drives actual visible size.
+  // Soft stops: solid core to 25% of radius, fully transparent by 65%.
+  // Widen the gap (e.g. 20% → 80%) for softer dots; narrow it for harder edges.
+  const r = dotSize / 2;
+  const backgroundImage = `radial-gradient(circle ${r}px at center, ${dotColor} 0%, ${dotColor} 25%, transparent 65%)`;
 
   const style: React.CSSProperties = {
     position: "absolute",
