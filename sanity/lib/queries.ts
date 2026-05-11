@@ -3,15 +3,18 @@ import { client } from "./client";
 export type Artwork = {
   _id: string;
   title: string;
-  city?: string;
-  category: string;
   image: { asset: { _ref: string }; hotspot?: object };
+  city?: string;
+  category?: string;
   description?: string;
   year?: number;
   role?: "hero" | "gallery";
   heroOrder?: number;
   galleryOrder?: number;
-  order?: number;
+  interactive?: boolean;
+  type?: "touring" | "permanent";
+  featured?: boolean;
+  displayOrder?: number;
 };
 
 export async function getHeroArtworks(): Promise<Artwork[]> {
@@ -30,28 +33,7 @@ export async function getGalleryArtworks(): Promise<Artwork[]> {
   );
 }
 
-export async function getAllArtworks(): Promise<Artwork[]> {
-  return client.fetch(
-    `*[_type == "artwork" && role != "hero" && role != "gallery"] | order(order asc, _createdAt asc) {
-      _id, title, city, category, image, description, year, order
-    }`
-  );
-}
-
-// ── Artworks index ────────────────────────────────────────────────────────────
-
-export type ArtworkIndex = {
-  _id: string;
-  title: string;
-  image: { asset: { _ref: string }; hotspot?: object };
-  city?: string;
-  interactive?: boolean;
-  type?: "touring" | "permanent";
-  featured?: boolean;
-  displayOrder?: number;
-};
-
-export async function getArtworksIndex(): Promise<ArtworkIndex[]> {
+export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork"]
       | order(displayOrder asc, _createdAt asc) {

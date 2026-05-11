@@ -2,10 +2,10 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ArtworkIndex } from "../../sanity/lib/queries";
+import type { Artwork } from "../../sanity/lib/queries";
 
 type Props = {
-  artworks: ArtworkIndex[]; // unfiltered, used for city counts
+  artworks: Artwork[]; // unfiltered, used for city counts
 };
 
 // ── Chip ──────────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ function Chip({
 
 // ── City helpers ──────────────────────────────────────────────────────────────
 
-function getCityCounts(artworks: ArtworkIndex[]) {
+function getCityCounts(artworks: Artwork[]) {
   const counts = new Map<string, number>();
   for (const a of artworks) {
     if (a.city && a.type !== "touring") {
@@ -49,7 +49,7 @@ function getCityCounts(artworks: ArtworkIndex[]) {
 }
 
 // City is stored lowercase in the URL; this finds the display-case label.
-function findCityLabel(artworks: ArtworkIndex[], slug: string) {
+function findCityLabel(artworks: Artwork[], slug: string) {
   return artworks.find((a) => a.city?.toLowerCase() === slug)?.city ?? slug;
 }
 

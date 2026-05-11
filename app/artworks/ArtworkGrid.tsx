@@ -1,15 +1,15 @@
 import Image from "next/image";
 import { urlFor } from "../../sanity/lib/image";
 import { buildRows } from "./buildRows";
-import type { ArtworkIndex } from "../../sanity/lib/queries";
+import type { Artwork } from "../../sanity/lib/queries";
 
-type Props = { artworks: ArtworkIndex[] };
+type Props = { artworks: Artwork[] };
 
-function locationLine(a: ArtworkIndex) {
+function locationLine(a: Artwork) {
   return a.type === "touring" ? "Touring" : (a.city ?? "");
 }
 
-function ArtworkCard({ artwork, featured }: { artwork: ArtworkIndex; featured: boolean }) {
+function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolean }) {
   const imgUrl = artwork.image
     ? urlFor(artwork.image)
         .width(featured ? 900 : 600)

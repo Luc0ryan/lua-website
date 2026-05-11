@@ -3,11 +3,11 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FilterBar from "./FilterBar";
 import ArtworkGrid from "./ArtworkGrid";
-import type { ArtworkIndex } from "../../sanity/lib/queries";
+import type { Artwork } from "../../sanity/lib/queries";
 
-type Props = { artworks: ArtworkIndex[] };
+type Props = { artworks: Artwork[] };
 
-function applyFilters(artworks: ArtworkIndex[], params: URLSearchParams): ArtworkIndex[] {
+function applyFilters(artworks: Artwork[], params: URLSearchParams): Artwork[] {
   let result = artworks;
 
   if (params.get("interactive") === "true") {
