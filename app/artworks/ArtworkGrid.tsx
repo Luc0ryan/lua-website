@@ -6,7 +6,7 @@ import type { ArtworkIndex } from "../../sanity/lib/queries";
 type Props = { artworks: ArtworkIndex[] };
 
 function locationLine(a: ArtworkIndex) {
-  return a.touring ? "Touring" : (a.city ?? "");
+  return a.type === "touring" ? "Touring" : (a.city ?? "");
 }
 
 function ArtworkCard({ artwork, featured }: { artwork: ArtworkIndex; featured: boolean }) {

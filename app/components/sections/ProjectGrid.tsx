@@ -24,7 +24,7 @@ function ArtworkCard({ aw, aspectClass }: { aw: Artwork; aspectClass: string }) 
         )}
       </div>
       <p className="text-[10px] font-body uppercase tracking-widest text-[--color-gray-label] mt-3">
-        {aw.location}
+        {aw.city}
       </p>
       <p className="text-base font-heading font-bold text-fg mt-0.5">{aw.title}</p>
     </div>

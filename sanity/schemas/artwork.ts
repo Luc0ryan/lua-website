@@ -6,7 +6,6 @@ export const artworkSchema = defineType({
   type: "document",
   fields: [
     defineField({ name: "title", title: "Title", type: "string" }),
-    defineField({ name: "location", title: "Location", type: "string" }),
     defineField({
       name: "category",
       title: "Category",
@@ -79,16 +78,9 @@ export const artworkSchema = defineType({
     // ── Card metadata ──────────────────────────────────────────────────────
     defineField({
       name: "city",
-      title: "City",
+      title: "Location",
       type: "string",
-      description: 'Displayed on the card, e.g. "Jackson, TN". Ignored when Touring is checked.',
-    }),
-    defineField({
-      name: "touring",
-      title: "Touring",
-      type: "boolean",
-      description: 'If checked, the card shows "Touring" instead of a city.',
-      initialValue: false,
+      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN". Leave blank for touring works.',
     }),
     defineField({
       name: "interactive",

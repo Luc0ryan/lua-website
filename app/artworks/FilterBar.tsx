@@ -39,7 +39,7 @@ function Chip({
 function getCityCounts(artworks: ArtworkIndex[]) {
   const counts = new Map<string, number>();
   for (const a of artworks) {
-    if (a.city && !a.touring) {
+    if (a.city && a.type !== "touring") {
       counts.set(a.city, (counts.get(a.city) ?? 0) + 1);
     }
   }

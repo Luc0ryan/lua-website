@@ -50,7 +50,7 @@ export default function HeroAccordion({ artworks }: Props) {
                 }`}
               >
                 <p className="text-[10px] uppercase tracking-widest font-body mb-1 opacity-70">
-                  {aw.location}
+                  {aw.city}
                 </p>
                 <p className="text-lg font-heading font-bold leading-tight">{aw.title}</p>
               </div>
@@ -62,7 +62,7 @@ export default function HeroAccordion({ artworks }: Props) {
                     className="text-white text-[11px] uppercase tracking-widest font-body font-medium whitespace-nowrap opacity-80"
                     style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                   >
-                    {aw.location ?? aw.title}
+                    {aw.city ?? aw.title}
                   </p>
                 </div>
               )}
