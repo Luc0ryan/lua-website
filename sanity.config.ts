@@ -11,7 +11,7 @@ export default defineConfig({
 
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "your-project-id",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
-plugins: [structureTool(), visionTool(), media()],
+  plugins: [structureTool(), visionTool(), media()],
   
   schema: { types: schemaTypes },
   studio: {
