@@ -5,27 +5,57 @@ export const artworkSchema = defineType({
   title: "Artwork",
   type: "document",
   fields: [
+    // ── Core ──────────────────────────────────────────────────────────────────
     defineField({ name: "title", title: "Title", type: "string" }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "string",
-      options: {
-        list: [
-          { title: "Interactive", value: "Interactive" },
-          { title: "Public / Civic", value: "Public / Civic" },
-          { title: "Festival / Event", value: "Festival / Event" },
-        ],
-      },
-    }),
     defineField({
       name: "image",
       title: "Image",
       type: "image",
       options: { hotspot: true },
     }),
-    defineField({ name: "description", title: "Description", type: "text" }),
+    defineField({
+      name: "city",
+      title: "Location",
+      type: "string",
+      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN". Leave blank for touring works.',
+    }),
+    defineField({
+      name: "type",
+      title: "Touring / Permanent",
+      type: "string",
+      options: {
+        list: [
+          { title: "Touring", value: "touring" },
+          { title: "Permanent", value: "permanent" },
+        ],
+        layout: "radio",
+      },
+    }),
     defineField({ name: "year", title: "Year", type: "number" }),
+
+    // ── Filters ───────────────────────────────────────────────────────────────
+    defineField({
+      name: "interactive",
+      title: "Interactive",
+      type: "boolean",
+      description: "Enables the Interactive filter on the Artworks page.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "displayOrder",
+      title: "Display order",
+      type: "number",
+      description: "Position on the Artworks page (lower = first). Falls back to creation date if unset.",
+    }),
+
+    // ── Homepage ──────────────────────────────────────────────────────────────
     defineField({
       name: "role",
       title: "Homepage role",
@@ -53,61 +83,12 @@ export const artworkSchema = defineType({
       description: "Position in the homepage project grid (lower = first).",
       hidden: ({ document }) => document?.role !== "gallery",
     }),
-    defineField({
-      name: "order",
-      title: "Artworks page order (legacy)",
-      type: "number",
-      description: "Legacy sort field. Use Display order instead.",
-    }),
 
-    // ── Artworks index fields ──────────────────────────────────────────────
-    defineField({
-      name: "displayOrder",
-      title: "Display order",
-      type: "number",
-      description: "Position on the Artworks index page (lower = first). Falls back to creation date if unset.",
-    }),
-    defineField({
-      name: "featured",
-      title: "Featured",
-      type: "boolean",
-      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
-      initialValue: false,
-    }),
-
-    // ── Card metadata ──────────────────────────────────────────────────────
-    defineField({
-      name: "city",
-      title: "Location",
-      type: "string",
-      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN". Leave blank for touring works.',
-    }),
-    defineField({
-      name: "interactive",
-      title: "Interactive",
-      type: "boolean",
-      description: "Marks the piece as interactive — enables the Interactive filter on the Artworks page.",
-      initialValue: false,
-    }),
-
-    // ── Filter taxonomy ────────────────────────────────────────────────────
-    defineField({
-      name: "type",
-      title: "Type",
-      type: "string",
-      options: {
-        list: [
-          { title: "Touring", value: "touring" },
-          { title: "Permanent", value: "permanent" },
-        ],
-        layout: "radio",
-      },
-      description: "Used by the Touring / Permanent filter on the Artworks page.",
-    }),
+    // ── Details ───────────────────────────────────────────────────────────────
+    defineField({ name: "description", title: "Description", type: "text" }),
   ],
   orderings: [
     { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
-    { title: "Artworks page order (legacy)", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
     { title: "Hero order", name: "heroOrderAsc", by: [{ field: "heroOrder", direction: "asc" }] },
     { title: "Gallery order", name: "galleryOrderAsc", by: [{ field: "galleryOrder", direction: "asc" }] },
   ],
