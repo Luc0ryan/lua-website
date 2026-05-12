@@ -40,3 +40,22 @@ export async function getArtworksIndex(): Promise<Artwork[]> {
       }`
   );
 }
+
+export type InstagramPost = {
+  _id: string;
+  image: { asset: { _ref: string }; hotspot?: object };
+  caption?: string;
+  postUrl?: string;
+  publishedAt?: string;
+  featured?: boolean;
+};
+
+export async function getInstagramPosts(): Promise<InstagramPost[]> {
+  return client.fetch(
+    `*[_type == "instagramPost"] | order(featured desc, publishedAt desc) [0...8] {
+      _id, image, caption, postUrl, publishedAt, featured
+    }`,
+    {},
+    { next: { revalidate: 86400 } }
+  );
+}
