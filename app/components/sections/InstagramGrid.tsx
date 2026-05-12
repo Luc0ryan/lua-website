@@ -4,7 +4,7 @@ const igCount = 8;
 
 export default function InstagramGrid() {
   return (
-    <section className="max-w-6xl mx-auto px-4 md:px-8 pb-16">
+    <section className="w-full max-w-6xl mx-auto px-gutter pb-16">
       <div className="grid grid-cols-4 gap-2">
         {Array.from({ length: igCount }).map((_, i) => (
           <div

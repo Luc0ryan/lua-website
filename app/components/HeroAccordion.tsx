@@ -13,8 +13,8 @@ export default function HeroAccordion({ artworks }: Props) {
   if (!artworks.length) return null;
 
   return (
-<div className="max-w-6xl mx-auto px-4 md:px-8 flex gap-2 w-full min-h-125">
-        {artworks.map((aw, i) => {
+    <div className="w-full max-w-6xl mx-auto px-gutter flex gap-2 min-h-125">
+      {artworks.map((aw, i) => {
           const isActive = i === activeIdx;
           const imgSrc = aw.image
             ? urlFor(aw.image).width(1200).height(800).fit("crop").url()

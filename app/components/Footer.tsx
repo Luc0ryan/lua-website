@@ -27,7 +27,7 @@ const cols = [
 export default function Footer() {
   return (
     <footer className="bg-[#E8E4DF] mt-auto">
-      <div className="max-w-6xl mx-auto px-8 pt-12 pb-8">
+      <div className="w-full max-w-6xl mx-auto px-gutter pt-12 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {cols.map((col) => (
             <div key={col.heading}>
