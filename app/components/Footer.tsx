@@ -26,7 +26,7 @@ const cols = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#E8E4DF] mt-auto">
+    <footer className="bg-footer-bg mt-auto">
       <div className="w-full max-w-6xl mx-auto px-gutter pt-12 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {cols.map((col) => (
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="flex items-end justify-between border-t border-fg/15 pt-6">
-          <p className="text-xs font-body text-fg/40">© 2025 Looking Up Arts</p>
+          <p className="text-xs font-body text-fg/40">© {new Date().getFullYear()} Looking Up Arts</p>
           <Link
             href="/contact"
             className="border border-fg/30 px-5 py-3 text-right hover:border-fg transition-colors"
