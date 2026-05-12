@@ -14,9 +14,9 @@ function applyFilters(artworks: Artwork[], params: URLSearchParams): Artwork[] {
     result = result.filter((a) => a.interactive);
   }
 
-  const type = params.get("type");
-  if (type === "touring" || type === "permanent") {
-    result = result.filter((a) => a.type === type);
+  const placement = params.get("placement");
+  if (placement === "touring" || placement === "permanent") {
+    result = result.filter((a) => a.placement === placement);
   }
 
   const city = params.get("city");

@@ -6,7 +6,9 @@
       "Bash(git push *)",
       "Bash(command -v gh)",
       "Read(//usr/local/bin/**)",
-      "Read(//c/Users/Lucas Ryan/AppData/Local/Programs/gh/bin/**)"
+      "Read(//c/Users/Lucas Ryan/AppData/Local/Programs/gh/bin/**)",
+      "Bash(ls \"C:\\\\Users\\\\Lucas Ryan\\\\lua-website\\\\public\\\\\" 2>/dev/null || echo \"NOT FOUND\")",
+      "Bash(cp \"C:/Users/Lucas Ryan/lua-website/public/luaLogo.png\" \"C:/Users/Lucas Ryan/lua-website/.claude/worktrees/zealous-noyce-18cab2/public/luaLogo.png\")"
     ]
   }
 }

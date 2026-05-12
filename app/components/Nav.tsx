@@ -27,10 +27,14 @@ export default function Nav() {
       }`}
     >
       <Link href="/" className="shrink-0">
-        {/* Swap for actual SVG logo when available */}
-        <div className="font-heading font-bold leading-tight tracking-tight uppercase text-fg border-2 border-fg rounded-xs px-2 py-1 text-xl">
-          LOOKING<br />UP ARTS
-        </div>
+        <Image
+          src="/luaLogo.png"
+          alt="Looking Up Arts"
+          width={120}
+          height={48}
+          className="h-10 w-auto"
+          priority
+        />
       </Link>
 
       <ul className="flex items-center gap-8">
@@ -38,10 +42,10 @@ export default function Nav() {
           <li key={label}>
             <Link
               href={href}
-              className="font-body font-medium tracking-widest text-fg relative group"
+              className="text-base font-body font-medium tracking-wide text-fg relative group"
             >
               {label}
-              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-fg transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-fg transition-all duration-300 group-hover:w-full" />
             </Link>
           </li>
         ))}

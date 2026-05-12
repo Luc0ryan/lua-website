@@ -38,7 +38,7 @@ export default async function ProjectGrid() {
   const [first, second, third, fourth, fifth] = artworks;
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-gutter py-16 space-y-4">
+    <section className="w-full max-w-6xl mx-auto px-gutter py-20 space-y-4">
       {/* Row 1: full-width panoramic */}
       {first && <ArtworkCard aw={first} aspectClass="aspect-[21/8]" />}
 

@@ -20,7 +20,7 @@ export const artworkSchema = defineType({
       description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN". Leave blank for touring works.',
     }),
     defineField({
-      name: "type",
+      name: "placement",
       title: "Touring / Permanent",
       type: "string",
       options: {
