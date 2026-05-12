@@ -39,43 +39,43 @@ export default async function ProjectGrid() {
 
   return (
     <section className="w-full max-w-6xl mx-auto px-gutter py-20 space-y-4">
-      {/* Row 1: 8/4 asymmetric split */}
+      {/* Row 1: 8/4 asymmetric split (dominant left) */}
       {first && (
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-8">
-            <ArtworkCard aw={first} aspectClass="aspect-[4/3]" />
+            <ArtworkCard aw={first} aspectClass="h-72" />
           </div>
           {second && (
             <div className="col-span-4">
-              <ArtworkCard aw={second} aspectClass="aspect-[4/3]" />
+              <ArtworkCard aw={second} aspectClass="h-72" />
             </div>
           )}
         </div>
       )}
 
-      {/* Row 2: 7/5 asymmetric split */}
+      {/* Row 2: 5/7 asymmetric split (dominant right) */}
       {third && (
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-7">
-            <ArtworkCard aw={third} aspectClass="aspect-[4/3]" />
+          <div className="col-span-5">
+            <ArtworkCard aw={third} aspectClass="h-72" />
           </div>
           {fourth && (
-            <div className="col-span-5">
-              <ArtworkCard aw={fourth} aspectClass="aspect-[4/3]" />
+            <div className="col-span-7">
+              <ArtworkCard aw={fourth} aspectClass="h-72" />
             </div>
           )}
         </div>
       )}
 
-      {/* Row 3: 5/7 asymmetric split (reversed) */}
+      {/* Row 3: 7/5 asymmetric split (dominant left) */}
       {fifth && (
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-5">
-            <ArtworkCard aw={fifth} aspectClass="aspect-[4/3]" />
+          <div className="col-span-7">
+            <ArtworkCard aw={fifth} aspectClass="h-72" />
           </div>
           {sixth && (
-            <div className="col-span-7">
-              <ArtworkCard aw={sixth} aspectClass="aspect-[4/3]" />
+            <div className="col-span-5">
+              <ArtworkCard aw={sixth} aspectClass="h-72" />
             </div>
           )}
         </div>
