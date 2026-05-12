@@ -18,16 +18,15 @@ interface DotFieldProps {
   spacing?: number;
   opacity?: number; // 0–1
   // Grid rotation in degrees. 45° gives the Lichtenstein diagonal.
-  // The layer scales by 1.5 (> √2) so all corners remain covered after rotation.
   angle?: number;
   className?: string;
 }
 
 export function DotField({
   dotColor = "#E8197D",
-  intensity = 0.55,
+  intensity = 0.15,
   dotSize,
-  spacing = 28,
+  spacing = 20,
   opacity = 0.45,
   angle = 45,
   className,
@@ -41,15 +40,15 @@ export function DotField({
 
   const style: React.CSSProperties = {
     position: "absolute",
-    inset: 0,
+    // Extend 50% beyond each edge so the rotated tile covers all corners
+    // without CSS scale, which would visually enlarge backgroundSize.
+    // DotMask's overflow:hidden clips the excess.
+    inset: "-50%",
     backgroundImage,
     backgroundSize: `${spacing}px ${spacing}px`,
     backgroundPosition: "0 0",
     opacity,
-    // Rotate the tiling grid and scale out so the rotated layer still covers
-    // the full container. 1.5 > √2 ≈ 1.414 which is the minimum needed for a
-    // square; use 1.5 to cover tall or wide rectangles with margin to spare.
-    transform: angle !== 0 ? `rotate(${angle}deg) scale(1.5)` : undefined,
+    transform: angle !== 0 ? `rotate(${angle}deg)` : undefined,
     transformOrigin: "center center",
     pointerEvents: "none",
   };
