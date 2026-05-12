@@ -21,18 +21,17 @@ function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolea
   return (
     <div
       className={[
-        "group cursor-pointer transition-transform duration-300 ease-out",
-        featured ? "hover:-translate-y-1" : "hover:-translate-y-0.5",
+        "group cursor-pointer transition-transform duration-300 ease-out"
       ].join(" ")}
     >
       {/* Image */}
-      <div className="relative overflow-hidden bg-neutral-200 aspect-[4/3]">
+      <div className="relative overflow-hidden bg-neutral-200 aspect-4/3">
         {imgUrl ? (
           <Image
             src={imgUrl}
             alt={artwork.title ?? ""}
             fill
-            className="object-cover"
+            className="object-cover hover:scale-[1.03] transition-transform duration-500 ease-out"
             sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
           />
         ) : (

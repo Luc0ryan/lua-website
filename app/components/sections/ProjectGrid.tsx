@@ -16,15 +16,15 @@ function ArtworkCard({ aw, aspectClass }: { aw: Artwork; aspectClass: string }) 
             src={src}
             alt={aw.title ?? ""}
             fill
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            className="object-cover transition-transform h-72 duration-500 ease-out group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         ) : (
           <div className="absolute inset-0 bg-neutral-300" />
         )}
       </div>
-      <p className="text-[10px] font-body uppercase tracking-widest text-[--color-gray-label] mt-3">
-        {aw.city}
+      <p className="text-xs font-body uppercase tracking-wider text-[--color-gray-label] mt-3">
+        {aw.city || 'Touring'}
       </p>
       <p className="text-base font-heading font-bold text-fg mt-0.5">{aw.title}</p>
     </div>

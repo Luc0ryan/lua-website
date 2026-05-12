@@ -12,7 +12,8 @@
       "Bash(git branch *)",
       "Bash(git worktree *)",
       "Bash(git fetch *)",
-      "Bash(git commit -m 'Allow git branch, worktree, and fetch commands in settings.local.json *)"
+      "Bash(git commit -m 'Allow git branch, worktree, and fetch commands in settings.local.json *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

@@ -50,7 +50,7 @@ export default async function InstagramGrid() {
           href="https://www.instagram.com/lookinguparts"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-body font-medium text-fg hover:text-[#E8197D] transition-colors"
+          className="text-2xl font-body font-medium text-fg hover:text-[#E8197D] transition-colors"
         >
           Follow us on instagram →
         </Link>
