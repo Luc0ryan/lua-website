@@ -24,10 +24,10 @@ interface DotFieldProps {
 
 export function DotField({
   dotColor = "#E8197D",
-  intensity = 0.15,
+  intensity = 0.25,
   dotSize,
-  spacing = 20,
-  opacity = 0.45,
+  spacing = 15,
+  opacity = 0.25,
   angle = 45,
   className,
 }: DotFieldProps) {
@@ -43,7 +43,7 @@ export function DotField({
     // Extend 50% beyond each edge so the rotated tile covers all corners
     // without CSS scale, which would visually enlarge backgroundSize.
     // DotMask's overflow:hidden clips the excess.
-    inset: "-50%",
+    inset: "-100%",
     backgroundImage,
     backgroundSize: `${spacing}px ${spacing}px`,
     backgroundPosition: "0 0",

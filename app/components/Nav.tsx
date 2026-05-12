@@ -38,7 +38,7 @@ export default function Nav() {
           <li key={label}>
             <Link
               href={href}
-              className="text-[11px] font-body font-medium tracking-widest text-fg relative group"
+              className="font-body font-medium tracking-widest text-fg relative group"
             >
               {label}
               <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-fg transition-all duration-300 group-hover:w-full" />
