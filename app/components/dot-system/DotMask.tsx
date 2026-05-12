@@ -9,7 +9,8 @@ export type MaskShape =
   | "diagonal-tlbr"
   | "diagonal-trbl"
   | "radial-center"  // opaque center, fades to transparent at edges
-  | "radial-edges";  // transparent center, opaque at edges
+  | "radial-edges"   // transparent center, opaque at edges
+  | "peak";          // transparent top → opaque middle → transparent bottom
 
 interface DotMaskProps {
   shape?: MaskShape;
@@ -50,6 +51,8 @@ function buildMaskValue(
       return `radial-gradient(circle at center, ${a(hi)} 0%, ${a(lo)} 100%)`;
     case "radial-edges":
       return `radial-gradient(circle at center, ${a(lo)} 0%, ${a(hi)} 100%)`;
+    case "peak":
+      return `linear-gradient(to bottom, ${a(lo)} 0%, ${a(hi)} 35%, ${a(hi)} 70%, ${a(lo)} 100%)`;
   }
 }
 

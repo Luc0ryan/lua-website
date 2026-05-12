@@ -7,11 +7,11 @@ export default async function Hero() {
 
   return (
     // relative makes this the positioning context for the dot layer
-    <div className="relative">
+    <div className="relative pb-20">
       {/* full-bleed: DotPanel fills the viewport edge-to-edge via absolute positioning;
           the parent has no width constraint so no -mx-gutter escape is needed */}
       <DotPanel
-        shape="radial-edges"
+        shape="peak"
         intensityRange={[0, 1]}
         dotColor="#E8197D"
         opacity={0.4}

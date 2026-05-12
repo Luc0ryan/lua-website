@@ -7,9 +7,15 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Editorial />
-      <ProjectGrid />
-      <InstagramGrid />
+      <div className="mt-40">
+        <Editorial />
+      </div>
+      <div className="mt-40">
+        <ProjectGrid />
+      </div>
+      <div className="mt-40">
+        <InstagramGrid />
+      </div>
     </>
   );
 }

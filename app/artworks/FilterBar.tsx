@@ -39,7 +39,7 @@ function Chip({
 function getCityCounts(artworks: Artwork[]) {
   const counts = new Map<string, number>();
   for (const a of artworks) {
-    if (a.city && a.type !== "touring") {
+    if (a.city && a.placement !== "touring") {
       counts.set(a.city, (counts.get(a.city) ?? 0) + 1);
     }
   }
@@ -61,7 +61,7 @@ export default function FilterBar({ artworks }: Props) {
   const searchParams = useSearchParams();
 
   const interactive = searchParams.get("interactive") === "true";
-  const type = searchParams.get("type") as "touring" | "permanent" | null;
+  const placement = searchParams.get("placement") as "touring" | "permanent" | null;
   const citySlug = searchParams.get("city"); // lowercase slug
 
   const [locationOpen, setLocationOpen] = useState(false);
@@ -113,13 +113,13 @@ export default function FilterBar({ artworks }: Props) {
         <div className="flex gap-2 ml-0 sm:ml-8">
           <Chip
             label="Touring"
-            selected={type === "touring"}
-            onClick={() => setParam("type", type === "touring" ? null : "touring")}
+            selected={placement === "touring"}
+            onClick={() => setParam("placement", placement === "touring" ? null : "touring")}
           />
           <Chip
             label="Permanent"
-            selected={type === "permanent"}
-            onClick={() => setParam("type", type === "permanent" ? null : "permanent")}
+            selected={placement === "permanent"}
+            onClick={() => setParam("placement", placement === "permanent" ? null : "permanent")}
           />
         </div>
 

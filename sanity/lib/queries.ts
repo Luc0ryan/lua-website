@@ -6,7 +6,7 @@ export type Artwork = {
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
   year?: number;
-  type?: "touring" | "permanent";
+  placement?: "touring" | "permanent";
   interactive?: boolean;
   featured?: boolean;
   displayOrder?: number;
@@ -36,7 +36,7 @@ export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork"]
       | order(displayOrder asc, _createdAt asc) {
-        _id, title, image, city, interactive, type, featured, displayOrder
+        _id, title, image, city, interactive, placement, featured, displayOrder
       }`
   );
 }
