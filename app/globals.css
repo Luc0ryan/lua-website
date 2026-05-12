@@ -6,6 +6,8 @@
   --magenta: #C91F6E;
   --gray-label: #888;
   --footer-bg: #E8E4DF;
+  /* Single source-of-truth for all horizontal rhythm */
+  --gutter: clamp(24px, 4vw, 64px);
 }
 
 @theme inline {
@@ -16,6 +18,8 @@
   --color-footer-bg: var(--footer-bg);
   --font-sans: var(--font-dm-sans);
   --font-body: var(--font-inter);
+  /* Exposes --gutter as the `gutter` spacing key: px-gutter, mx-gutter, etc. */
+  --spacing-gutter: var(--gutter);
 }
 
 * {
