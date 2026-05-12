@@ -13,10 +13,11 @@ export const instagramPostSchema = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "caption",
-      title: "Caption",
-      type: "text",
-      rows: 3,
+      name: "alt",
+      title: "Alt Text",
+      type: "string",
+      description: "Describe the image for screen readers",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "postUrl",
@@ -30,23 +31,16 @@ export const instagramPostSchema = defineType({
       type: "datetime",
       options: { dateFormat: "YYYY-MM-DD" },
     }),
-    defineField({
-      name: "featured",
-      title: "Featured",
-      type: "boolean",
-      description: "Pin this post to appear first in the grid",
-      initialValue: false,
-    }),
   ],
   preview: {
     select: {
-      title: "caption",
+      title: "alt",
       media: "image",
       date: "publishedAt",
     },
     prepare({ title, media, date }: { title?: string; media?: unknown; date?: string }) {
       return {
-        title: title?.slice(0, 60) ?? "No caption",
+        title: title?.slice(0, 60) ?? "No alt text",
         subtitle: date ? new Date(date).toLocaleDateString() : "",
         media,
       };
