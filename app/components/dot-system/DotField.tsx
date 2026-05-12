@@ -1,47 +1,56 @@
 // Parent must be `position: relative` (or absolute/fixed/sticky) for this
 // absolutely-positioned layer to fill it correctly.
 
+// MAX_FILL: dot diameter can reach at most 90% of the cell pitch before dots
+// visually merge. At intensity=1 you get ~90% fill; at intensity=0.5 you get
+// ~45% fill — the classic Lichtenstein halftone mid-tone.
+const MAX_FILL = 0.9;
+
 interface DotFieldProps {
   dotColor?: string;
-  dotSize?: number;  // dot diameter in px
-  spacing?: number;  // center-to-center grid pitch in px
-  opacity?: number;  // 0–1
-  // Blur applied to the background layer for a printed-on-paper feel.
-  // Increase toward 1–2px if dots feel too crisp; set to 0 to disable.
-  // The gradient stops (25% / 65%) are the primary softness control — adjust
-  // those in the backgroundImage string if you want to change edge crispness
-  // without affecting the overall blur budget.
-  softness?: number;
+  // 0–1: controls dot diameter as a fraction of MAX_FILL × spacing.
+  // This is the halftone density knob — larger = bigger dots = more ink.
+  // Ignored when dotSize is set explicitly.
+  intensity?: number;
+  // Explicit diameter override in px. Bypasses intensity when provided.
+  dotSize?: number;
+  // Center-to-center grid pitch in px.
+  spacing?: number;
+  opacity?: number; // 0–1
+  // Grid rotation in degrees. 45° gives the Lichtenstein diagonal.
+  // The layer scales by 1.5 (> √2) so all corners remain covered after rotation.
+  angle?: number;
   className?: string;
 }
 
 export function DotField({
-  dotColor = "#C91F6E",
-  dotSize = 3,
-  spacing = 24,
-  opacity = 0.5,
-  softness = 0.4,
+  dotColor = "#E8197D",
+  intensity = 0.55,
+  dotSize,
+  spacing = 28,
+  opacity = 0.45,
+  angle = 45,
   className,
 }: DotFieldProps) {
-  // Explicit gradient radius = dotSize/2 px. Percentage stops are now relative
-  // to the dot itself, not the tile — so dotSize drives actual visible size.
-  // Soft stops: solid core to 25% of radius, fully transparent by 65%.
-  // Widen the gap (e.g. 20% → 80%) for softer dots; narrow it for harder edges.
-  const r = dotSize / 2;
-  const backgroundImage = `radial-gradient(circle ${r}px at center, ${dotColor} 0%, ${dotColor} 25%, transparent 65%)`;
+  const diameter = dotSize ?? spacing * intensity * MAX_FILL;
+  const r = diameter / 2;
+
+  // Hard-edged circle: solid fill to radius, then immediate transparency.
+  // This matches Lichtenstein's flat, graphic benday dot style — no soft halos.
+  const backgroundImage = `radial-gradient(circle ${r}px at center, ${dotColor} 99%, transparent 100%)`;
 
   const style: React.CSSProperties = {
     position: "absolute",
     inset: 0,
     backgroundImage,
     backgroundSize: `${spacing}px ${spacing}px`,
-    // Phase-consistent: fixed origin so adjacent DotField instances align.
     backgroundPosition: "0 0",
     opacity,
-    // softness > 0 adds a subtle sub-pixel blur over the background layer,
-    // reinforcing the printed-ink feel. Keep below ~1px to avoid destroying
-    // the dot shape; set to 0 to rely solely on the gradient soft stops.
-    filter: softness > 0 ? `blur(${softness}px)` : undefined,
+    // Rotate the tiling grid and scale out so the rotated layer still covers
+    // the full container. 1.5 > √2 ≈ 1.414 which is the minimum needed for a
+    // square; use 1.5 to cover tall or wide rectangles with margin to spare.
+    transform: angle !== 0 ? `rotate(${angle}deg) scale(1.5)` : undefined,
+    transformOrigin: "center center",
     pointerEvents: "none",
   };
 

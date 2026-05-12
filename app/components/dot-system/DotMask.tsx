@@ -61,15 +61,15 @@ export function DotMask({
 }: DotMaskProps) {
   const maskValue = buildMaskValue(shape, intensityRange);
 
-  // Both vendor-prefixed and standard properties are always emitted so Safari
-  // and Chrome/FF are covered without any conditional branching.
-  const style: CSSProperties =
-    maskValue != null
-      ? ({
-          maskImage: maskValue,
-          WebkitMaskImage: maskValue,
-        } as CSSProperties)
-      : {};
+  // overflow:hidden clips any overflow from DotField's rotate+scale transform.
+  // Both vendor-prefixed and standard mask properties are always emitted so
+  // Safari and Chrome/FF are covered without any conditional branching.
+  const style: CSSProperties = {
+    overflow: "hidden",
+    ...(maskValue != null
+      ? ({ maskImage: maskValue, WebkitMaskImage: maskValue } as CSSProperties)
+      : {}),
+  };
 
   return (
     <div style={style} className={className}>
