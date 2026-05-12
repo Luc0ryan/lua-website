@@ -7,13 +7,13 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <div className="mt-40">
+      <div className="mt-20">
         <Editorial />
       </div>
-      <div className="mt-40">
+      <div className="mt-20">
         <ProjectGrid />
       </div>
-      <div className="mt-40">
+      <div className="mt-20">
         <InstagramGrid />
       </div>
     </>
