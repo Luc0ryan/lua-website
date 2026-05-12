@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 const links = [
   { label: "ARTWORKS", href: "/artworks" },
@@ -13,7 +12,6 @@ const links = [
 ];
 
 export default function Nav() {
-  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -22,14 +20,11 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (pathname?.startsWith("/studio")) return null;
-
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-5 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-gutter py-5 transition-all duration-300 ${
         scrolled ? "bg-[#F2EFEA]/60 backdrop-blur-sm border-b border-black/10" : "bg-transparent"
       }`}
-      style={{ paddingLeft: "var(--gutter)", paddingRight: "var(--gutter)" }}
     >
       <Link href="/" className="shrink-0">
         <Image
@@ -42,7 +37,7 @@ export default function Nav() {
         />
       </Link>
 
-      <ul className="flex items-center gap-8 shrink-0">
+      <ul className="flex items-center gap-8">
         {links.map(({ label, href }) => (
           <li key={label}>
             <Link
