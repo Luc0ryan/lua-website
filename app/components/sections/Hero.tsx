@@ -12,9 +12,9 @@ export default async function Hero() {
           the parent has no width constraint so no -mx-gutter escape is needed */}
       <DotPanel
         shape="radial-edges"
-        intensityRange={[0, 1]}
+        intensityRange={[0, 0.75]}
         dotColor="#E8197D"
-        opacity={0.35}
+        opacity={0.4}
         className="absolute inset-0"
       />
 
