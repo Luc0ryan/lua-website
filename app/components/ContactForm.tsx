@@ -111,8 +111,8 @@ export default function ContactForm({
   return (
     <section className="flex-1 flex flex-col lg:flex-row min-h-screen pt-20">
       {/* ── Left: image ───────────────────────────────────────────────── */}
-      <div className="hidden lg:block lg:w-[45%] shrink-0 p-8 pr-4">
-        <div className="relative w-full h-full rounded-2xl overflow-hidden">
+      <div className="hidden lg:block lg:w-[45%] shrink-0 pr-4">
+        <div className="relative w-full h-full rounded-r-2xl overflow-hidden">
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -150,10 +150,10 @@ export default function ContactForm({
           ) : (
             <>
               <h1 className="font-sans text-5xl font-bold leading-tight mb-3">
-                Get in touch
+                Start the conversation
               </h1>
               <p className="font-body font-semibold text-fg mb-8 text-base">
-                Request our full art deck and start a conversation.
+                Request our full art deck and get in touch
               </p>
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
@@ -226,9 +226,8 @@ export default function ContactForm({
                     className="mt-0.5 w-4 h-4 shrink-0 accent-fg"
                   />
                   <span className="font-body text-sm text-fg/80 leading-snug">
-                    <strong>YES</strong>, I&apos;d be interested in signing up for Looking Up
-                    Art&apos;s newsletter and receiving <strong>project updates</strong> and
-                    opportunities for <strong>community involvement</strong> via email!
+                    <strong>Keep me in the loop!</strong> Project updates, community
+                    opportunities, and the occasional love letter from the studio.
                   </span>
                 </label>
 
