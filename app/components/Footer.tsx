@@ -40,7 +40,7 @@ const dotMask: CSSProperties = {
 
 export default function Footer() {
   return (
-    <footer className="bg-bg relative overflow-hidden mt-auto">
+    <footer className="bg-bg relative overflow-hidden pt-12 mt-auto">
       <div style={dotMask} aria-hidden="true">
         <DotField dotColor="#D4458A" intensity={0.3} spacing={15} opacity={0.35} angle={45} />
       </div>
@@ -73,7 +73,7 @@ export default function Footer() {
           {/* Contact Us — pop art card */}
           <Link
             href="/contact"
-            className="shrink-0 rounded-lg border-2 border-[#2B2B2B] bg-[#F2EFEA] px-7 py-6 min-w-55 shadow-[3px_3px_0px_#2B2B2B] transition-[transform,box-shadow] duration-150 ease-in-out hover:-translatex-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#2B2B2B]"
+            className="shrink-0 border-2 border-[#2B2B2B] bg-[#F2EFEA] px-7 py-6 min-w-55 shadow-[3px_3px_0px_#2B2B2B] transition-[transform,box-shadow] duration-150 ease-in-out hover:-translatex-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#2B2B2B]"
           >
             <p className="font-sans font-bold text-[30px] leading-tight text-[#2B2B2B] uppercase mb-3">
               CONTACT US

@@ -14,11 +14,11 @@ export default async function Hero() {
         shape="peak"
         intensityRange={[0, 1]}
         dotColor="#E8197D"
-        opacity={0.4}
+        opacity={0.15}
         className="absolute inset-0"
       />
 
-      <section className="w-full max-w-6xl mx-auto px-gutter pt-24 pb-8">
+      <section className="w-full max-w-6xl mx-auto px-gutter pt-40 pb-8">
         <h1 className="text-7xl font-heading font-bold text-black leading-tight">
           Interactive art made<br />
           <span className="text-magenta">together</span>, for everyone

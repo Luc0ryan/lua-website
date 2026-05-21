@@ -16,7 +16,7 @@ function ArtworkCard({ aw, aspectClass }: { aw: Artwork; aspectClass: string }) 
             src={src}
             alt={aw.title ?? ""}
             fill
-            className="object-cover transition-transform h-72 duration-500 ease-out group-hover:scale-[1.03]"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         ) : (
@@ -43,11 +43,11 @@ export default async function ProjectGrid() {
       {first && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-8">
-            <ArtworkCard aw={first} aspectClass="h-72" />
+            <ArtworkCard aw={first} aspectClass="h-96" />
           </div>
           {second && (
             <div className="md:col-span-4">
-              <ArtworkCard aw={second} aspectClass="h-72" />
+              <ArtworkCard aw={second} aspectClass="h-96" />
             </div>
           )}
         </div>
@@ -57,11 +57,11 @@ export default async function ProjectGrid() {
       {third && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-5">
-            <ArtworkCard aw={third} aspectClass="h-72" />
+            <ArtworkCard aw={third} aspectClass="h-96" />
           </div>
           {fourth && (
             <div className="md:col-span-7">
-              <ArtworkCard aw={fourth} aspectClass="h-72" />
+              <ArtworkCard aw={fourth} aspectClass="h-96" />
             </div>
           )}
         </div>
@@ -71,11 +71,11 @@ export default async function ProjectGrid() {
       {fifth && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-7">
-            <ArtworkCard aw={fifth} aspectClass="h-72" />
+            <ArtworkCard aw={fifth} aspectClass="h-96" />
           </div>
           {sixth && (
             <div className="md:col-span-5">
-              <ArtworkCard aw={sixth} aspectClass="h-72" />
+              <ArtworkCard aw={sixth} aspectClass="h-96" />
             </div>
           )}
         </div>
