@@ -13,7 +13,11 @@
       "Bash(git worktree *)",
       "Bash(git fetch *)",
       "Bash(git commit -m 'Allow git branch, worktree, and fetch commands in settings.local.json *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(gh pr *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/contact)"
     ]
   }
 }
