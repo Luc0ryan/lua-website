@@ -38,7 +38,7 @@ export default function ContactForm({
   // Prefer a Sanity-sourced image; fall back to static placeholder.
   const imageSrc = sanityImage
     ? urlFor(sanityImage).width(900).url()
-    : "/images/homeEditorial.webp";
+    : "/images/contactHero.webp";
   const imageAlt = sanityImage?.alt ?? "Looking Up Art — contact";
 
   async function handleSubmit(e: React.FormEvent) {
