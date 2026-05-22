@@ -21,6 +21,7 @@ interface ContactFormProps {
 // Set via .env.local — NEXT_PUBLIC_ so the browser can POST directly to HubSpot.
 const PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
 const FORM_ID = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID;
+const HUBSPOT_CONTACT_TYPE_ID = "0-1";
 
 export default function ContactForm({
   sanityImage,
@@ -69,18 +70,18 @@ export default function ContactForm({
 
       const payload = {
         fields: [
-          { objectTypeId: "0-1", name: "firstname", value: firstName },
-          { objectTypeId: "0-1", name: "lastname", value: lastName },
-          { objectTypeId: "0-1", name: "email", value: form.email },
-          { objectTypeId: "0-1", name: "message", value: form.message },
+          { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "firstname", value: firstName },
+          { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "lastname", value: lastName },
+          { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "email", value: form.email },
+          { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "message", value: form.message },
           {
-            objectTypeId: "0-1",
+            objectTypeId: HUBSPOT_CONTACT_TYPE_ID,
             name: "newsletter_opt_in",
             value: form.newsletter ? "true" : "false",
           },
         ],
         context: {
-          pageUri: typeof window !== "undefined" ? window.location.href : "",
+          pageUri: window.location.href,
           pageName: "Contact — Get in Touch",
         },
       };
@@ -109,7 +110,7 @@ export default function ContactForm({
   }
 
   return (
-    <section className="flex-1 flex flex-col lg:flex-row min-h-screen pt-20">
+    <section className="flex-1 flex flex-col lg:flex-row min-h-screen py-32">
       {/* ── Left: image ───────────────────────────────────────────────── */}
       <div className="hidden lg:block lg:w-[45%] shrink-0 pr-4">
         <div className="relative w-full h-full rounded-r-2xl overflow-hidden">
@@ -125,7 +126,7 @@ export default function ContactForm({
 
       {/* ── Right: form ───────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col justify-center px-gutter py-16">
-        <div className="max-w-lg w-full mx-auto lg:mx-0">
+        <div className="max-w-xl w-full mx-auto lg:mx-0">
           {/* Email link */}
           <p className="text-sm font-body mb-6">
             Email:{" "}
@@ -152,7 +153,7 @@ export default function ContactForm({
               <h1 className="font-sans text-5xl font-bold leading-tight mb-3">
                 Start the conversation
               </h1>
-              <p className="font-body font-semibold text-fg mb-8 text-base">
+              <p className="font-body font-normal text-fg mb-8 text-base">
                 Request our full art deck and get in touch
               </p>
 

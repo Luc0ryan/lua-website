@@ -3,7 +3,7 @@
 :root {
   --bg: #F2EFEA;
   --fg: #111111;
-  --magenta: #C91F6E;
+  --pink: #DC738F;
   --gray-label: #888;
   --footer-bg: #E8E4DF;
   /* Single source-of-truth for all horizontal rhythm */
@@ -13,7 +13,7 @@
 @theme inline {
   --color-bg: var(--bg);
   --color-fg: var(--fg);
-  --color-magenta: var(--magenta);
+  --color-pink: var(--pink);
   --color-gray-label: var(--gray-label);
   --color-footer-bg: var(--footer-bg);
   --font-sans: var(--font-dm-sans);

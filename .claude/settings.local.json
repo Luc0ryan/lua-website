@@ -17,7 +17,11 @@
       "Bash(gh pr *)",
       "mcp__Claude_Preview__preview_start",
       "Bash(npm run *)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/contact)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/contact)",
+      "Bash(cwebp --version)",
+      "Bash(winget search *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)"
     ]
   }
 }

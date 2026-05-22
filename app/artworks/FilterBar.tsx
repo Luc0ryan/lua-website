@@ -25,7 +25,7 @@ function Chip({
       className={[
         "px-4 py-1.5 text-sm font-body border-2 transition-shadow cursor-pointer whitespace-nowrap",
         selected
-          ? "border-magenta shadow-[3px_3px_0_0_#C91F6E]"
+          ? "border-pink shadow-[3px_3px_0_0_#DC738F]"
           : "border-fg hover:shadow-[3px_3px_0_0_#111111]",
       ].join(" ")}
     >
@@ -130,7 +130,7 @@ export default function FilterBar({ artworks }: Props) {
             className={[
               "flex items-center border-2 transition-shadow",
               locationSelected
-                ? "border-magenta shadow-[3px_3px_0_0_#C91F6E]"
+                ? "border-pink shadow-[3px_3px_0_0_#DC738F]"
                 : "border-fg hover:shadow-[3px_3px_0_0_#111111]",
             ].join(" ")}
           >
@@ -186,7 +186,7 @@ export default function FilterBar({ artworks }: Props) {
                         }}
                         className={[
                           "w-full text-left px-4 py-2 text-sm font-body flex justify-between items-center cursor-pointer hover:bg-fg/5",
-                          active ? "text-magenta" : "text-fg",
+                          active ? "text-pink" : "text-fg",
                         ].join(" ")}
                       >
                         <span>{city}</span>

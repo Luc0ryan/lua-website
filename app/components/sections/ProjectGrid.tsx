@@ -43,11 +43,11 @@ export default async function ProjectGrid() {
       {first && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-8">
-            <ArtworkCard aw={first} aspectClass="h-96" />
+            <ArtworkCard aw={first} aspectClass="h-[520px]" />
           </div>
           {second && (
             <div className="md:col-span-4">
-              <ArtworkCard aw={second} aspectClass="h-96" />
+              <ArtworkCard aw={second} aspectClass="h-[520px]" />
             </div>
           )}
         </div>
@@ -57,11 +57,11 @@ export default async function ProjectGrid() {
       {third && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-5">
-            <ArtworkCard aw={third} aspectClass="h-96" />
+            <ArtworkCard aw={third} aspectClass="h-[480px]" />
           </div>
           {fourth && (
             <div className="md:col-span-7">
-              <ArtworkCard aw={fourth} aspectClass="h-96" />
+              <ArtworkCard aw={fourth} aspectClass="h-[480px]" />
             </div>
           )}
         </div>
@@ -71,11 +71,11 @@ export default async function ProjectGrid() {
       {fifth && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-7">
-            <ArtworkCard aw={fifth} aspectClass="h-96" />
+            <ArtworkCard aw={fifth} aspectClass="h-[500px]" />
           </div>
           {sixth && (
             <div className="md:col-span-5">
-              <ArtworkCard aw={sixth} aspectClass="h-96" />
+              <ArtworkCard aw={sixth} aspectClass="h-[500px]" />
             </div>
           )}
         </div>

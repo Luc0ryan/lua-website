@@ -25,7 +25,7 @@ interface DotFieldProps {
 }
 
 export function DotField({
-  dotColor = "#E8197D",
+  dotColor = "#DC738F",
   intensity = 0.35,
   dotSize,
   spacing = 10,

@@ -37,10 +37,11 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 flex items-center justify-between px-gutter py-5 transition-all duration-300 w-full ${
+        className={`fixed top-0 z-50 w-full py-5 transition-all duration-300 ${
           scrolled || menuOpen ? "bg-bg/60 backdrop-blur-sm border-b border-black/10" : "bg-transparent"
         }`}
       >
+        <div className="max-w-6xl mx-auto px-gutter flex items-center justify-between">
         <Link href="/" className="shrink-0">
           <Image
             src="/luaLogo.png"
@@ -59,14 +60,14 @@ export default function Nav() {
               <Link
                 href={href}
                 className={`text-base font-body font-medium tracking-wide relative group py-1 px-0.5 transition-colors duration-200 ${
-                  pathname === href ? "text-magenta" : "text-fg"
+                  pathname === href ? "text-pink" : "text-fg"
                 }`}
               >
                 {label}
                 <span
                   className={`absolute -bottom-1 left-0 h-px transition-all duration-300 ${
                     pathname === href
-                      ? "w-full bg-magenta"
+                      ? "w-full bg-pink"
                       : "w-0 bg-fg group-hover:w-full"
                   }`}
                 />
@@ -95,6 +96,7 @@ export default function Nav() {
         >
           {menuOpen ? <X size={26} strokeWidth={1.5} /> : <Menu size={26} strokeWidth={1.5} />}
         </button>
+        </div>
       </nav>
 
       {/* Mobile drawer */}
@@ -106,7 +108,7 @@ export default function Nav() {
                 <Link
                   href={href}
                   className={`text-2xl font-body font-medium tracking-wide transition-colors duration-200 ${
-                    pathname === href ? "text-magenta" : "text-fg"
+                    pathname === href ? "text-pink" : "text-fg"
                   }`}
                 >
                   {label}

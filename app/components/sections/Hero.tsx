@@ -13,15 +13,14 @@ export default async function Hero() {
       <DotPanel
         shape="peak"
         intensityRange={[0, 1]}
-        dotColor="#E8197D"
+        dotColor="#DC738F"
         opacity={0.15}
         className="absolute inset-0"
       />
 
       <section className="w-full max-w-6xl mx-auto px-gutter pt-40 pb-8">
-        <h1 className="text-7xl font-heading font-bold text-black leading-tight">
-          Interactive art made<br />
-          <span className="text-magenta">together</span>, for everyone
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-heading font-bold text-black leading-tight">
+          Interactive art built to bring <span className="text-pink">people</span> together
         </h1>
       </section>
 

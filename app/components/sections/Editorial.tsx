@@ -1,9 +1,10 @@
 import Image from "next/image";
+import FadeUp from "../FadeUp";
 
 export default function Editorial() {
   return (
     <section className="w-full max-w-6xl mx-auto px-gutter py-10 grid md:grid-cols-2 gap-16 items-center">
-      <div className="overflow-hidden relative aspect-4/3">
+      <div className="relative overflow-hidden aspect-4/3">
         <Image
           src="/images/homeEditorial.webp"
           alt="Editorial photo"
@@ -11,8 +12,9 @@ export default function Editorial() {
           className="object-cover"
         />
       </div>
-      <div>
-        <p className="text-sm font-body font-medium text-magenta mb-4">// we build local</p>
+
+      <FadeUp>
+        <p className="text-sm font-body font-medium text-pink mb-4">// we build local</p>
         <h2 className="text-4xl font-heading font-bold text-fg leading-tight mb-6">
           Transforming public space with every project
         </h2>
@@ -21,7 +23,7 @@ export default function Editorial() {
           and hands-on collaboration. We work with communities and cities to build work that
           energizes and inspires connection.
         </p>
-      </div>
+      </FadeUp>
     </section>
   );
 }
