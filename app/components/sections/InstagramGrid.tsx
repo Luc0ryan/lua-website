@@ -7,7 +7,7 @@ export default async function InstagramGrid() {
   const posts = await getInstagramPosts();
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-gutter pt-10 pb-20">
+    <section className="w-full max-w-screen-2xl mx-auto px-gutter pt-10 pb-20">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {posts.map((post) => {
           const imageUrl = urlFor(post.image).width(400).height(400).fit("crop").url();

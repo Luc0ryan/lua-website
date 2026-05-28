@@ -18,10 +18,13 @@ export default async function Hero() {
         className="absolute inset-0"
       />
 
-      <section className="w-full max-w-6xl mx-auto px-gutter pt-40 pb-8">
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-heading font-bold text-black leading-tight">
-          Interactive art built to bring <span className="text-pink">people</span> together
+      <section className="w-full max-w-screen-2xl mx-auto px-gutter pt-40 pb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold text-black leading-tight">
+          We make you <span className="text-pink">look up</span>
         </h1>
+        <p className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold text-black leading-tight">
+          Interactive art in San Francisco
+        </p>
       </section>
 
       <HeroAccordion artworks={artworks} />

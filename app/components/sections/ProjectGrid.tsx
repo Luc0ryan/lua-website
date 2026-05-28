@@ -38,7 +38,7 @@ export default async function ProjectGrid() {
   const [first, second, third, fourth, fifth, sixth] = artworks;
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-gutter py-10 space-y-4">
+    <section className="w-full max-w-screen-2xl mx-auto px-gutter py-10 space-y-4">
       {/* Row 1: 8/4 asymmetric split (dominant left) */}
       {first && (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">

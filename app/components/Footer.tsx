@@ -2,15 +2,13 @@ import Link from "next/link";
 
 const cols = [
   {
-    heading: "ABOUT",
-    links: [],
-  },
-  {
     heading: "PROJECTS",
+    href: "/artworks",
     links: [],
   },
   {
     heading: "COMMUNITY",
+    href: "/community",
     links: [
       { label: "Donate", href: "/donate" },
       { label: "Events", href: "/events" },
@@ -18,6 +16,7 @@ const cols = [
   },
   {
     heading: "SERVICES",
+    href: "/services",
     links: [
       { label: "Store", href: "/store" },
       { label: "FAQs", href: "/faqs" },
@@ -31,12 +30,12 @@ export default function Footer() {
       <div className="relative w-full max-w-6xl mx-auto px-gutter pt-12 pb-8">
         <div className="flex flex-col gap-8 mb-12 md:flex-row md:items-start md:justify-between">
           {/* Nav columns */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {cols.map((col) => (
               <div key={col.heading}>
-                <p className="text-sm font-sans font-semibold tracking-widest uppercase text-fg mb-3">
+                <Link href={col.href} className="text-sm font-sans font-semibold tracking-widest uppercase text-fg mb-3 hover:text-pink transition-colors inline-block">
                   {col.heading}
-                </p>
+                </Link>
                 <ul className="space-y-2">
                   {col.links.map((l) => (
                     <li key={l.label}>

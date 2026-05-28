@@ -99,7 +99,7 @@ export default function FilterBar({ artworks }: Props) {
 
   return (
     <div className="mb-10">
-      <p className="text-[10px] font-body tracking-widest uppercase text-fg/50 mb-4">SHOW</p>
+      <p className="text-xs font-body tracking-widest uppercase text-fg mb-4">SHOW</p>
 
       <div className="flex flex-wrap items-center gap-2">
         {/* Interactive toggle */}

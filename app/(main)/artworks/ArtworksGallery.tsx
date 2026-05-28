@@ -36,7 +36,7 @@ export default function ArtworksGallery({ artworks }: Props) {
   const hasFilters = searchParams.toString() !== "";
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-gutter pt-32 pb-16">
+    <div className="w-full max-w-screen-2xl mx-auto px-gutter pt-32 pb-16">
       <FilterBar artworks={artworks} />
 
       {filtered.length === 0 ? (

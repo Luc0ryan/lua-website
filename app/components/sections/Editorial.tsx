@@ -3,7 +3,7 @@ import FadeUp from "../FadeUp";
 
 export default function Editorial() {
   return (
-    <section className="w-full max-w-6xl mx-auto px-gutter py-10 grid md:grid-cols-2 gap-16 items-center">
+    <section className="w-full max-w-screen-2xl mx-auto px-gutter py-10 grid md:grid-cols-2 gap-16 items-center">
       <div className="relative overflow-hidden aspect-4/3">
         <Image
           src="/images/homeEditorial.webp"

@@ -21,7 +21,11 @@
       "Bash(cwebp --version)",
       "Bash(winget search *)",
       "Bash(netstat -ano)",
-      "Bash(findstr :3000)"
+      "Bash(findstr :3000)",
+      "Read(//mnt/c/Users/Lucas Ryan/**)",
+      "Bash(cp -r app/projects \"app/\\(main\\)/projects\")",
+      "Bash(ls /mnt/c/Users/)",
+      "Bash(ls /)"
     ]
   }
 }

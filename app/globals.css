@@ -4,6 +4,7 @@
   --bg: #F2EFEA;
   --fg: #111111;
   --pink: #DC738F;
+  --lua-pink: #C91F6E;
   --gray-label: #888;
   --footer-bg: #E8E4DF;
   /* Single source-of-truth for all horizontal rhythm */
@@ -14,6 +15,7 @@
   --color-bg: var(--bg);
   --color-fg: var(--fg);
   --color-pink: var(--pink);
+  --color-lua-pink: var(--lua-pink);
   --color-gray-label: var(--gray-label);
   --color-footer-bg: var(--footer-bg);
   --font-sans: var(--font-dm-sans);
