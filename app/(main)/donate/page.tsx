@@ -82,12 +82,11 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
         {/* Page header */}
         <header className="max-w-3xl mb-10">
           <h1 className="font-sans text-5xl md:text-6xl font-bold leading-tight mb-5">
-            Art belongs to everyone.
+            Art belongs to everyone
           </h1>
           <p className="font-body text-fg/70 text-lg leading-relaxed">
-            Looking Up Art makes monumental, community-driven public art that
-            is free and open to all. That only works because people like you
-            choose to be part of it.
+            Looking Up Art is a collective of artists and builders who channel 100% of donations back into art. That only works because people like you
+            choose to be part of the community.
           </p>
         </header>
 

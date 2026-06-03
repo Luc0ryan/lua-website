@@ -29,7 +29,7 @@ export function DotField({
   intensity = 0.35,
   dotSize,
   spacing = 10,
-  opacity = 0.15,
+  opacity = 0.30,
   angle = 45,
   className,
 }: DotFieldProps) {

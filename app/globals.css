@@ -19,7 +19,7 @@
   --color-gray-label: var(--gray-label);
   --color-footer-bg: var(--footer-bg);
   --font-sans: var(--font-dm-sans);
-  --font-body: var(--font-inter);
+  --font-heading: var(--font-archivo);
   /* Exposes --gutter as the `gutter` spacing key: px-gutter, mx-gutter, etc. */
   --spacing-gutter: var(--gutter);
 }
@@ -38,10 +38,11 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-inter), Inter, sans-serif;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-family: var(--font-archivo), Archivo, sans-serif;
+  letter-spacing: -0.02em;
 }

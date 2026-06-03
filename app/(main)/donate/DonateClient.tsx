@@ -136,7 +136,7 @@ export function OneTimeDonation() {
     <div className="bg-bg border border-fg/10 rounded-lg p-8 md:p-10 flex flex-col gap-6">
       <div>
         <h2 className="font-sans text-3xl font-bold leading-tight mb-2">
-          Make a Gift
+          Fund the work
         </h2>
         <p className="font-body text-fg/60 text-sm leading-relaxed">
           A one-time contribution of any size goes directly to artists,
@@ -262,9 +262,9 @@ export function RecurringDonation() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, #C91F6E 1.5px, transparent 1.5px)",
+            "radial-gradient(circle, #C91F6E 2px, transparent 1.5px)",
           backgroundSize: "20px 20px",
-          opacity: 0.18,
+          opacity: 0.30,
           maskImage:
             "radial-gradient(ellipse 90% 85% at 100% 100%, black 0%, transparent 72%)",
           WebkitMaskImage:
@@ -275,7 +275,7 @@ export function RecurringDonation() {
       <div className="relative z-10 flex flex-col gap-6">
         <div>
           <h2 className="font-sans text-3xl font-bold leading-tight mb-2">
-            Join the Circle
+            Join the community
           </h2>
           <p className="font-body text-fg/70 text-sm leading-relaxed">
             Our Patreon community is the living core of what we do. Members
