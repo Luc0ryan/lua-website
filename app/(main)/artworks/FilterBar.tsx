@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Artwork } from "../../sanity/lib/queries";
+import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = {
   artworks: Artwork[]; // unfiltered, used for city counts

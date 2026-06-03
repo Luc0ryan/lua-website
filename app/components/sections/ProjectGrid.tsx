@@ -5,7 +5,7 @@ import type { Artwork } from "../../../sanity/lib/queries";
 
 function ArtworkCard({ aw, aspectClass }: { aw: Artwork; aspectClass: string }) {
   const src = aw.image
-    ? urlFor(aw.image).width(1200).height(900).fit("crop").url()
+    ? urlFor(aw.image).fit("crop").url()
     : null;
 
   return (
@@ -23,10 +23,10 @@ function ArtworkCard({ aw, aspectClass }: { aw: Artwork; aspectClass: string }) 
           <div className="absolute inset-0 bg-neutral-300" />
         )}
       </div>
-      <p className="text-xs font-body uppercase tracking-wider text-[--color-gray-label] mt-3">
-        {aw.city || 'Touring'}
+      <p className="text-xs font-body uppercase tracking-widest text-fg/50 mt-3 mb-1">
+        {aw.city || "Touring"}
       </p>
-      <p className="text-base font-heading font-bold text-fg mt-0.5">{aw.title}</p>
+      <p className="text-base font-heading font-bold text-fg uppercase leading-tight">{aw.title}</p>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FilterBar from "./FilterBar";
 import ArtworkGrid from "./ArtworkGrid";
-import type { Artwork } from "../../sanity/lib/queries";
+import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = { artworks: Artwork[] };
 

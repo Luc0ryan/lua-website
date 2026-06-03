@@ -13,11 +13,11 @@ export default function HeroAccordion({ artworks }: Props) {
   if (!artworks.length) return null;
 
   return (
-    <div className="w-full max-w-screen-2xl mx-auto px-gutter flex gap-2 min-h-125">
+    <div className="w-full max-w-screen-2xl mx-auto px-gutter flex gap-2 min-h-[65vh]">
       {artworks.map((aw, i) => {
           const isActive = i === activeIdx;
           const imgSrc = aw.image
-            ? urlFor(aw.image).width(1200).height(800).fit("crop").url()
+            ? urlFor(aw.image).fit("crop").url()
             : null;
 
           return (
@@ -50,7 +50,7 @@ export default function HeroAccordion({ artworks }: Props) {
                 }`}
               >
                 <p className="text-[10px] uppercase tracking-widest font-body mb-1 opacity-70">
-                  {aw.city}
+                  {aw.placement === "touring" ? "Touring" : aw.city}
                 </p>
                 <p className="text-lg font-heading font-bold leading-tight">{aw.title}</p>
               </div>
@@ -62,7 +62,7 @@ export default function HeroAccordion({ artworks }: Props) {
                     className="text-white text-[11px] uppercase tracking-widest font-body font-medium whitespace-nowrap opacity-80"
                     style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                   >
-                    {aw.city ?? aw.title}
+                    {aw.title}
                   </p>
                 </div>
               )}

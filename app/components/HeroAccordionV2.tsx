@@ -73,7 +73,7 @@ export default function HeroAccordionV2({ artworks }: Props) {
           {artworks.map((aw, i) => {
             const isDominant = dominantIdx === i;
             const imgSrc = aw.image
-              ? urlFor(aw.image).width(1400).height(900).fit("crop").url()
+              ? urlFor(aw.image).fit("crop").url()
               : null;
 
             return (

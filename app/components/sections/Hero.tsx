@@ -19,12 +19,12 @@ export default async function Hero() {
       />
 
       <section className="w-full max-w-screen-2xl mx-auto px-gutter pt-40 pb-8">
+        <p className="text-lg sm:text-xl md:text-3xl font-heading font-medium text-fg/50 leading-tight mb-2">
+          Interactive art in San Francisco
+        </p>
         <h1 className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold text-black leading-tight">
           We make you <span className="text-pink">look up</span>
         </h1>
-        <p className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold text-black leading-tight">
-          Interactive art in San Francisco
-        </p>
       </section>
 
       <HeroAccordion artworks={artworks} />

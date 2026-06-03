@@ -19,7 +19,7 @@ export type Artwork = {
 export async function getHeroArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) [0...5] {
-      _id, title, city, image
+      _id, title, city, placement, image
     }`
   );
 }
@@ -46,13 +46,12 @@ export type InstagramPost = {
   image: { asset: { _ref: string }; hotspot?: object };
   alt?: string;
   postUrl?: string;
-  publishedAt?: string;
 };
 
 export async function getInstagramPosts(): Promise<InstagramPost[]> {
   return client.fetch(
-    `*[_type == "instagramPost"] | order(publishedAt desc) [0...8] {
-      _id, image, alt, postUrl, publishedAt
+    `*[_type == "instagramPost"] | order(_createdAt desc) [0...10] {
+      _id, image, alt, postUrl
     }`,
     {},
     { next: { revalidate: 86400 } }

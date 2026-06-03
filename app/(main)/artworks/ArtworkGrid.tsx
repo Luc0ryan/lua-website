@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { urlFor } from "../../sanity/lib/image";
+import { urlFor } from "@/sanity/lib/image";
 import { buildRows } from "./buildRows";
-import type { Artwork } from "../../sanity/lib/queries";
+import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = { artworks: Artwork[] };
 
@@ -11,11 +11,7 @@ function locationLine(a: Artwork) {
 
 function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolean }) {
   const imgUrl = artwork.image
-    ? urlFor(artwork.image)
-        .width(featured ? 900 : 600)
-        .height(featured ? 675 : 450)
-        .fit("crop")
-        .url()
+    ? urlFor(artwork.image).fit("crop").url()
     : null;
 
   return (
@@ -38,15 +34,17 @@ function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolea
       </div>
 
       {/* Metadata */}
+      <p className="text-xs font-body uppercase tracking-widest text-fg/50 mt-3 mb-1">
+        {locationLine(artwork)}
+      </p>
       <p
         className={[
-          "font-heading font-bold text-fg mt-3 leading-tight",
+          "font-heading font-bold text-fg uppercase leading-tight",
           featured ? "text-[18px]" : "text-base",
         ].join(" ")}
       >
         {artwork.title}
       </p>
-      <p className="text-sm font-body text-fg/50 mt-0.5">{locationLine(artwork)}</p>
     </div>
   );
 }

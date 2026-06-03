@@ -38,7 +38,9 @@ export default function Nav() {
     <>
       <nav
         className={`fixed top-0 z-50 w-full py-5 transition-all duration-300 ${
-          scrolled || menuOpen ? "bg-bg/60 backdrop-blur-sm border-b border-black/10" : "bg-transparent"
+          scrolled || menuOpen
+            ? "bg-bg border-b border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
+            : "bg-transparent"
         }`}
       >
         <div className="max-w-6xl mx-auto px-gutter flex items-center justify-between">

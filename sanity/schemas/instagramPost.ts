@@ -25,32 +25,17 @@ export const instagramPostSchema = defineType({
       type: "url",
       description: "Link to the original Instagram post",
     }),
-    defineField({
-      name: "publishedAt",
-      title: "Published At",
-      type: "datetime",
-      options: { dateFormat: "YYYY-MM-DD" },
-    }),
   ],
   preview: {
     select: {
       title: "alt",
       media: "image",
-      date: "publishedAt",
     },
-    prepare({ title, media, date }: { title?: string; media?: unknown; date?: string }) {
+    prepare({ title, media }: { title?: string; media?: unknown }) {
       return {
         title: title?.slice(0, 60) ?? "No alt text",
-        subtitle: date ? new Date(date).toLocaleDateString() : "",
         media,
       };
     },
   },
-  orderings: [
-    {
-      title: "Newest First",
-      name: "publishedAtDesc",
-      by: [{ field: "publishedAt", direction: "desc" as const }],
-    },
-  ],
 });
