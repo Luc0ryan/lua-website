@@ -1,252 +1,215 @@
-# LUA Website — Developer Reference
+# LUA Website — Project Reference
 
-For someone with basic/intermediate frontend knowledge. Not a tutorial — a reference
-you can scan when you forget how something works.
-
----
-
-## Running the project
-
-```bash
-cd lua-website
-npm run dev        # start dev server → http://localhost:3000
-```
-
-Sanity Studio (the CMS dashboard) lives at `http://localhost:3000/studio`
-once you've added a real project ID (see Sanity setup below).
+**Looking Up Arts** — interactive public art collective site.  
+Stack: Next.js 16 (App Router) · Sanity 5 · Tailwind 4 · TypeScript · React 19
 
 ---
 
-## File map — what lives where
+## Route Structure
 
 ```
-lua-website/
-├── app/
-│   ├── layout.tsx          ← fonts + html shell (wraps every page)
-│   ├── globals.css         ← color variables, base styles
-│   ├── page.tsx            ← homepage
+app/
+├── layout.tsx                    Root: fonts, metadata, html/body shell
+├── globals.css                   Tailwind @theme + CSS variable definitions
+├── (main)/
+│   ├── layout.tsx                Injects <Nav> + <Footer> for all main pages
+│   ├── page.tsx                  Home: Hero → Editorial → ProjectGrid → InstagramGrid
+│   ├── about/page.tsx
 │   ├── artworks/
-│   │   ├── page.tsx        ← artworks gallery (server: fetches data)
-│   │   └── ArtworksGallery.tsx  ← gallery UI (client: handles filter clicks)
-│   ├── components/
-│   │   ├── Nav.tsx         ← site navigation (client: scroll listener)
-│   │   ├── HeroAccordion.tsx ← homepage hero (client: accordion state)
-│   │   └── Footer.tsx      ← site footer (server: no interactivity)
-│   └── studio/[[...tool]]/ ← Sanity Studio, don't touch
-│
-├── sanity/
-│   ├── schemas/artwork.ts  ← defines what fields an "Artwork" has in the CMS
-│   ├── lib/client.ts       ← Sanity connection config
-│   ├── lib/queries.ts      ← GROQ queries (how you fetch CMS data)
-│   └── lib/image.ts        ← image URL helper
-│
-├── sanity.config.ts        ← Sanity Studio config (schema registration)
-├── .env.local              ← your secret keys (never commit this)
-└── next.config.ts          ← Next.js config (image domains, etc.)
+│   │   ├── page.tsx              Server: fetches all artworks, renders gallery
+│   │   ├── ArtworksGallery.tsx   Client: filter state shell
+│   │   ├── ArtworkGrid.tsx       Alternating 3-up / 2-up rows
+│   │   ├── FilterBar.tsx         Filter pill UI
+│   │   └── buildRows.ts          Array → Row[] split utility
+│   ├── community/page.tsx
+│   ├── contact/page.tsx
+│   └── projects/
+│       ├── page.tsx
+│       └── [slug]/page.tsx
+├── components/
+│   ├── Nav.tsx                   Fixed navbar — scroll-aware, mobile menu (client)
+│   ├── Footer.tsx                Multi-column footer (server)
+│   ├── ContactForm.tsx           HubSpot form (client)
+│   ├── HeroAccordion.tsx         Flex-based accordion (client)
+│   ├── FadeUp.tsx                Scroll-in animation wrapper
+│   └── sections/
+│       ├── Hero.tsx              Hero section with DotPanel background (server)
+│       ├── Editorial.tsx
+│       ├── ProjectGrid.tsx       8/4 · 5/7 · 7/5 asymmetric col splits (server)
+│       └── InstagramGrid.tsx     5-col desktop / 2-col mobile (server)
+│   └── dot-system/
+│       ├── index.ts
+│       ├── DotPanel.tsx          Main dot pattern composite
+│       ├── DotMask.tsx           Shaped masks (peak, etc.)
+│       └── DotField.tsx          Dot renderer
+└── studio/[[...tool]]/           Sanity Studio at /studio
 ```
 
 ---
 
-## The "server vs client" split — the one concept to understand
+## Design Tokens
 
-Next.js App Router has two kinds of components. You'll see this at the top of files:
+CSS variables defined in `app/globals.css`, exposed to Tailwind via `@theme inline`.
 
-```tsx
-"use client"   // ← this component runs in the browser
-               //   can use useState, useEffect, onClick, etc.
-
-// (no directive) ← server component (default)
-//   runs on the server, can fetch data directly, can't use useState
-```
-
-**Rule of thumb for this project:**
-- Pages (`page.tsx`) are server components — they fetch from Sanity
-- Anything interactive (clicking, hovering, state) is a client component
-
-So the pattern you'll see repeatedly:
-```
-page.tsx (server)  →  fetches artworks from Sanity
-    └── passes data as props to →  SomeClientComponent.tsx (client)
-                                      handles clicks / filters / animation
-```
-
-You can't flip this — a server component can pass data *down* to a client
-component, but not the other way around.
-
----
-
-## Colors & design tokens
-
-All colors are CSS variables defined in `app/globals.css`:
-
-| Variable | Value | Used for |
+| Variable | Value | Tailwind |
 |---|---|---|
-| `--bg` | `#F2EFEA` | Page background (warm off-white) |
-| `--fg` | `#111111` | Body text |
-| `--magenta` | `#E8197D` | Accent — active pills, highlights |
-| `--footer-bg` | `#E8E4DF` | Footer (slightly darker than page) |
+| `--bg` | `#F2EFEA` | `bg-bg` / `text-bg` |
+| `--fg` | `#111111` | `text-fg` |
+| `--pink` | `#DC738F` | `text-pink` / `bg-pink` |
+| `--lua-pink` | `#C91F6E` | `text-lua-pink` |
+| `--gray-label` | `#888` | `text-gray-label` |
+| `--footer-bg` | `#E8E4DF` | `bg-footer-bg` |
+| `--gutter` | `clamp(24px, 4vw, 64px)` | `px-gutter` / `mx-gutter` |
 
-In Tailwind classes you use them as `bg-[var(--bg)]` or the shorthand aliases
-like `text-fg`, `bg-magenta` (these are registered in `@theme inline` in globals.css).
+**Fonts** (loaded in `app/layout.tsx` via `next/font/google`):
+- `DM Sans` → `--font-dm-sans` → applies to `h1–h6, .font-heading`
+- `Inter` → `--font-inter` → body default
 
-To change a color site-wide, edit the variable in `globals.css`. One change,
-everywhere updates.
-
----
-
-## Fonts
-
-Two fonts loaded in `app/layout.tsx`:
-
-- **DM Sans** (`--font-dm-sans`) — headings, nav, labels. CSS class: `font-heading`
-- **Inter** (`--font-inter`) — body text. CSS class: `font-body`
-
-To swap a font: change the import in `layout.tsx` (Next.js pulls it from Google
-Fonts automatically — no manual `<link>` tags needed).
+No `tailwind.config` file — Tailwind 4 reads everything from `globals.css`.
 
 ---
 
-## Sanity CMS — setup & workflow
+## Typography Conventions
 
-### First-time setup
-
-1. Go to [sanity.io/manage](https://sanity.io/manage) → create a free project
-2. Copy your **Project ID** from the project dashboard
-3. Open `.env.local` and paste it:
-   ```
-   NEXT_PUBLIC_SANITY_PROJECT_ID=abc123xyz
-   NEXT_PUBLIC_SANITY_DATASET=production
-   ```
-4. Restart `npm run dev`
-5. Go to `http://localhost:3000/studio` → you'll see the CMS
-
-### Adding artworks
-
-In the Studio (`/studio`):
-- Create a new **Artwork** document
-- Fill in: title, location, category, image
-- Toggle **Featured on homepage** → `true` to make it appear in the hero accordion
-- Set **Display order** (1, 2, 3…) to control the order
-
-The homepage hero shows up to 5 featured artworks.
-The artworks gallery page shows all artworks.
-
-### How the data flows
-
-```
-Sanity (CMS database)
-    ↓  GROQ query in sanity/lib/queries.ts
-    ↓  runs at page load on the server
-app/page.tsx or app/artworks/page.tsx
-    ↓  passes data as props
-HeroAccordion.tsx / ArtworksGallery.tsx
-    ↓  renders it
-Browser
-```
-
-GROQ is Sanity's query language. It looks like:
-```
-*[_type == "artwork" && featured == true] | order(order asc) [0...5]
-```
-Read it as: "give me all documents of type artwork, where featured is true,
-sorted by order, max 5 results."
+Artwork card title pattern (eyebrow + title):
+- **Eyebrow** (city/location): `text-xs uppercase tracking-wide text-fg/50`
+- **Title**: `font-heading font-bold uppercase`
+  - Featured cards: `text-[18px]`
+  - Standard cards: `text-base`
 
 ---
 
-## The hero accordion — how it works
+## Image Conventions
 
-File: `app/components/HeroAccordion.tsx`
+- **Never** hardcode `.width()` / `.height()` on `urlFor` — use aspect ratios and let `sizes` drive resolution
+- Builder: `import { urlFor } from "@/sanity/lib/image"` → `urlFor(image).fit("crop").url()`
+- Hover scale (standard): `group-hover:scale-[1.03] transition-transform duration-500 ease-out` on `<Image>`, `group` on the wrapping `<div>`
+- `next/image` remote pattern: `cdn.sanity.io` (configured in `next.config.ts`)
+- Image formats: `avif`, `webp`
 
-The mechanic is pure CSS flexbox — no animation library needed:
+---
 
-```tsx
-// Active panel: takes up most of the space
-className={isActive ? "flex-5" : "flex-[0.4] hover:flex-[0.55]"}
+## Component Conventions
+
+**Server vs Client**
+- Default to server components (async, data-fetching)
+- `"use client"` only for: state, events, scroll listeners, animations
+
+**Props typing**
+```typescript
+type Props = { artworks: Artwork[] };
+export default function Component({ artworks }: Props) { ... }
 ```
 
-`flex-[5]` means "grow to 5x the base unit." `flex-[0.4]` means "shrink to a narrow strip."
-Tailwind's `transition-all duration-500` handles the smooth animation between states.
-
-`activeIdx` is just a number (0, 1, 2…) stored in `useState`. Clicking a panel
-sets `setActiveIdx(i)`, which causes the classes to update, which causes the
-CSS transition to animate.
-
----
-
-## The artworks filter — how it works
-
-File: `app/artworks/ArtworksGallery.tsx`
-
-```tsx
-const [active, setActive] = useState<string | null>(null);
-// null = show all, "Interactive" = show only Interactive, etc.
-
-const filtered = active ? artworks.filter((a) => a.category === active) : artworks;
+**Data fetching** — call query functions from `sanity/lib/queries.ts` directly in server components:
+```typescript
+const artworks = await getHeroArtworks();
 ```
 
-The pill buttons toggle `active`. The grid re-renders with the filtered list.
-No page reload — it's all in-browser state.
+**Asymmetric grids** (ProjectGrid): desktop col splits are 8/4, 5/7, 7/5 using CSS grid.  
+**Row builder** (ArtworkGrid): `buildRows()` splits flat arrays into alternating 3-col / 2-col rows.
 
 ---
 
-## Making common changes
+## Sanity Schemas
 
-### Change the "Transforming public space" text
-→ `app/page.tsx`, look for the `{/* Mid — editorial section */}` comment
+### `artwork`
 
-### Change nav links
-→ `app/components/Nav.tsx`, edit the `links` array at the top
+| Field | Type | Purpose |
+|---|---|---|
+| `title` | string | |
+| `image` | image (hotspot) | |
+| `city` | string | e.g. `"Jackson, TN"` |
+| `placement` | `"touring" \| "permanent"` | |
+| `year` | number | |
+| `interactive` | boolean | Enables Interactive filter tag |
+| `featured` | boolean | Triggers 2-up featured row layout |
+| `displayOrder` | number | Position in /artworks gallery |
+| `role` | `"hero" \| "gallery" \| null` | Homepage section placement |
+| `heroOrder` | number | Position in hero accordion (role=hero) |
+| `galleryOrder` | number | Position in homepage ProjectGrid (role=gallery) |
+| `description` | text | |
 
-### Add a new footer column
-→ `app/components/Footer.tsx`, add an entry to the `cols` array
+### `instagramPost`
 
-### Add a new artwork category for filtering
-→ `sanity/schemas/artwork.ts` — add to the `options.list` array
-→ `app/artworks/ArtworksGallery.tsx` — add to the `CATEGORIES` array
-
-### Change how many artworks show in the hero
-→ `sanity/lib/queries.ts` — change `[0...5]` to `[0...4]` etc.
-
-### Add a new page (e.g. /about)
-1. Create `app/about/page.tsx`
-2. Add `import Nav from "../components/Nav"` and `import Footer from "../components/Footer"`
-3. Link to it in `Nav.tsx`'s `links` array
+| Field | Type | Notes |
+|---|---|---|
+| `image` | image (hotspot) | Required |
+| `alt` | string | Required |
+| `postUrl` | url | Link to original IG post |
 
 ---
 
-## Image domains
+## GROQ Queries (`sanity/lib/queries.ts`)
 
-If you add images from an external URL (not Sanity), you'll get an error.
-Fix: add the domain to `next.config.ts`:
+| Function | Filter | Order | Limit |
+|---|---|---|---|
+| `getHeroArtworks()` | `role == "hero"` | `heroOrder asc` | 5 |
+| `getGalleryArtworks()` | `role == "gallery"` | `galleryOrder asc` | 6 |
+| `getArtworksIndex()` | all | `displayOrder asc, _createdAt asc` | — |
+| `getInstagramPosts()` | all | `_createdAt desc` | 10, revalidate 24h |
 
-```ts
-images: {
-  remotePatterns: [{ hostname: "your-image-host.com" }],
-},
+---
+
+## TypeScript Types
+
+```typescript
+type Artwork = {
+  _id: string;
+  title: string;
+  image: { asset: { _ref: string }; hotspot?: object };
+  city?: string;
+  year?: number;
+  placement?: "touring" | "permanent";
+  interactive?: boolean;
+  featured?: boolean;
+  displayOrder?: number;
+  role?: "hero" | "gallery";
+  heroOrder?: number;
+  galleryOrder?: number;
+  description?: string;
+};
+
+type InstagramPost = {
+  _id: string;
+  image: { asset: { _ref: string }; hotspot?: object };
+  alt: string;
+  postUrl?: string;
+};
 ```
 
-Sanity images work automatically because they come through the `urlFor()` helper
-which builds the right URL format.
+---
+
+## Key Dependencies
+
+| Package | Version | Purpose |
+|---|---|---|
+| `next` | 16.x | Framework |
+| `react` | 19.x | UI |
+| `sanity` | 5.x | CMS + Studio |
+| `@sanity/client` | 7.x | Data fetching |
+| `@sanity/image-url` | 2.x | Image URL builder |
+| `next-sanity` | 12.x | Next + Sanity integration |
+| `tailwindcss` | 4.x | Styling (config-less, `@theme` in CSS) |
+| `lucide-react` | 1.x | Icons |
+| `stripe` | 22.x | Payments |
+| `styled-components` | 6.x | Occasional CSS-in-JS |
 
 ---
 
-## What "build" means and when to run it
+## Environment Variables
 
-```bash
-npm run build   # compiles everything for production
-npm run dev     # what you use during development (hot reload)
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID
+NEXT_PUBLIC_SANITY_DATASET
 ```
 
-`npm run build` is useful to catch errors before deploying. If it passes,
-the site will work on Vercel. You don't need to run it during day-to-day work.
-
 ---
 
-## Deploying to Vercel (when ready)
+## Metadata
 
-1. Push to GitHub
-2. Go to [vercel.com](https://vercel.com) → import the repo
-3. Add your environment variables in Vercel's dashboard (same as `.env.local`)
-4. Deploy — Vercel detects Next.js automatically
-
-Every push to `main` after that triggers a redeploy.
+- **Site title**: "Looking Up Arts"
+- **Description**: "Interactive art built to bring people together."
+- **Studio path**: `/studio`
+- **Sanity API version**: `2024-01-01`
+- **Sanity CDN**: enabled
