@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { activeCampaign } from "@/config/campaign";
 import {
-  OneTimeDonation,
+  DonationForm,
   CancelledNotice,
-  RecurringDonation,
   TrustStrip,
   FaqAccordion,
 } from "./DonateClient";
@@ -96,29 +95,30 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
           </div>
         )}
 
-        {/* Donation options */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <OneTimeDonation />
-          <RecurringDonation />
+        {/* Two-col: donation form (left) + FAQ (right) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+
+          {/* Left — donation form card */}
+          <div className="bg-footer-bg border border-fg/10 border-t-4 border-t-pink rounded-xl p-8 md:p-10">
+            <DonationForm />
+          </div>
+
+          {/* Right — FAQ */}
+          <div className="pt-1">
+            <h2 className="font-sans text-xl font-bold mb-3">
+              Common questions
+            </h2>
+            <div className="w-8 h-0.5 bg-pink mb-5" aria-hidden="true" />
+            <p className="font-body text-fg/50 text-sm mb-6 leading-relaxed">
+              Crypto, stock, donor-advised funds, checks, and employer
+              matching — we can work with any of it.
+            </p>
+            <FaqAccordion />
+          </div>
         </div>
 
         {/* Trust strip */}
         <TrustStrip />
-
-        {/* Other ways to give */}
-        <section aria-labelledby="other-ways-heading">
-          <h2
-            id="other-ways-heading"
-            className="font-sans text-2xl md:text-3xl font-bold mb-2"
-          >
-            Other Ways to Give
-          </h2>
-          <p className="font-body text-fg/60 text-sm mb-8">
-            Crypto, stock, donor-advised funds, checks, and employer
-            matching — we can work with any of it.
-          </p>
-          <FaqAccordion />
-        </section>
 
         {/* Fine print */}
         <p className="mt-16 font-body text-xs text-fg/40 text-center">

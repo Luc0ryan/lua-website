@@ -10,7 +10,15 @@ function trackEvent(name: string, props: Record<string, unknown>) {
   }
 }
 
-const PRESET_AMOUNTS = [10, 25, 50, 100, 250];
+const PRESET_AMOUNTS: Record<"one_time" | "monthly", number[]> = {
+  one_time: [25, 50, 100, 250, 500],
+  monthly: [5, 10, 25, 50, 100],
+};
+
+const DEFAULT_AMOUNT: Record<"one_time" | "monthly", number> = {
+  one_time: 50,
+  monthly: 10,
+};
 
 // ─── Stripe wordmark (inline SVG — official brand purple #635BFF) ─────────────
 
@@ -33,54 +41,45 @@ function StripeLockup() {
   );
 }
 
-// ─── Patreon wordmark ─────────────────────────────────────────────────────────
-
-function PatreonLockup() {
-  return (
-    <div className="flex items-center gap-1.5 text-xs font-body text-fg/50">
-      <svg width="12" height="14" viewBox="0 0 24 28" fill="none" aria-hidden="true">
-        <circle cx="15.5" cy="9.5" r="8.5" fill="#FF424D" />
-        <rect x="0" y="0" width="5.5" height="28" fill="#052D49" />
-      </svg>
-      <span>
-        via{" "}
-        <span className="font-bold" style={{ color: "#FF424D" }}>
-          Patreon
-        </span>
-      </span>
-    </div>
-  );
-}
-
 // ─── Trust strip ──────────────────────────────────────────────────────────────
 
 export function TrustStrip() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-y border-fg/10 py-6 my-16 font-body text-xs text-fg/50">
       <span>501(c)(3) nonprofit</span>
-      <span className="hidden sm:inline text-fg/20">·</span>
+      <span className="hidden sm:inline text-pink/50">·</span>
       {/* TODO: insert EIN */}
       <span>EIN: [INSERT EIN]</span>
-      <span className="hidden sm:inline text-fg/20">·</span>
+      <span className="hidden sm:inline text-pink/50">·</span>
       <span>All gifts are tax-deductible</span>
-      <span className="hidden sm:inline text-fg/20">·</span>
+      <span className="hidden sm:inline text-pink/50">·</span>
       <StripeLockup />
     </div>
   );
 }
 
-// ─── One-Time Donation ────────────────────────────────────────────────────────
+// ─── Donation Form (one-time + monthly toggle) ────────────────────────────────
 
-export function OneTimeDonation() {
-  const [selected, setSelected] = useState<number | null>(25);
+export function DonationForm() {
+  const [mode, setMode] = useState<"one_time" | "monthly">("one_time");
+  // Per-mode selection so toggling never bleeds a shared value across preset lists
+  const [oneTimeSelected, setOneTimeSelected] = useState<number | null>(DEFAULT_AMOUNT.one_time);
+  const [monthlySelected, setMonthlySelected] = useState<number | null>(DEFAULT_AMOUNT.monthly);
   const [custom, setCustom] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const customRef = useRef<HTMLInputElement>(null);
 
+  const selected = mode === "one_time" ? oneTimeSelected : monthlySelected;
+  function setSelected(val: number | null) {
+    if (mode === "one_time") setOneTimeSelected(val);
+    else setMonthlySelected(val);
+  }
+
   const effectiveAmount =
     selected !== null ? selected : parseInt(custom, 10);
   const isValid = Number.isFinite(effectiveAmount) && effectiveAmount >= 1;
+  const customIsActive = selected === null;
 
   function handlePresetClick(amt: number) {
     setSelected(amt);
@@ -99,8 +98,6 @@ export function OneTimeDonation() {
     customRef.current?.focus();
   }
 
-  const customIsActive = selected === null;
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isValid) return;
@@ -108,10 +105,15 @@ export function OneTimeDonation() {
     setStatus("loading");
     setErrorMsg("");
 
-    trackEvent("donate_click", { amount: effectiveAmount, type: "one_time" });
+    trackEvent("donate_click", { amount: effectiveAmount, type: mode });
+
+    const endpoint =
+      mode === "one_time"
+        ? "/api/stripe/checkout"
+        : "/api/stripe/subscription";
 
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amountCents: effectiveAmount * 100 }),
@@ -133,24 +135,53 @@ export function OneTimeDonation() {
   }
 
   return (
-    <div className="bg-bg border border-fg/10 rounded-lg p-8 md:p-10 flex flex-col gap-6">
+    <div className="flex flex-col items-center gap-6 text-center">
       <div>
         <h2 className="font-sans text-3xl font-bold leading-tight mb-2">
           Fund the work
         </h2>
         <p className="font-body text-fg/60 text-sm leading-relaxed">
-          A one-time contribution of any size goes directly to artists,
+          Every contribution, whatever its size, goes directly to artists,
           materials, and making the work happen.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+      {/* One-time / Monthly toggle */}
+      <div
+        role="group"
+        aria-label="Donation frequency"
+        className="flex w-full rounded-full bg-footer-bg border border-fg/10 p-1"
+      >
+        <button
+          type="button"
+          onClick={() => { setMode("one_time"); setCustom(""); }}
+          aria-pressed={mode === "one_time"}
+          className={`flex-1 py-2.5 rounded-full font-sans font-semibold text-sm transition-colors cursor-pointer ${
+            mode === "one_time" ? "bg-pink text-bg" : "text-fg/60 hover:text-fg"
+          }`}
+        >
+          One-time
+        </button>
+        <button
+          type="button"
+          onClick={() => { setMode("monthly"); setCustom(""); }}
+          aria-pressed={mode === "monthly"}
+          className={`flex-1 py-2.5 rounded-full font-sans font-semibold text-sm transition-colors cursor-pointer ${
+            mode === "monthly" ? "bg-pink text-bg" : "text-fg/60 hover:text-fg"
+          }`}
+        >
+          Monthly
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5" noValidate>
+        {/* 2 rows × 3 tiles: $10 $25 $50 / $100 $250 Other */}
         <div
           role="group"
           aria-label="Select a donation amount"
-          className="grid grid-cols-3 sm:grid-cols-6 gap-2"
+          className="grid grid-cols-3 gap-2"
         >
-          {PRESET_AMOUNTS.map((amt) => (
+          {PRESET_AMOUNTS[mode].map((amt) => (
             <button
               key={amt}
               type="button"
@@ -158,7 +189,7 @@ export function OneTimeDonation() {
               aria-pressed={selected === amt}
               className={`py-3 rounded font-sans font-semibold text-sm border transition-colors cursor-pointer ${
                 selected === amt
-                  ? "bg-fg text-bg border-fg"
+                  ? "bg-pink text-bg border-pink"
                   : "bg-bg text-fg border-fg/20 hover:border-fg/60"
               }`}
             >
@@ -171,7 +202,7 @@ export function OneTimeDonation() {
             aria-pressed={customIsActive}
             className={`py-3 rounded font-sans font-semibold text-sm border transition-colors cursor-pointer ${
               customIsActive
-                ? "bg-fg text-bg border-fg"
+                ? "bg-pink text-bg border-pink"
                 : "bg-bg text-fg border-fg/20 hover:border-fg/60"
             }`}
           >
@@ -200,7 +231,7 @@ export function OneTimeDonation() {
               placeholder="0"
               value={custom}
               onChange={handleCustomChange}
-              className={`w-full bg-footer-bg border rounded pl-8 pr-4 py-3 font-body text-fg placeholder:text-fg/30 focus:outline-none transition-colors ${
+              className={`w-full bg-footer-bg border rounded pl-8 pr-4 py-3 font-body text-fg placeholder:text-fg/30 focus:outline-none transition-colors text-left ${
                 customIsActive ? "border-fg/60" : "border-fg/20 focus:border-fg/60"
               }`}
             />
@@ -217,7 +248,7 @@ export function OneTimeDonation() {
           type="submit"
           disabled={status === "loading" || !isValid}
           data-event="donate_submit"
-          className="w-full bg-fg text-bg font-sans font-semibold tracking-widest uppercase py-4 rounded transition-opacity hover:opacity-80 disabled:opacity-40 cursor-pointer flex items-center justify-center gap-3"
+          className="w-full bg-pink text-bg font-sans font-semibold tracking-widest uppercase py-4 rounded transition-opacity hover:opacity-80 disabled:opacity-40 cursor-pointer flex items-center justify-center gap-3"
         >
           {status === "loading" ? (
             <>
@@ -227,12 +258,12 @@ export function OneTimeDonation() {
               />
               Processing…
             </>
-          ) : (
+          ) : mode === "one_time" ? (
             "Give Now"
+          ) : (
+            "Give Monthly"
           )}
         </button>
-
-        <StripeLockup />
       </form>
     </div>
   );
@@ -247,80 +278,6 @@ export function CancelledNotice() {
       className="bg-footer-bg border border-fg/10 rounded px-5 py-4 font-body text-sm text-fg/70"
     >
       Your checkout was cancelled — no charge was made. Feel free to try again whenever you&apos;re ready.
-    </div>
-  );
-}
-
-// ─── Patreon / Community ──────────────────────────────────────────────────────
-
-export function RecurringDonation() {
-  return (
-    <div className="relative overflow-hidden bg-footer-bg border border-fg/10 rounded-lg p-8 md:p-10 flex flex-col gap-6">
-      {/* Ben-day dot pattern — dense at bottom-right, dissolves toward upper-left */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, #C91F6E 2px, transparent 1.5px)",
-          backgroundSize: "20px 20px",
-          opacity: 0.30,
-          maskImage:
-            "radial-gradient(ellipse 90% 85% at 100% 100%, black 0%, transparent 72%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 90% 85% at 100% 100%, black 0%, transparent 72%)",
-        }}
-      />
-
-      <div className="relative z-10 flex flex-col gap-6">
-        <div>
-          <h2 className="font-sans text-3xl font-bold leading-tight mb-2">
-            Join the community
-          </h2>
-          <p className="font-body text-fg/70 text-sm leading-relaxed">
-            Our Patreon community is the living core of what we do. Members
-            get a front-row seat to the work — behind-the-scenes updates,
-            early announcements, and the knowledge that their monthly support
-            keeps Looking Up Art independent and free to take on ambitious
-            projects.
-          </p>
-          <p className="font-body text-fg/60 text-sm mt-3 leading-relaxed">
-            No transaction fees, no algorithms. Just a direct line between you
-            and the art.
-          </p>
-        </div>
-
-        {/* TODO: add Patreon tier names/amounts once client provides them */}
-        {/* Example:
-        <ul className="flex flex-col gap-2 border-t border-fg/10 pt-4">
-          <li className="flex justify-between font-body text-sm text-fg/70">
-            <span>Friend</span><span className="font-semibold">$5 / mo</span>
-          </li>
-          <li className="flex justify-between font-body text-sm text-fg/70">
-            <span>Patron</span><span className="font-semibold">$15 / mo</span>
-          </li>
-          <li className="flex justify-between font-body text-sm text-fg/70">
-            <span>Champion</span><span className="font-semibold">$50 / mo</span>
-          </li>
-        </ul>
-        */}
-
-        <div className="flex flex-col gap-3">
-          <a
-            href="[INSERT PATREON URL]" // TODO: replace with live Patreon URL
-            target="_blank"
-            rel="noopener noreferrer"
-            data-event="patreon_click"
-            onClick={() =>
-              trackEvent("donate_click", { type: "recurring", platform: "patreon" })
-            }
-            className="inline-block text-center bg-fg text-bg font-sans font-semibold tracking-widest uppercase px-8 py-4 rounded transition-opacity hover:opacity-80"
-          >
-            Join on Patreon
-          </a>
-          <PatreonLockup />
-        </div>
-      </div>
     </div>
   );
 }
