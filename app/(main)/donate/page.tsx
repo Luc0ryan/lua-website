@@ -84,8 +84,9 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
             Art belongs to everyone
           </h1>
           <p className="font-body text-fg/70 text-lg leading-relaxed">
-            Looking Up Art is a collective of artists and builders who channel 100% of donations back into art. That only works because people like you
-            choose to be part of the community.
+            Looking Up Art is a collective of artists and builders who channel
+            100% of donations back into art. That only works because people like
+            you choose to be part of the community.
           </p>
         </header>
 
@@ -97,7 +98,6 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
 
         {/* Two-col: donation form (left) + FAQ (right) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-
           {/* Left — donation form card */}
           <div className="bg-footer-bg border border-fg/10 border-t-4 border-t-pink rounded-xl p-8 md:p-10">
             <DonationForm />
@@ -110,8 +110,8 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
             </h2>
             <div className="w-8 h-0.5 bg-pink mb-5" aria-hidden="true" />
             <p className="font-body text-fg/50 text-sm mb-6 leading-relaxed">
-              Crypto, stock, donor-advised funds, checks, and employer
-              matching — we can work with any of it.
+              Crypto, stock, donor-advised funds, checks, and employer matching
+              — we can work with any of it.
             </p>
             <FaqAccordion />
           </div>

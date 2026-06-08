@@ -1,4 +1,4 @@
-import { DotField } from "./DotField";
+import { DotField, type DotVariant } from "./DotField";
 import { DotMask, type MaskShape } from "./DotMask";
 
 interface DotPanelProps {
@@ -9,6 +9,7 @@ interface DotPanelProps {
   spacing?: number;
   opacity?: number;
   angle?: number;
+  variant?: DotVariant;
   // DotMask props
   shape?: MaskShape;
   intensityRange?: [number, number];
@@ -22,6 +23,7 @@ export function DotPanel({
   spacing,
   opacity,
   angle,
+  variant,
   shape,
   intensityRange,
   className,
@@ -35,6 +37,7 @@ export function DotPanel({
         spacing={spacing}
         opacity={opacity}
         angle={angle}
+        variant={variant}
       />
     </DotMask>
   );

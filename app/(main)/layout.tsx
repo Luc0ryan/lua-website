@@ -5,7 +5,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Nav />
-      {children}
+      <div className="pt-2">
+        {children}
+      </div>
       <Footer />
     </>
   );
