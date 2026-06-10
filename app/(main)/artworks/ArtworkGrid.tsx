@@ -11,7 +11,7 @@ function locationLine(a: Artwork) {
 
 function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolean }) {
   const imgUrl = artwork.image
-    ? urlFor(artwork.image).fit("crop").url()
+    ? urlFor(artwork.image).url()
     : null;
 
   return (

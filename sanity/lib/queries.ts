@@ -24,6 +24,14 @@ export async function getHeroArtworks(): Promise<Artwork[]> {
   );
 }
 
+export async function getMarqueeArtworks(): Promise<Artwork[]> {
+  return client.fetch(
+    `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) {
+      _id, title, city, year, placement, image
+    }`
+  );
+}
+
 export async function getGalleryArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role == "gallery"] | order(galleryOrder asc) [0...6] {

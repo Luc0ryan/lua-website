@@ -1,10 +1,10 @@
-import Nav from "../components/Nav";
+import SiteNav from "../components/SiteNav";
 import Footer from "../components/Footer";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Nav />
+      <SiteNav />
       <div className="pt-2">
         {children}
       </div>

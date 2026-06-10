@@ -29,7 +29,9 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Lucas Ryan\\\\lua-website\" -Force)",
       "Bash(Select-Object Name, PSIsContainer)",
       "Bash(npm install *)",
-      "Bash(kill 3761)"
+      "Bash(kill 3761)",
+      "Bash(node -e \"console.log\\(require\\('C:/Users/Lucas Ryan/lua-website/node_modules/next/package.json'\\).version\\)\")",
+      "Bash(npx next *)"
     ]
   }
 }

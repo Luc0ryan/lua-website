@@ -31,9 +31,9 @@ export const instagramPostSchema = defineType({
       title: "alt",
       media: "image",
     },
-    prepare({ title, media }: { title?: string; media?: unknown }) {
+    prepare({ title, media }) {
       return {
-        title: title?.slice(0, 60) ?? "No alt text",
+        title: typeof title === "string" ? title.slice(0, 60) : "No alt text",
         media,
       };
     },

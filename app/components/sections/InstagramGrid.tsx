@@ -16,7 +16,7 @@ export default async function InstagramGrid() {
     <section className="w-full max-w-screen-2xl mx-auto px-gutter pt-10 pb-20">
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
         {posts.map((post) => {
-          const imageUrl = urlFor(post.image).width(400).height(400).fit("crop").url();
+          const imageUrl = urlFor(post.image).url();
           const cell = (
             <div className="bg-neutral-200 overflow-hidden relative aspect-square group">
               <Image
@@ -24,7 +24,7 @@ export default async function InstagramGrid() {
                 alt={post.alt ?? "LUA Instagram post"}
                 fill
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                sizes="(max-width: 768px) 50vw, 25vw"
+                sizes="(max-width: 640px) 50vw, 281px"
               />
               <Image
                 src="/Instagram_Glyph_White.svg"

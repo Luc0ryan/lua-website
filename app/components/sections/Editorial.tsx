@@ -9,6 +9,7 @@ export default function Editorial() {
           src="/images/homeEditorial.webp"
           alt="Editorial photo"
           fill
+          sizes="(max-width: 768px) 100vw, 845px"
           className="object-cover"
         />
       </div>
