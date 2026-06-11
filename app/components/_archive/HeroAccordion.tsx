@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { urlFor } from "../../sanity/lib/image";
-import type { Artwork } from "../../sanity/lib/queries";
+import { urlFor } from "../../../sanity/lib/image";
+import type { Artwork } from "../../../sanity/lib/queries";
 
 type Props = { artworks: Artwork[] };
 

@@ -9,7 +9,7 @@ export type HeroProject = {
   title: string;
   href: string;
   image: Artwork["image"];
-  /** One-line metadata, rendered before the title: "Jackson, TN · 2024" or "Touring". */
+  /** One-line metadata, rendered before the title: "Jackson // 2024" or "Touring". */
   meta: string;
 };
 
@@ -25,7 +25,7 @@ function toHeroProject(artwork: Artwork): HeroProject {
     artwork.placement === "touring"
       ? // TODO real data: venue count not in schema yet — "Touring · N venues" once it is
         "Touring"
-      : [artwork.city, artwork.year].filter(Boolean).join(" · ");
+      : [artwork.city, artwork.year].filter(Boolean).join(" // ");
 
   return {
     key: artwork._id,

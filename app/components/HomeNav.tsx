@@ -33,7 +33,7 @@ export default function HomeNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 w-full py-5 transition-all duration-300 ${
+        className={`sticky top-0 z-50 w-full py-5 transition-all duration-300 ${
           scrolled
             ? "bg-bg border-b border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
             : "bg-transparent"

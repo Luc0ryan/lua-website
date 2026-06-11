@@ -1,3 +1,4 @@
+// DEPRECATED — replaced by HeroStage, kept for reference
 "use client";
 
 import Image from "next/image";

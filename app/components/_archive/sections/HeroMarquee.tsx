@@ -1,3 +1,4 @@
+// DEPRECATED — replaced by HeroStage, kept for reference
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DotPanel } from "../dot-system";

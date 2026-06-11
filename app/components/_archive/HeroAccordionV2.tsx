@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { urlFor } from "../../sanity/lib/image";
-import type { Artwork } from "../../sanity/lib/queries";
+import { urlFor } from "../../../sanity/lib/image";
+import type { Artwork } from "../../../sanity/lib/queries";
 import { DotField, DotMask } from "./dot-system";
 
 type Props = { artworks: Artwork[] };

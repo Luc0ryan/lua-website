@@ -1,6 +1,6 @@
 import HeroAccordion from "../HeroAccordion";
 import { DotPanel } from "../dot-system";
-import { getHeroArtworks } from "../../../sanity/lib/queries";
+import { getHeroArtworks } from "../../../../sanity/lib/queries";
 
 export default async function Hero() {
   const artworks = await getHeroArtworks().catch(() => []);

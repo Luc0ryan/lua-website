@@ -25,12 +25,7 @@ function buildMaskValue(
   shape: MaskShape,
   [lo, hi]: [number, number],
 ): string | undefined {
-  // alpha() shorthands: mask layers use rgba to express the alpha stops.
   const a = (alpha: number) => `rgba(0,0,0,${alpha})`;
-
-  // Falloff is linear by default. To ease the curve (slow start, fast finish
-  // etc.) you need multi-stop gradients — e.g. add midpoint stops at 10%,
-  // 30%, 70%, 90% with interpolated alpha values.
 
   switch (shape) {
     case "none":
@@ -64,9 +59,6 @@ export function DotMask({
 }: DotMaskProps) {
   const maskValue = buildMaskValue(shape, intensityRange);
 
-  // overflow:hidden clips any overflow from DotField's rotate+scale transform.
-  // Both vendor-prefixed and standard mask properties are always emitted so
-  // Safari and Chrome/FF are covered without any conditional branching.
   const style: CSSProperties = {
     overflow: "hidden",
     ...(maskValue != null
