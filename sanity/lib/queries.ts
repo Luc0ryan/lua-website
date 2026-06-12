@@ -6,7 +6,9 @@ export type Artwork = {
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
   year?: number;
-  placement?: "touring" | "permanent";
+  placement?: "touring" | "permanent" | "temporary";
+  // TODO: add materials to Sanity artwork schema at launch
+  materials?: string[];
   interactive?: boolean;
   featured?: boolean;
   displayOrder?: number;

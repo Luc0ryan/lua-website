@@ -5,10 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = {
-  artworks: Artwork[]; // unfiltered, used for city counts
+  artworks: Artwork[];
 };
 
-// ── Chip ──────────────────────────────────────────────────────────────────────
+// ── Chip ─────────────────────────────────────────────────────────────────────
 
 function Chip({
   label,
@@ -23,7 +23,7 @@ function Chip({
     <button
       onClick={onClick}
       className={[
-        "px-4 py-1.5 text-sm font-body border-2 transition-shadow cursor-pointer whitespace-nowrap",
+        "px-4 py-1.5 text-base font-body font-bold border-[1.5px] transition-shadow cursor-pointer whitespace-nowrap",
         selected
           ? "border-pink shadow-[3px_3px_0_0_#DC738F]"
           : "border-fg hover:shadow-[3px_3px_0_0_#111111]",
@@ -31,6 +31,93 @@ function Chip({
     >
       {label}
     </button>
+  );
+}
+
+// ── DropdownFilter ────────────────────────────────────────────────────────────
+
+function DropdownFilter({
+  label,
+  selected,
+  options,
+  onSelect,
+  onClear,
+}: {
+  label: string;
+  selected: string | null;
+  options: { label: string; value: string }[];
+  onSelect: (v: string) => void;
+  onClear: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onMouseDown(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, []);
+
+  const displayLabel = options.find((o) => o.value === selected)?.label ?? null;
+
+  return (
+    <div className="relative" ref={ref}>
+      <div
+        className={[
+          "flex items-center border-[1.5px] transition-shadow",
+          selected
+            ? "border-pink shadow-[3px_3px_0_0_#DC738F]"
+            : "border-fg hover:shadow-[3px_3px_0_0_#111111]",
+        ].join(" ")}
+      >
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="px-4 py-1.5 text-base font-body font-bold cursor-pointer whitespace-nowrap"
+        >
+          {displayLabel ? `${label}: ${displayLabel}` : `${label} ▾`}
+        </button>
+        {displayLabel && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClear();
+              setOpen(false);
+            }}
+            aria-label={`Clear ${label} filter`}
+            className="pr-3 text-base leading-none cursor-pointer text-fg/60 hover:text-fg"
+          >
+            ×
+          </button>
+        )}
+      </div>
+
+      {open && options.length > 0 && (
+        <div className="absolute top-full left-0 mt-1 w-52 bg-bg border-[1.5px] border-fg shadow-[3px_3px_0_0_#111111] z-50">
+          <ul>
+            {options.map(({ label: optLabel, value }) => (
+              <li key={value}>
+                <button
+                  onClick={() => {
+                    onSelect(value);
+                    setOpen(false);
+                  }}
+                  className={[
+                    "w-full text-left px-4 py-2 text-base font-body font-bold cursor-pointer hover:bg-fg/5",
+                    selected === value ? "text-pink" : "text-fg",
+                  ].join(" ")}
+                >
+                  {optLabel}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -48,7 +135,6 @@ function getCityCounts(artworks: Artwork[]) {
     .sort((a, b) => a.city.localeCompare(b.city));
 }
 
-// City is stored lowercase in the URL; this finds the display-case label.
 function findCityLabel(artworks: Artwork[], slug: string) {
   return artworks.find((a) => a.city?.toLowerCase() === slug)?.city ?? slug;
 }
@@ -61,14 +147,15 @@ export default function FilterBar({ artworks }: Props) {
   const searchParams = useSearchParams();
 
   const interactive = searchParams.get("interactive") === "true";
-  const placement = searchParams.get("placement") as "touring" | "permanent" | null;
-  const citySlug = searchParams.get("city"); // lowercase slug
+  const placement = searchParams.get("placement") as "touring" | "permanent" | "temporary" | null;
+  const citySlug = searchParams.get("city");
+  const material = searchParams.get("material");
+  const q = searchParams.get("q") ?? "";
 
   const [locationOpen, setLocationOpen] = useState(false);
   const [citySearch, setCitySearch] = useState("");
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // Close popover on outside click
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
@@ -95,11 +182,28 @@ export default function FilterBar({ artworks }: Props) {
     : allCities;
 
   const cityLabel = citySlug ? findCityLabel(artworks, citySlug) : null;
-  const locationSelected = citySlug !== null;
+
+  const placementOptions = [
+    { label: "Permanent", value: "permanent" },
+    { label: "Temporary", value: "temporary" },
+    { label: "Touring", value: "touring" },
+  ];
+
+  // TODO: connect materials from Sanity schema at launch — populate from artwork.materials field
+  const materialOptions: { label: string; value: string }[] = [];
 
   return (
     <div className="mb-10">
-      <p className="text-xs font-body tracking-widest uppercase text-fg mb-4">SHOW</p>
+      {/* Search */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search projects…"
+          value={q}
+          onChange={(e) => setParam("q", e.target.value || null)}
+          className="w-full max-w-sm text-base font-body border-[1.5px] border-fg bg-transparent px-4 py-1.5 outline-none focus:shadow-[3px_3px_0_0_#111111] transition-shadow placeholder:text-fg/40"
+        />
+      </div>
 
       <div className="flex flex-wrap items-center gap-2">
         {/* Interactive toggle */}
@@ -109,34 +213,37 @@ export default function FilterBar({ artworks }: Props) {
           onClick={() => setParam("interactive", interactive ? null : "true")}
         />
 
-        {/* Touring / Permanent — 32px gap on desktop, flows in-line on mobile */}
-        <div className="flex gap-2 ml-0 sm:ml-8">
-          <Chip
-            label="Touring"
-            selected={placement === "touring"}
-            onClick={() => setParam("placement", placement === "touring" ? null : "touring")}
-          />
-          <Chip
-            label="Permanent"
-            selected={placement === "permanent"}
-            onClick={() => setParam("placement", placement === "permanent" ? null : "permanent")}
-          />
-        </div>
+        {/* Type dropdown */}
+        <DropdownFilter
+          label="Type"
+          selected={placement}
+          options={placementOptions}
+          onSelect={(v) => setParam("placement", v)}
+          onClear={() => setParam("placement", null)}
+        />
 
-        {/* Location — 32px gap on desktop, flows in-line on mobile */}
-        <div className="relative ml-0 sm:ml-8" ref={popoverRef}>
-          {/* The chip is a border wrapper so × sits inside the border */}
+        {/* Materials dropdown */}
+        <DropdownFilter
+          label="Materials"
+          selected={material}
+          options={materialOptions}
+          onSelect={(v) => setParam("material", v)}
+          onClear={() => setParam("material", null)}
+        />
+
+        {/* Location dropdown */}
+        <div className="relative" ref={popoverRef}>
           <div
             className={[
-              "flex items-center border-2 transition-shadow",
-              locationSelected
+              "flex items-center border-[1.5px] transition-shadow",
+              citySlug
                 ? "border-pink shadow-[3px_3px_0_0_#DC738F]"
                 : "border-fg hover:shadow-[3px_3px_0_0_#111111]",
             ].join(" ")}
           >
             <button
               onClick={() => setLocationOpen((o) => !o)}
-              className="px-4 py-1.5 text-sm font-body cursor-pointer whitespace-nowrap"
+              className="px-4 py-1.5 text-base font-body font-bold cursor-pointer whitespace-nowrap"
             >
               {cityLabel ? `Location: ${cityLabel}` : "Location ▾"}
             </button>
@@ -156,9 +263,8 @@ export default function FilterBar({ artworks }: Props) {
             )}
           </div>
 
-          {/* Popover */}
           {locationOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-2 border-fg shadow-[3px_3px_0_0_#111111] z-50">
+            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-[1.5px] border-fg shadow-[3px_3px_0_0_#111111] z-50">
               <div className="p-2 border-b border-fg/20">
                 <input
                   autoFocus
@@ -185,7 +291,7 @@ export default function FilterBar({ artworks }: Props) {
                           setCitySearch("");
                         }}
                         className={[
-                          "w-full text-left px-4 py-2 text-sm font-body flex justify-between items-center cursor-pointer hover:bg-fg/5",
+                          "w-full text-left px-4 py-2 text-base font-body font-bold flex justify-between items-center cursor-pointer hover:bg-fg/5",
                           active ? "text-pink" : "text-fg",
                         ].join(" ")}
                       >

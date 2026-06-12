@@ -30,7 +30,7 @@ export default function Footer() {
                 <li key={l.label}>
                   <Link
                     href={l.href}
-                    className="text-sm font-sans font-semibold tracking-widest uppercase text-fg hover:text-pink transition-colors"
+                    className="text-sm font-heading font-semibold tracking-widest uppercase text-fg hover:text-pink transition-colors"
                   >
                     {l.label}
                   </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
                 <li key={l.label}>
                   <Link
                     href={l.href}
-                    className="text-sm font-sans font-medium tracking-widest uppercase text-fg/60 hover:text-fg transition-colors"
+                    className="text-sm font-heading font-medium tracking-widest uppercase text-fg/75 hover:text-fg transition-colors"
                   >
                     {l.label}
                   </Link>

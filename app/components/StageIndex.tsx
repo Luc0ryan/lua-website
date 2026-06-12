@@ -106,7 +106,7 @@ export default function StageIndex({ projects }: Props) {
       </div>
 
       {/* Project index */}
-      <nav aria-label="Featured projects" className="flex min-h-0 flex-1 flex-col justify-center">
+      <nav aria-label="Featured projects" className="flex min-h-0 flex-1 flex-col justify-start">
         <ul className="flex flex-col">
           {projects.map((p, i) => {
             const isActive = i === requested;

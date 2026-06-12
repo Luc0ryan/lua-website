@@ -99,20 +99,16 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
         {/* Two-col: donation form (left) + FAQ (right) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {/* Left — donation form card */}
-          <div className="bg-footer-bg border border-fg/10 border-t-4 border-t-pink rounded-xl p-8 md:p-10">
+          <div className="bg-footer-bg border border-fg/10 rounded-sm p-8 md:p-10">
             <DonationForm />
           </div>
 
           {/* Right — FAQ */}
           <div className="pt-1">
             <h2 className="font-sans text-xl font-bold mb-3">
-              Common questions
+              Donation FAQs
             </h2>
-            <div className="w-8 h-0.5 bg-pink mb-5" aria-hidden="true" />
-            <p className="font-body text-fg/50 text-sm mb-6 leading-relaxed">
-              Crypto, stock, donor-advised funds, checks, and employer matching
-              — we can work with any of it.
-            </p>
+            <div className="w-full h-0.5 mb-5" style={{ backgroundColor: "#B8622A" }} aria-hidden="true" />
             <FaqAccordion />
           </div>
         </div>

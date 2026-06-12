@@ -10,18 +10,30 @@ type Props = { artworks: Artwork[] };
 function applyFilters(artworks: Artwork[], params: URLSearchParams): Artwork[] {
   let result = artworks;
 
+  const q = params.get("q");
+  if (q) {
+    const lower = q.toLowerCase();
+    result = result.filter((a) => a.title.toLowerCase().includes(lower));
+  }
+
   if (params.get("interactive") === "true") {
     result = result.filter((a) => a.interactive);
   }
 
   const placement = params.get("placement");
-  if (placement === "touring" || placement === "permanent") {
+  if (placement === "touring" || placement === "permanent" || placement === "temporary") {
     result = result.filter((a) => a.placement === placement);
   }
 
   const city = params.get("city");
   if (city) {
     result = result.filter((a) => a.city?.toLowerCase() === city);
+  }
+
+  // TODO: connect materials filter at launch once artwork.materials is in schema
+  const material = params.get("material");
+  if (material && material.length > 0) {
+    result = result.filter((a) => a.materials?.includes(material));
   }
 
   return result;
@@ -36,7 +48,8 @@ export default function ArtworksGallery({ artworks }: Props) {
   const hasFilters = searchParams.toString() !== "";
 
   return (
-    <div className="w-full max-w-screen-2xl mx-auto px-gutter pt-32 pb-16">
+    <div className="w-full max-w-screen-2xl mx-auto px-gutter pt-8 pb-16">
+      <h1 className="font-heading text-5xl sm:text-6xl font-bold uppercase mb-8">All Projects</h1>
       <FilterBar artworks={artworks} />
 
       {filtered.length === 0 ? (

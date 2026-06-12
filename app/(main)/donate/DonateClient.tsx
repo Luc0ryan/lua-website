@@ -47,12 +47,12 @@ export function TrustStrip() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-y border-fg/10 py-6 my-16 font-body text-xs text-fg/50">
       <span>501(c)(3) nonprofit</span>
-      <span className="hidden sm:inline text-pink/50">·</span>
+      <span className="hidden sm:inline text-fg/20">·</span>
       {/* TODO: insert EIN */}
       <span>EIN: [INSERT EIN]</span>
-      <span className="hidden sm:inline text-pink/50">·</span>
+      <span className="hidden sm:inline text-fg/20">·</span>
       <span>All gifts are tax-deductible</span>
-      <span className="hidden sm:inline text-pink/50">·</span>
+      <span className="hidden sm:inline text-fg/20">·</span>
       <StripeLockup />
     </div>
   );
@@ -150,15 +150,16 @@ export function DonationForm() {
       <div
         role="group"
         aria-label="Donation frequency"
-        className="flex w-full rounded-full bg-footer-bg border border-fg/10 p-1"
+        className="flex w-full rounded-[4px] bg-footer-bg border border-fg/10 p-1"
       >
         <button
           type="button"
           onClick={() => { setMode("one_time"); setCustom(""); }}
           aria-pressed={mode === "one_time"}
-          className={`flex-1 py-2.5 rounded-full font-sans font-semibold text-sm transition-colors cursor-pointer ${
-            mode === "one_time" ? "bg-pink text-bg" : "text-fg/60 hover:text-fg"
+          className={`flex-1 py-2.5 rounded-[3px] font-sans font-semibold text-sm transition-colors cursor-pointer ${
+            mode === "one_time" ? "text-bg" : "text-fg/60 hover:text-fg"
           }`}
+          style={mode === "one_time" ? { backgroundColor: "#B8622A" } : {}}
         >
           One-time
         </button>
@@ -166,9 +167,10 @@ export function DonationForm() {
           type="button"
           onClick={() => { setMode("monthly"); setCustom(""); }}
           aria-pressed={mode === "monthly"}
-          className={`flex-1 py-2.5 rounded-full font-sans font-semibold text-sm transition-colors cursor-pointer ${
-            mode === "monthly" ? "bg-pink text-bg" : "text-fg/60 hover:text-fg"
+          className={`flex-1 py-2.5 rounded-[3px] font-sans font-semibold text-sm transition-colors cursor-pointer ${
+            mode === "monthly" ? "text-bg" : "text-fg/60 hover:text-fg"
           }`}
+          style={mode === "monthly" ? { backgroundColor: "#B8622A" } : {}}
         >
           Monthly
         </button>
@@ -187,11 +189,12 @@ export function DonationForm() {
               type="button"
               onClick={() => handlePresetClick(amt)}
               aria-pressed={selected === amt}
-              className={`py-3 rounded font-sans font-semibold text-sm border transition-colors cursor-pointer ${
+              className={`py-3 rounded-sm font-sans font-semibold text-sm border transition-colors cursor-pointer ${
                 selected === amt
-                  ? "bg-pink text-bg border-pink"
+                  ? "text-bg border-transparent"
                   : "bg-bg text-fg border-fg/20 hover:border-fg/60"
               }`}
+              style={selected === amt ? { backgroundColor: "#B8622A" } : {}}
             >
               ${amt}
             </button>
@@ -200,11 +203,12 @@ export function DonationForm() {
             type="button"
             onClick={handleOtherClick}
             aria-pressed={customIsActive}
-            className={`py-3 rounded font-sans font-semibold text-sm border transition-colors cursor-pointer ${
+            className={`py-3 rounded-sm font-sans font-semibold text-sm border transition-colors cursor-pointer ${
               customIsActive
-                ? "bg-pink text-bg border-pink"
+                ? "text-bg border-transparent"
                 : "bg-bg text-fg border-fg/20 hover:border-fg/60"
             }`}
+            style={customIsActive ? { backgroundColor: "#B8622A" } : {}}
           >
             Other
           </button>
@@ -248,7 +252,8 @@ export function DonationForm() {
           type="submit"
           disabled={status === "loading" || !isValid}
           data-event="donate_submit"
-          className="w-full bg-pink text-bg font-sans font-semibold tracking-widest uppercase py-4 rounded transition-opacity hover:opacity-80 disabled:opacity-40 cursor-pointer flex items-center justify-center gap-3"
+          className="w-full text-bg font-sans font-semibold tracking-widest uppercase py-4 rounded-sm transition-opacity hover:opacity-80 disabled:opacity-40 cursor-pointer flex items-center justify-center gap-3"
+          style={{ backgroundColor: "#B8622A" }}
         >
           {status === "loading" ? (
             <>

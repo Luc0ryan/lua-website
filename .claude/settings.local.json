@@ -33,7 +33,8 @@
       "Bash(node -e \"console.log\\(require\\('C:/Users/Lucas Ryan/lua-website/node_modules/next/package.json'\\).version\\)\")",
       "Bash(npx next *)",
       "mcp__Figma__get_design_context",
-      "mcp__Figma__get_screenshot"
+      "mcp__Figma__get_screenshot",
+      "Bash(xargs grep -l \"section\\\\|container\\\\|main\\\\|hero\\\\|page\")"
     ]
   }
 }

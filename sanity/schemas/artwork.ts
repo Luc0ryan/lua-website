@@ -25,8 +25,9 @@ export const artworkSchema = defineType({
       type: "string",
       options: {
         list: [
-          { title: "Touring", value: "touring" },
           { title: "Permanent", value: "permanent" },
+          { title: "Temporary", value: "temporary" },
+          { title: "Touring", value: "touring" },
         ],
         layout: "radio",
       },
@@ -86,6 +87,15 @@ export const artworkSchema = defineType({
 
     // ── Details ───────────────────────────────────────────────────────────────
     defineField({ name: "description", title: "Description", type: "text" }),
+    // TODO: connect to FilterBar materials dropdown at launch
+    defineField({
+      name: "materials",
+      title: "Materials",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Materials used in this work. Drives the Materials filter on the projects page.",
+      options: { layout: "tags" },
+    }),
   ],
   orderings: [
     { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },

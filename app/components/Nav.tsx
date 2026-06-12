@@ -37,7 +37,7 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 w-full py-5 transition-all duration-300 ${
+        className={`fixed top-0 z-50 w-full pt-10 pb-5 transition-all duration-300 ${
           scrolled || menuOpen
             ? "bg-bg border-b border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
             : "bg-transparent"
@@ -46,11 +46,11 @@ export default function Nav() {
         <div className="max-w-6xl mx-auto px-gutter flex items-center justify-between">
         <Link href="/" className="shrink-0">
           <Image
-            src="/luaLogo.png"
+            src="/logos/logo-black-1000.png"
             alt="Looking Up Arts"
             width={120}
             height={48}
-            className="h-10 w-auto"
+            className="h-16 w-auto"
             priority
           />
         </Link>
