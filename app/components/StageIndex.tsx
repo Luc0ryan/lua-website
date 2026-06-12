@@ -80,8 +80,8 @@ export default function StageIndex({ projects }: Props) {
       onKeyDownCapture={() => { lastPointerTypeRef.current = ""; }}
     >
       {/* Stage with hard offset shadow */}
-      <div className="relative aspect-[3/2] w-full md:h-full md:w-auto md:max-w-[66%] md:shrink-0">
-        <div className="absolute inset-0 translate-x-[8px] translate-y-[8px] rounded-xs bg-fg" aria-hidden="true" />
+      <div className="relative aspect-3/2 w-full md:h-full md:w-auto md:max-w-[66%] md:shrink-0">
+        <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-xs bg-fg" aria-hidden="true" />
         <Link
           href={active.href}
           aria-label={`View ${active.title}`}
@@ -90,7 +90,7 @@ export default function StageIndex({ projects }: Props) {
           {projects.map((p, i) => (
             <Image
               key={p.key}
-              src={urlFor(p.image).fit("crop").url()}
+              src={urlFor(p.image).url()}
               alt=""
               fill
               sizes="(max-width: 768px) 100vw, 66vw"

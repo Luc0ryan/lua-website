@@ -1,4 +1,4 @@
-import { DotField, type DotVariant } from "../dot-system/DotField";
+import { DotField, type DotVariant } from "../../dot-system/DotField";
 import { DotMask, type MaskShape } from "./DotMask";
 
 interface DotPanelProps {
