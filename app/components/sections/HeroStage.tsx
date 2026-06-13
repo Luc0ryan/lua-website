@@ -16,7 +16,7 @@ export default async function HeroStage() {
 
   return (
     <div
-      className="grid min-h-[calc(100svh-5.5rem)] md:grid-rows-[auto_auto_minmax(0,1fr)] pb-6"
+      className="grid pb-6"
       data-hero-root
     >
       {/* Headline */}
@@ -30,12 +30,12 @@ export default async function HeroStage() {
       </section>
 
       {/* Door links — above the stage */}
-      <div className="w-full max-w-screen-2xl mx-auto px-gutter mt-4 flex flex-wrap items-center gap-x-8 gap-y-2">
+      <div className="w-full max-w-screen-2xl mx-auto px-gutter mt-1 flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-x-8 md:gap-y-0">
         {doorLinks.map(({ label, href }) => (
           <Link
             key={label}
             href={href}
-            className="group inline-flex items-center gap-1 font-heading font-semibold text-fg hover:text-pink transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+            className="group inline-flex items-center gap-1 font-heading font-semibold text-fg hover:text-pink active:text-pink transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
             style={{ fontSize: "clamp(1.25rem, 2.5vw, 2rem)" }}
           >
             {label}

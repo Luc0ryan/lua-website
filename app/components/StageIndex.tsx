@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { urlFor } from "@/sanity/lib/image";
 import type { HeroProject } from "@/lib/heroProjects";
@@ -75,12 +74,12 @@ export default function StageIndex({ projects }: Props) {
   return (
     <div
       ref={rootRef}
-      className="flex h-full flex-col gap-6 md:flex-row md:gap-8"
+      className="flex flex-col gap-6 md:flex-row md:gap-8"
       onPointerDownCapture={(e) => { lastPointerTypeRef.current = e.pointerType; }}
       onKeyDownCapture={() => { lastPointerTypeRef.current = ""; }}
     >
       {/* Stage with hard offset shadow */}
-      <div className="relative aspect-3/2 w-full md:h-full md:w-auto md:max-w-[66%] md:shrink-0">
+      <div className="relative aspect-3/2 w-full md:aspect-16/9 md:w-[60%] md:shrink-0">
         <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-xs bg-fg" aria-hidden="true" />
         <Link
           href={active.href}
@@ -93,7 +92,7 @@ export default function StageIndex({ projects }: Props) {
               src={urlFor(p.image).url()}
               alt=""
               fill
-              sizes="(max-width: 768px) 100vw, 66vw"
+              sizes="(max-width: 768px) 100vw, 60vw"
               preload={i === 0}
               loading={i === 0 ? undefined : "eager"}
               onLoad={() => markLoaded(i)}
@@ -107,7 +106,7 @@ export default function StageIndex({ projects }: Props) {
 
       {/* Project index */}
       <nav aria-label="Featured projects" className="flex min-h-0 flex-1 flex-col justify-start">
-        <ul className="flex flex-col">
+        <ul className="flex w-fit flex-col">
           {projects.map((p, i) => {
             const isActive = i === requested;
             return (
@@ -148,12 +147,6 @@ export default function StageIndex({ projects }: Props) {
                     >
                       {p.title}
                     </span>
-                    {isActive && (
-                      <span className="mt-0.5 flex items-center gap-1 font-heading text-sm font-medium text-pink md:hidden">
-                        View project
-                        <ArrowRight size={14} strokeWidth={2} aria-hidden="true" />
-                      </span>
-                    )}
                   </div>
                 </Link>
               </li>
