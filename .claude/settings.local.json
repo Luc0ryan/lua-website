@@ -34,8 +34,7 @@
       "Bash(npx next *)",
       "mcp__Figma__get_design_context",
       "mcp__Figma__get_screenshot",
-      "Bash(xargs grep -l \"section\\\\|container\\\\|main\\\\|hero\\\\|page\")",
-      "Bash(kill 5142)"
+      "Bash(xargs grep -l \"section\\\\|container\\\\|main\\\\|hero\\\\|page\")"
     ]
   }
 }

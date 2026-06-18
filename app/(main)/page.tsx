@@ -1,4 +1,4 @@
-import HeroStage from "../components/sections/HeroStage";
+import HeroFull from "../components/sections/HeroFull";
 import Editorial from "../components/sections/Editorial";
 import ProjectGrid from "../components/sections/ProjectGrid";
 import InstagramGrid from "../components/sections/InstagramGrid";
@@ -6,7 +6,7 @@ import InstagramGrid from "../components/sections/InstagramGrid";
 export default function HomePage() {
   return (
     <>
-      <HeroStage />
+      <HeroFull />
       <div className="mt-12">
         <Editorial />
       </div>

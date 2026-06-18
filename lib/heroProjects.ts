@@ -36,6 +36,20 @@ function toHeroProject(artwork: Artwork): HeroProject {
   };
 }
 
+/**
+ * Title (case-insensitive) to surface first regardless of CMS order — lets us
+ * test a specific project's imagery at hero scale. No-op if it isn't present.
+ */
+const PINNED_FIRST = "Spider Trap";
+
+function pinFirst(projects: HeroProject[], title: string): HeroProject[] {
+  const i = projects.findIndex(
+    (p) => p.title.toLowerCase() === title.toLowerCase()
+  );
+  if (i <= 0) return projects;
+  return [projects[i], ...projects.slice(0, i), ...projects.slice(i + 1)];
+}
+
 /** Alternate permanent/touring in the data order; leftovers append in CMS order. */
 function interleaveByPlacement(artworks: Artwork[]): Artwork[] {
   const permanent = artworks.filter((a) => a.placement !== "touring");
@@ -52,5 +66,8 @@ function interleaveByPlacement(artworks: Artwork[]): Artwork[] {
 
 export async function getHeroProjects(): Promise<HeroProject[]> {
   const artworks = await getMarqueeArtworks().catch(() => [] as Artwork[]);
-  return interleaveByPlacement(artworks.filter((a) => a.image)).map(toHeroProject);
+  const projects = interleaveByPlacement(artworks.filter((a) => a.image)).map(
+    toHeroProject
+  );
+  return pinFirst(projects, PINNED_FIRST);
 }

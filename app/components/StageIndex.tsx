@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -74,12 +74,12 @@ export default function StageIndex({ projects }: Props) {
   return (
     <div
       ref={rootRef}
-      className="flex flex-col gap-6 md:flex-row md:gap-8"
+      className="flex h-full flex-col gap-6 md:flex-row md:gap-8"
       onPointerDownCapture={(e) => { lastPointerTypeRef.current = e.pointerType; }}
       onKeyDownCapture={() => { lastPointerTypeRef.current = ""; }}
     >
       {/* Stage with hard offset shadow */}
-      <div className="relative aspect-3/2 w-full md:aspect-16/9 md:w-[60%] md:shrink-0">
+      <div className="relative aspect-3/2 w-full md:aspect-[4/3] md:h-full md:w-auto md:shrink-0">
         <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-xs bg-fg" aria-hidden="true" />
         <Link
           href={active.href}
@@ -106,7 +106,7 @@ export default function StageIndex({ projects }: Props) {
 
       {/* Project index */}
       <nav aria-label="Featured projects" className="flex min-h-0 flex-1 flex-col justify-start">
-        <ul className="flex w-fit flex-col">
+        <ul className="flex flex-col">
           {projects.map((p, i) => {
             const isActive = i === requested;
             return (
