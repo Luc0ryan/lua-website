@@ -9,7 +9,7 @@ function locationLine(a: Artwork) {
   return a.placement === "touring" ? "Touring" : (a.city ?? "");
 }
 
-function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolean }) {
+function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featured: boolean; priority?: boolean }) {
   const imgUrl = artwork.image
     ? urlFor(artwork.image).url()
     : null;
@@ -25,6 +25,7 @@ function ArtworkCard({ artwork, featured }: { artwork: Artwork; featured: boolea
             src={imgUrl}
             alt={artwork.title ?? ""}
             fill
+            priority={priority}
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
           />
@@ -64,6 +65,7 @@ export default function ArtworkGrid({ artworks }: Props) {
               key={artwork._id}
               artwork={artwork}
               featured={row.columns === 2}
+              priority={i === 0}
             />
           ))}
         </div>

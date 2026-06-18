@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Search } from "lucide-react";
 import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = {
@@ -194,17 +195,6 @@ export default function FilterBar({ artworks }: Props) {
 
   return (
     <div className="mb-10">
-      {/* Search */}
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Search projects…"
-          value={q}
-          onChange={(e) => setParam("q", e.target.value || null)}
-          className="w-full max-w-sm text-base font-body border-[1.5px] border-fg bg-transparent px-4 py-1.5 outline-none focus:shadow-[3px_3px_0_0_#111111] transition-shadow placeholder:text-fg/40"
-        />
-      </div>
-
       <div className="flex flex-wrap items-center gap-2">
         {/* Interactive toggle */}
         <Chip
@@ -304,6 +294,30 @@ export default function FilterBar({ artworks }: Props) {
               </ul>
             </div>
           )}
+        </div>
+
+        {/* Search — full-width on mobile, inline on desktop */}
+        <div
+          className={[
+            "flex items-center border-[1.5px] transition-shadow w-full sm:w-auto sm:ml-auto",
+            q ? "border-pink shadow-[3px_3px_0_0_#DC738F]" : "border-fg focus-within:shadow-[3px_3px_0_0_#111111]",
+          ].join(" ")}
+        >
+          <input
+            type="text"
+            placeholder="Search…"
+            value={q}
+            onChange={(e) => setParam("q", e.target.value || null)}
+            onKeyDown={(e) => e.key === "Escape" && setParam("q", null)}
+            className="w-36 sm:w-48 text-base font-body bg-transparent px-4 py-1.5 outline-none placeholder:text-fg/40"
+          />
+          <button
+            onClick={() => q && setParam("q", null)}
+            aria-label={q ? "Clear search" : "Search"}
+            className="pr-3 text-fg/60 hover:text-fg cursor-pointer"
+          >
+            <Search size={16} strokeWidth={2} />
+          </button>
         </div>
       </div>
     </div>
