@@ -7,34 +7,10 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import NavOverlay from "./NavOverlay";
 
-/**
- * Routes that lead with a full-bleed hero image. These get the overlay
- * treatment: transparent nav, opaque (white-fill + black-outline) logo, and a
- * beefy outlined hamburger so the chrome survives over any photo. Add future
- * hero routes (e.g. project pages) here.
- */
 function isHeroRoute(pathname: string): boolean {
   return pathname === "/";
 }
 
-/** White bars with 2px internal stroke; drop shadow appears on hover. */
-function BeefyMenuIcon() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      aria-hidden="true"
-      className="transition-discrete duration-50 group-hover:filter-[drop-shadow(2px_2px_0px_#111111)]"
-    >
-      <g fill="white" stroke="#111111" strokeWidth="2">
-        <rect x="5" y="7.75" width="30" height="4.5" rx="2.25" />
-        <rect x="5" y="17.75" width="30" height="4.5" rx="2.25" />
-        <rect x="5" y="27.75" width="30" height="4.5" rx="2.25" />
-      </g>
-    </svg>
-  );
-}
 
 export default function HomeNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -114,16 +90,16 @@ export default function HomeNav() {
               className="group flex cursor-pointer items-center justify-center p-1 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
             >
               {onImage ? (
-                <BeefyMenuIcon />
+                <Menu size={32} strokeWidth={2} className="text-white transition-all duration-150 group-hover:drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]" />
               ) : (
-                <Menu size={26} strokeWidth={1.5} />
+                <Menu size={26} strokeWidth={1.5} className="transition-all duration-150 group-hover:drop-shadow-[1px_1px_0px_rgba(0,0,0,0.4)]" />
               )}
             </button>
 
             <Link
               href="/contact"
-              className={`hidden md:inline-block text-base font-body font-semibold tracking-wide px-4 py-2.5 border text-fg border-fg shadow-[3px_3px_0px_#111111] transition-all duration-150 hover:shadow-none hover:translate-x-0.75 hover:translate-y-0.75 ${
-                onImage ? "bg-bg" : "bg-transparent"
+              className={`hidden md:inline-block text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_#111111] transition-all duration-150 hover:shadow-[4px_4px_0_#DC738F] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none] ${
+                onImage ? "bg-bg" : "bg-transparent border border-fg"
               }`}
             >
               CONTACT US

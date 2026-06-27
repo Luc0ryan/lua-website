@@ -37,7 +37,7 @@ export async function getMarqueeArtworks(): Promise<Artwork[]> {
 export async function getGalleryArtworks(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork" && role == "gallery"] | order(galleryOrder asc) [0...6] {
-      _id, title, city, image
+      _id, title, city, year, placement, materials, image
     }`
   );
 }

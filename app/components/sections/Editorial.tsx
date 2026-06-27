@@ -1,29 +1,57 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import FadeUp from "../FadeUp";
 
+// "IMAGINATION IS OUR CRAFT" editorial block — Figma node 1140:1591.
+// Title over a body/CTA row over a four-tile mosaic. The first tile keeps the
+// real photo; the rest are gray placeholders until schema wiring lands.
 export default function Editorial() {
   return (
-    <section className="w-full max-w-screen-2xl mx-auto px-gutter py-10 grid md:grid-cols-[3fr_2fr] gap-16 items-center">
-      <div className="relative overflow-hidden aspect-4/3">
-        <Image
-          src="/images/homeEditorial.webp"
-          alt="Editorial photo"
-          fill
-          sizes="(max-width: 768px) 100vw, 845px"
-          className="object-cover"
-        />
-      </div>
-
-      <FadeUp>
-        <p className="text-sm font-body font-medium text-pink mb-4">// we build local</p>
-        <h2 className="text-4xl font-heading font-bold text-fg leading-tight mb-6">
-          Transforming public space with every project
+    <section className="mx-auto w-full max-w-screen-2xl px-gutter py-10">
+      <FadeUp className="flex flex-col gap-10">
+        <h2 className="font-heading text-[clamp(2.5rem,6vw,4rem)] font-normal uppercase leading-none text-fg">
+          Imagination is our craft
         </h2>
-        <p className="text-base font-body text-fg/60 leading-relaxed">
-          Looking Up Arts is a nonprofit studio shaping public spaces through light, creativity,
-          and hands-on collaboration. We work with communities and cities to build work that
-          energizes and inspires connection.
-        </p>
+
+        <div className="flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
+          <p className="max-w-[687px] font-body text-xl leading-normal text-fg">
+            We don&rsquo;t think any project has a single right answer. The work gets better when
+            more people have a hand in it, so we leave room in almost everything we build for someone
+            else to step in and make it theirs.
+            <br />
+            <br />
+            Whatever we&rsquo;re making and wherever it ends up, the care is the same.
+          </p>
+          <Link
+            href="/design"
+            className="group inline-flex shrink-0 items-center gap-2.5 font-heading text-2xl font-semibold text-fg transition-colors duration-150 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+          >
+            See how it&rsquo;s made
+            <ArrowRight
+              size={24}
+              strokeWidth={2.25}
+              aria-hidden="true"
+              className="transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none"
+            />
+          </Link>
+        </div>
+
+        {/* Mosaic: big feature (real) | tall narrow | two stacked squares — ~2:1:1 columns */}
+        <div className="grid grid-cols-[2fr_1fr_1fr] grid-rows-2 gap-4">
+          <div className="relative row-span-2 overflow-hidden rounded-[2px] bg-neutral-200">
+            <Image
+              src="/images/homeEditorial.webp"
+              alt="Editorial photo"
+              fill
+              sizes="(max-width: 768px) 50vw, 512px"
+              className="object-cover"
+            />
+          </div>
+          <div className="row-span-2 overflow-hidden rounded-[2px] bg-neutral-300" />
+          <div className="aspect-square overflow-hidden rounded-[2px] bg-neutral-300" />
+          <div className="aspect-square overflow-hidden rounded-[2px] bg-neutral-300" />
+        </div>
       </FadeUp>
     </section>
   );

@@ -16,7 +16,7 @@ const sizeClasses: Record<Size, string> = {
 
 const variantClasses: Record<Variant, string> = {
   brutalist:
-    "border border-fg bg-bg text-fg font-body font-medium tracking-wide shadow-[3px_3px_0px_#111111] transition-all duration-150 ease-out hover:shadow-none hover:translate-x-0.75 hover:translate-y-0.75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink",
+    "border border-fg bg-bg text-fg font-body font-medium tracking-wide shadow-[4px_4px_0_#111111] transition-all duration-150 ease-out hover:shadow-none hover:translate-x-1 hover:translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink",
   solid:
     "bg-fg text-bg font-sans font-semibold tracking-widest rounded transition-opacity duration-150 hover:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink",
   ghost:

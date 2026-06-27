@@ -5,7 +5,9 @@
   --fg: #111111;
   --pink: #DC738F;
   --lua-pink: #C91F6E;
+  --pink-fill: #fdf1f5;
   --gray-label: #888;
+  --text-muted: #666666;
   --footer-bg: #E8E4DF;
   /* Single source-of-truth for all horizontal rhythm */
   --gutter: clamp(24px, 4vw, 64px);
@@ -16,7 +18,9 @@
   --color-fg: var(--fg);
   --color-pink: var(--pink);
   --color-lua-pink: var(--lua-pink);
+  --color-pink-fill: var(--pink-fill);
   --color-gray-label: var(--gray-label);
+  --color-text-muted: var(--text-muted);
   --color-footer-bg: var(--footer-bg);
   --font-sans: var(--font-dm-sans);
   --font-heading: var(--font-archivo);

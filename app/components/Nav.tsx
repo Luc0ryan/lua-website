@@ -83,7 +83,7 @@ export default function Nav() {
           className={`hidden md:inline-block text-sm font-body font-medium tracking-wide px-4 py-2 border transition-all duration-150 ${
             pathname === "/contact"
               ? "bg-fg text-bg border-fg shadow-none translate-x-0.75 translate-y-0.75"
-              : "bg-transparent text-fg border-fg shadow-[3px_3px_0px_#111111] hover:shadow-none hover:translate-x-0.75 hover:translate-y-0.75"
+              : "bg-transparent text-fg border-fg shadow-[4px_4px_0_#111111] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
           }`}
         >
           CONTACT
@@ -125,7 +125,7 @@ export default function Nav() {
               className={`inline-block text-sm font-body font-medium tracking-wide px-4 py-2 border transition-all duration-150 ${
                 pathname === "/contact"
                   ? "bg-fg text-bg border-fg shadow-none translate-x-0.75 translate-y-0.75"
-                  : "bg-transparent text-fg border-fg shadow-[3px_3px_0px_#111111]"
+                  : "bg-transparent text-fg border-fg shadow-[4px_4px_0_#111111]"
               }`}
             >
               CONTACT
