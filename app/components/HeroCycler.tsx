@@ -79,8 +79,7 @@ export default function HeroCycler({ projects }: Props) {
   const active = projects[index];
 
   return (
-    <>
-    <section className="relative -mt-2 flex h-[calc(100svh-100px)] flex-col justify-end overflow-hidden">
+    <section className="relative -mt-2 flex h-[90svh] flex-col justify-end overflow-hidden">
       {/* Cycling background — layered crossfade */}
       <div className="absolute inset-0">
         {projects.map((p, i) => (
@@ -120,8 +119,9 @@ export default function HeroCycler({ projects }: Props) {
             "radial-gradient(ellipse 55% 70% at 0% 100%, rgba(0,0,0,.24) 0%, transparent 100%)",
             // edge: left-column darkening
             "linear-gradient(to right, rgba(0,0,0,.14) 0%, rgba(0,0,0,.10) 15%, rgba(0,0,0,.06) 30%, transparent 50%)",
-            // base: eased bottom scrim across full width
-            "linear-gradient(to top, rgba(0,0,0,.30) 0%, rgba(0,0,0,.28) 8%, rgba(0,0,0,.24) 15%, rgba(0,0,0,.19) 23%, rgba(0,0,0,.13) 31%, rgba(0,0,0,.08) 40%, rgba(0,0,0,.03) 52%, transparent 65%)",
+            // base: eased bottom scrim across full width — lightened so brighter
+            // slides don't blow out; still dark enough for nav/card legibility
+            "linear-gradient(to top, rgba(0,0,0,.20) 0%, rgba(0,0,0,.18) 8%, rgba(0,0,0,.15) 15%, rgba(0,0,0,.12) 23%, rgba(0,0,0,.08) 31%, rgba(0,0,0,.05) 40%, rgba(0,0,0,.02) 52%, transparent 65%)",
           ].join(", "),
         }}
       />
@@ -160,55 +160,56 @@ export default function HeroCycler({ projects }: Props) {
           </nav>
         </div>
 
-        {/* Bottom-right: project card */}
-        <div className="hidden md:block shrink-0 md:self-end">
+        {/* Bottom-right: dots card stacked above the project card */}
+        <div className="hidden md:flex shrink-0 flex-col items-end gap-3 md:self-end">
+          {/* Pagination dots — own card, 2px stroke, no drop shadow (subordinate
+              to the title card below it) */}
+          {projects.length > 1 && (
+            <div
+              role="group"
+              aria-label="Featured projects"
+              className="inline-flex items-center bg-white px-2 py-1 shadow-[inset_0_0_0_2px_#111]"
+            >
+              {projects.map((p, i) => {
+                const isActive = i === index;
+                return (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => select(i)}
+                    aria-label={p.title}
+                    aria-current={isActive ? "true" : undefined}
+                    className="group inline-flex items-center justify-center p-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
+                  >
+                    <span
+                      className={`block h-2.5 w-2.5 rounded-full transition-colors duration-200 ${
+                        isActive
+                          ? "bg-fg"
+                          : "border-2 border-fg group-hover:border-fg"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Project card — stroke + solid drop shadow */}
           <div
             key={index}
-            className="inline-block bg-white px-5 py-4 shadow-[5px_5px_0_#111] motion-safe:[animation:hero-card-in_350ms_ease-out]"
+            className="inline-block bg-white px-5 py-4 shadow-[inset_0_0_0_2px_#111,4px_4px_0_#111] motion-safe:[animation:hero-card-in_350ms_ease-out]"
           >
             {active.meta && (
-              <span className="block font-sans text-xs font-semibold uppercase tracking-widest text-gray-label">
+              <span className="block font-sans text-[13px] font-semibold uppercase tracking-widest text-gray-label">
                 {active.meta}
               </span>
             )}
-            <span className="mt-0.5 block font-heading font-normal leading-tight text-black text-[20px]">
+            <span className="mt-0.5 block font-heading font-normal leading-tight text-black text-[28px]">
               {active.title}
             </span>
           </div>
         </div>
       </div>
     </section>
-
-    {/* Pagination dots — sit below the hero in normal flow */}
-    {projects.length > 1 && (
-      <div
-        role="group"
-        aria-label="Featured projects"
-        className="mx-auto flex max-w-screen-2xl items-center justify-end px-gutter py-4"
-      >
-        {projects.map((p, i) => {
-          const isActive = i === index;
-          return (
-            <button
-              key={p.key}
-              type="button"
-              onClick={() => select(i)}
-              aria-label={p.title}
-              aria-current={isActive ? "true" : undefined}
-              className="group inline-flex items-center justify-center p-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
-            >
-              <span
-                className={`block h-2.5 w-2.5 rounded-full transition-colors duration-200 ${
-                  isActive
-                    ? "bg-fg"
-                    : "border-2 border-fg group-hover:border-fg"
-                }`}
-              />
-            </button>
-          );
-        })}
-      </div>
-    )}
-    </>
   );
 }
