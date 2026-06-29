@@ -37,9 +37,12 @@ export default function Editorial() {
           </Link>
         </div>
 
-        {/* Mosaic: big feature (real) | tall narrow | two stacked squares — ~2:1:1 columns */}
-        <div className="grid grid-cols-[2fr_1fr_1fr] grid-rows-2 gap-4">
-          <div className="relative row-span-2 overflow-hidden rounded-[2px] bg-neutral-200">
+        {/* Mosaic: big feature (real) | tall narrow | two stacked squares — ~2:1:1 columns.
+            The feature column owns an explicit aspect-ratio, so the fill image always
+            has a definite height from its own width — never borrowed from grid tracks
+            (which can collapse to 0). The other columns stretch to match its height. */}
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-4">
+          <div className="relative aspect-square overflow-hidden rounded-[2px] bg-neutral-200">
             <Image
               src="/images/homeEditorial.webp"
               alt="Editorial photo"
@@ -48,9 +51,11 @@ export default function Editorial() {
               className="object-cover"
             />
           </div>
-          <div className="row-span-2 overflow-hidden rounded-[2px] bg-neutral-300" />
-          <div className="aspect-square overflow-hidden rounded-[2px] bg-neutral-300" />
-          <div className="aspect-square overflow-hidden rounded-[2px] bg-neutral-300" />
+          <div className="overflow-hidden rounded-[2px] bg-neutral-300" />
+          <div className="grid grid-rows-2 gap-4">
+            <div className="overflow-hidden rounded-[2px] bg-neutral-300" />
+            <div className="overflow-hidden rounded-[2px] bg-neutral-300" />
+          </div>
         </div>
       </FadeUp>
     </section>
