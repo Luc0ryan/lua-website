@@ -109,7 +109,7 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
           featured image. */}
       <hr className="mb-9 border-t-2 border-fg" />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:grid-rows-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:grid-rows-[auto_auto]">
         {/* Text cell */}
         <div className={`flex flex-col justify-between gap-6 px-3 py-6 ${textPlacement}`}>
           <div className="flex flex-col gap-3">
