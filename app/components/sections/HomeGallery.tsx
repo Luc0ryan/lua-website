@@ -44,7 +44,7 @@ function exactlyThree(projects: GalleryProject[]): GalleryProject[] {
 function Chip({ project }: { project: GalleryProject }) {
   return (
     <div className="absolute bottom-0 right-0 m-4 max-w-[85%]">
-      <div className="flex flex-col items-start overflow-clip border-2 border-fg bg-bg p-3 shadow-[8px_8px_0_#1c1410]">
+      <div className="flex flex-col items-start overflow-clip border-2 border-fg bg-bg p-3 shadow-[8px_8px_0_var(--fg)]">
         {project.subtitle && (
           <span className="font-body text-sm font-normal leading-normal text-fg">
             {project.subtitle}

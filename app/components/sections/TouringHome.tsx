@@ -1,14 +1,10 @@
-import HomeGallery, { type GalleryProject } from "./HomeGallery";
+import HomeGallery from "./HomeGallery";
+import { getTouringGalleryProjects } from "@/lib/galleryProjects";
 
-// Placeholder tiles (gray; image: null) — schema wiring is the next step. Labels
-// mirror the Figma mock so the chip layout is exercised.
-const projects: GalleryProject[] = [
-  { key: "touring-1", title: "Phoenicopterus Rex", subtitle: "TOURING", image: null },
-  { key: "touring-2", title: "Ice Cream", subtitle: "LAS VEGAS", image: null },
-  { key: "touring-3", title: "Feel Love", subtitle: "LAS VEGAS", image: null },
-];
+export default async function TouringHome() {
+  const projects = await getTouringGalleryProjects();
+  if (!projects.length) return null;
 
-export default function TouringHome() {
   return (
     <HomeGallery
       title="Touring artwork"

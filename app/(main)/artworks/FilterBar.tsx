@@ -27,7 +27,7 @@ function Chip({
         "px-4 py-1.5 text-base font-body font-bold border-[1.5px] transition-shadow cursor-pointer whitespace-nowrap",
         selected
           ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
-          : "border-fg hover:shadow-[4px_4px_0_0_#111111]",
+          : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
       ].join(" ")}
     >
       {label}
@@ -72,7 +72,7 @@ function DropdownFilter({
           "flex items-center border-[1.5px] transition-shadow",
           selected
             ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
-            : "border-fg hover:shadow-[4px_4px_0_0_#111111]",
+            : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
         ].join(" ")}
       >
         <button
@@ -97,7 +97,7 @@ function DropdownFilter({
       </div>
 
       {open && options.length > 0 && (
-        <div className="absolute top-full left-0 mt-1 w-52 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_#111111] z-50">
+        <div className="absolute top-full left-0 mt-1 w-52 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
           <ul>
             {options.map(({ label: optLabel, value }) => (
               <li key={value}>
@@ -138,6 +138,26 @@ function getCityCounts(artworks: Artwork[]) {
 
 function findCityLabel(artworks: Artwork[], slug: string) {
   return artworks.find((a) => a.city?.toLowerCase() === slug)?.city ?? slug;
+}
+
+// ── Material helpers ─────────────────────────────────────────────────────────
+// Materials are free-text tags in Sanity, so editors can type new ones at will.
+// Matching happens case-insensitively here instead of constraining input in the
+// Studio — "Steel" and "steel" collapse to one filter option, keyed off
+// whichever casing was entered first.
+
+function getMaterialOptions(artworks: Artwork[]) {
+  const labelByValue = new Map<string, string>();
+  for (const a of artworks) {
+    for (const raw of a.materials ?? []) {
+      const label = raw.trim();
+      const value = label.toLowerCase();
+      if (value && !labelByValue.has(value)) labelByValue.set(value, label);
+    }
+  }
+  return [...labelByValue.entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 }
 
 // ── FilterBar ─────────────────────────────────────────────────────────────────
@@ -190,8 +210,7 @@ export default function FilterBar({ artworks }: Props) {
     { label: "Touring", value: "touring" },
   ];
 
-  // TODO: connect materials from Sanity schema at launch — populate from artwork.materials field
-  const materialOptions: { label: string; value: string }[] = [];
+  const materialOptions = getMaterialOptions(artworks);
 
   return (
     <div className="mb-10">
@@ -228,7 +247,7 @@ export default function FilterBar({ artworks }: Props) {
               "flex items-center border-[1.5px] transition-shadow",
               citySlug
                 ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
-                : "border-fg hover:shadow-[4px_4px_0_0_#111111]",
+                : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
             ].join(" ")}
           >
             <button
@@ -254,7 +273,7 @@ export default function FilterBar({ artworks }: Props) {
           </div>
 
           {locationOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_#111111] z-50">
+            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
               <div className="p-2 border-b border-fg/20">
                 <input
                   autoFocus
@@ -300,7 +319,7 @@ export default function FilterBar({ artworks }: Props) {
         <div
           className={[
             "flex items-center border-[1.5px] transition-shadow w-full sm:w-auto sm:ml-auto",
-            q ? "border-pink shadow-[4px_4px_0_0_#DC738F]" : "border-fg focus-within:shadow-[4px_4px_0_0_#111111]",
+            q ? "border-pink shadow-[4px_4px_0_0_#DC738F]" : "border-fg focus-within:shadow-[4px_4px_0_0_var(--fg)]",
           ].join(" ")}
         >
           <input

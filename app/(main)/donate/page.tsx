@@ -77,7 +77,7 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
     <div className="flex-1 flex flex-col">
       {campaignActive && <CampaignBanner />}
 
-      <main className="flex-1 px-gutter py-20 md:py-32 max-w-6xl mx-auto w-full">
+      <main className="flex-1 px-gutter pt-10 md:pt-14 pb-20 md:pb-32 max-w-6xl mx-auto w-full">
         {/* Page header */}
         <header className="max-w-3xl mb-10">
           <h1 className="font-sans text-5xl md:text-6xl font-bold leading-tight mb-5">

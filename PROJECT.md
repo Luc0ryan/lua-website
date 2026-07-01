@@ -13,7 +13,7 @@ app/
 ├── globals.css                   Tailwind @theme + CSS variable definitions
 ├── (main)/
 │   ├── layout.tsx                Injects <Nav> + <Footer> for all main pages
-│   ├── page.tsx                  Home: Hero → Editorial → ProjectGrid → InstagramGrid
+│   ├── page.tsx                  Home: Hero → Editorial → TouringHome → CommissionHome → InstagramGrid
 │   ├── about/page.tsx
 │   ├── artworks/
 │   │   ├── page.tsx              Server: fetches all artworks, renders gallery
@@ -31,11 +31,12 @@ app/
 │   ├── Footer.tsx                Multi-column footer (server)
 │   ├── ContactForm.tsx           HubSpot form (client)
 │   ├── HeroAccordion.tsx         Flex-based accordion (client)
-│   ├── FadeUp.tsx                Scroll-in animation wrapper
 │   └── sections/
 │       ├── Hero.tsx              Hero section with DotPanel background (server)
 │       ├── Editorial.tsx
-│       ├── ProjectGrid.tsx       8/4 · 5/7 · 7/5 asymmetric col splits (server)
+│       ├── HomeGallery.tsx       7/5 asymmetric gallery — shared by Touring/Commission (server)
+│       ├── TouringHome.tsx       Fetches role="touring" artworks, feeds HomeGallery
+│       ├── CommissionHome.tsx    Fetches role="commission" artworks, feeds HomeGallery
 │       └── InstagramGrid.tsx     5-col desktop / 2-col mobile (server)
 │   └── dot-system/
 │       ├── index.ts
@@ -103,10 +104,10 @@ export default function Component({ artworks }: Props) { ... }
 
 **Data fetching** — call query functions from `sanity/lib/queries.ts` directly in server components:
 ```typescript
-const artworks = await getHeroArtworks();
+const artworks = await getMarqueeArtworks();
 ```
 
-**Asymmetric grids** (ProjectGrid): desktop col splits are 8/4, 5/7, 7/5 using CSS grid.  
+**Asymmetric grids** (HomeGallery): desktop col splits are 7/5 using CSS grid.  
 **Row builder** (ArtworkGrid): `buildRows()` splits flat arrays into alternating 3-col / 2-col rows.
 
 ---
@@ -120,15 +121,17 @@ const artworks = await getHeroArtworks();
 | `title` | string | |
 | `image` | image (hotspot) | |
 | `city` | string | e.g. `"Jackson, TN"` |
-| `placement` | `"touring" \| "permanent"` | |
+| `placement` | `"touring" \| "permanent" \| "temporary"` | |
 | `year` | number | |
 | `interactive` | boolean | Enables Interactive filter tag |
-| `featured` | boolean | Triggers 2-up featured row layout |
+| `featured` | boolean | Triggers 2-up featured row layout on /artworks |
 | `displayOrder` | number | Position in /artworks gallery |
-| `role` | `"hero" \| "gallery" \| null` | Homepage section placement |
+| `materials` | string[] (free tags) | Drives the Materials filter; matched case-insensitively in code |
+| `role` | `"hero" \| "touring" \| "commission" \| null` | Homepage section placement — independent of `placement` |
 | `heroOrder` | number | Position in hero accordion (role=hero) |
-| `galleryOrder` | number | Position in homepage ProjectGrid (role=gallery) |
-| `description` | text | |
+| `touringOrder` | number | Position in homepage Touring section (role=touring, max 3 shown) |
+| `commissionOrder` | number | Position in homepage Commission section (role=commission, max 3 shown) |
+| `description` | text | **Future** — reserved for the `/projects/[slug]` template, not rendered yet |
 
 ### `instagramPost`
 
@@ -144,8 +147,9 @@ const artworks = await getHeroArtworks();
 
 | Function | Filter | Order | Limit |
 |---|---|---|---|
-| `getHeroArtworks()` | `role == "hero"` | `heroOrder asc` | 5 |
-| `getGalleryArtworks()` | `role == "gallery"` | `galleryOrder asc` | 6 |
+| `getMarqueeArtworks()` | `role == "hero"` | `heroOrder asc` | — |
+| `getTouringArtworks()` | `role == "touring"` | `touringOrder asc` | 3 |
+| `getCommissionArtworks()` | `role == "commission"` | `commissionOrder asc` | 3 |
 | `getArtworksIndex()` | all | `displayOrder asc, _createdAt asc` | — |
 | `getInstagramPosts()` | all | `_createdAt desc` | 10, revalidate 24h |
 
@@ -160,14 +164,16 @@ type Artwork = {
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
   year?: number;
-  placement?: "touring" | "permanent";
+  placement?: "touring" | "permanent" | "temporary";
+  materials?: string[];
   interactive?: boolean;
   featured?: boolean;
   displayOrder?: number;
-  role?: "hero" | "gallery";
+  role?: "hero" | "touring" | "commission";
   heroOrder?: number;
-  galleryOrder?: number;
-  description?: string;
+  touringOrder?: number;
+  commissionOrder?: number;
+  description?: string; // future — /projects/[slug], not rendered yet
 };
 
 type InstagramPost = {

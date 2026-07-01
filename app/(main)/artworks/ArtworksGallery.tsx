@@ -30,10 +30,11 @@ function applyFilters(artworks: Artwork[], params: URLSearchParams): Artwork[] {
     result = result.filter((a) => a.city?.toLowerCase() === city);
   }
 
-  // TODO: connect materials filter at launch once artwork.materials is in schema
   const material = params.get("material");
-  if (material && material.length > 0) {
-    result = result.filter((a) => a.materials?.includes(material));
+  if (material) {
+    result = result.filter((a) =>
+      a.materials?.some((m) => m.trim().toLowerCase() === material)
+    );
   }
 
   return result;

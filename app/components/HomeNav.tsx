@@ -98,9 +98,7 @@ export default function HomeNav() {
 
             <Link
               href="/contact"
-              className={`hidden md:inline-block text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_#111111] transition-all duration-150 hover:shadow-[4px_4px_0_#DC738F] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none] ${
-                onImage ? "bg-bg" : "bg-transparent border border-fg"
-              }`}
+              className="hidden md:inline-block border border-fg bg-bg text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_var(--fg)] transition-all duration-150 hover:shadow-[4px_4px_0_#DC738F] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none]"
             >
               CONTACT US
             </Link>

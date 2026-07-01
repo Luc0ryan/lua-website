@@ -20,7 +20,7 @@ export default function BenDayField() {
       className="pointer-events-none absolute bottom-full left-0 hidden h-9 w-full overflow-hidden md:block"
       style={{
         backgroundImage:
-          "radial-gradient(circle, #1c1410 32%, transparent 34%), radial-gradient(circle, #1c1410 32%, transparent 34%)",
+          "radial-gradient(circle, var(--fg) 32%, transparent 34%), radial-gradient(circle, var(--fg) 32%, transparent 34%)",
         backgroundSize: "18px 18px",
         backgroundPosition: "0 0, 9px 9px",
       }}

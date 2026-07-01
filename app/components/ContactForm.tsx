@@ -110,10 +110,20 @@ export default function ContactForm({
   }
 
   return (
-    <section className="flex-1 flex flex-col lg:flex-row min-h-screen py-32">
-      {/* ── Left: image ───────────────────────────────────────────────── */}
-      <div className="hidden lg:block lg:w-[45%] shrink-0 pr-4">
-        <div className="relative w-full h-full rounded-r-2xl overflow-hidden">
+    <section className="relative flex-1 flex flex-col lg:flex-row min-h-screen max-w-screen-2xl mx-auto w-full px-gutter pt-16 pb-32">
+      {/* ── Mobile: a peek of the image in the left gutter, below lg where
+          the full image is hidden. Sized to exactly fill that gutter strip. ── */}
+      <div className="lg:hidden absolute top-0 h-[880px] left-0 w-[var(--gutter)] rounded-r-2xl overflow-hidden" aria-hidden="true">
+        <Image src={imageSrc} alt="" fill className="object-cover" sizes="64px" />
+      </div>
+
+      {/* ── Left: image (desktop) ───────────────────────────────────────────
+          Bleeds past the container's left edge to the viewport edge, while
+          its right edge stays put — reuses the exact container classes from
+          HomeNav (max-w-screen-2xl mx-auto px-gutter) so the form column's
+          right edge lines up with the CONTACT US button above it. ── */}
+      <div className="hidden lg:block lg:w-1/2 shrink-0 relative">
+        <div className="absolute inset-y-0 right-4 left-[calc(-1*((100vw-min(96rem,100vw))/2+var(--gutter)))] rounded-r-2xl overflow-hidden">
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -125,8 +135,8 @@ export default function ContactForm({
       </div>
 
       {/* ── Right: form ───────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col justify-center px-gutter py-16">
-        <div className="max-w-xl w-full mx-auto lg:mx-0">
+      <div className="flex-1 flex flex-col justify-center pl-[20px] lg:pl-0 pt-8 pb-16">
+        <div className="max-w-xl w-full mx-auto">
           {/* Email link */}
           <p className="text-sm font-body mb-6">
             Email:{" "}

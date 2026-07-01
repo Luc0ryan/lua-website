@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import FadeUp from "../FadeUp";
 
 // "IMAGINATION IS OUR CRAFT" editorial block — Figma node 1140:1591.
 // Title over a body/CTA row over a four-tile mosaic. The first tile keeps the
@@ -9,7 +8,7 @@ import FadeUp from "../FadeUp";
 export default function Editorial() {
   return (
     <section className="mx-auto w-full max-w-screen-2xl px-gutter py-10">
-      <FadeUp className="flex flex-col gap-10">
+      <div className="flex flex-col gap-10">
         <h2 className="font-heading text-[clamp(2.5rem,6vw,4rem)] font-normal uppercase leading-none text-fg">
           Imagination is our craft
         </h2>
@@ -57,7 +56,7 @@ export default function Editorial() {
             <div className="overflow-hidden rounded-[2px] bg-neutral-300" />
           </div>
         </div>
-      </FadeUp>
+      </div>
     </section>
   );
 }

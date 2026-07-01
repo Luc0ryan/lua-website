@@ -7,24 +7,16 @@ export type Artwork = {
   city?: string;
   year?: number;
   placement?: "touring" | "permanent" | "temporary";
-  // TODO: add materials to Sanity artwork schema at launch
   materials?: string[];
   interactive?: boolean;
   featured?: boolean;
   displayOrder?: number;
-  role?: "hero" | "gallery";
+  role?: "hero" | "touring" | "commission";
   heroOrder?: number;
-  galleryOrder?: number;
+  touringOrder?: number;
+  commissionOrder?: number;
   description?: string;
 };
-
-export async function getHeroArtworks(): Promise<Artwork[]> {
-  return client.fetch(
-    `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) [0...5] {
-      _id, title, city, placement, image
-    }`
-  );
-}
 
 export async function getMarqueeArtworks(): Promise<Artwork[]> {
   return client.fetch(
@@ -34,9 +26,17 @@ export async function getMarqueeArtworks(): Promise<Artwork[]> {
   );
 }
 
-export async function getGalleryArtworks(): Promise<Artwork[]> {
+export async function getTouringArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork" && role == "gallery"] | order(galleryOrder asc) [0...6] {
+    `*[_type == "artwork" && role == "touring"] | order(touringOrder asc) [0...3] {
+      _id, title, city, year, placement, materials, image
+    }`
+  );
+}
+
+export async function getCommissionArtworks(): Promise<Artwork[]> {
+  return client.fetch(
+    `*[_type == "artwork" && role == "commission"] | order(commissionOrder asc) [0...3] {
       _id, title, city, year, placement, materials, image
     }`
   );
@@ -46,7 +46,7 @@ export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "artwork"]
       | order(displayOrder asc, _createdAt asc) {
-        _id, title, image, city, interactive, placement, featured, displayOrder
+        _id, title, image, city, interactive, placement, featured, displayOrder, materials
       }`
   );
 }

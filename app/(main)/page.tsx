@@ -8,18 +8,10 @@ export default function HomePage() {
   return (
     <>
       <HeroFull />
-      <div className="mt-12">
-        <Editorial />
-      </div>
-      <div className="mt-12">
-        <TouringHome />
-      </div>
-      <div className="mt-12">
-        <CommissionHome />
-      </div>
-      <div className="mt-12">
-        <InstagramGrid />
-      </div>
+      <Editorial />
+      <TouringHome />
+      <CommissionHome />
+      <InstagramGrid />
     </>
   );
 }

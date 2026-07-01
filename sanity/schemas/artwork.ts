@@ -55,8 +55,21 @@ export const artworkSchema = defineType({
       type: "number",
       description: "Position on the Artworks page (lower = first). Falls back to creation date if unset.",
     }),
+    defineField({
+      name: "materials",
+      title: "Materials",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Materials used in this work. Drives the Materials filter on the Artworks page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
+      options: { layout: "tags" },
+    }),
 
     // ── Homepage ──────────────────────────────────────────────────────────────
+    // `role` decides which homepage section (if any) shows this piece. It's
+    // independent of `placement` above — a permanently-installed piece can still
+    // be the Commission feature, and a touring piece doesn't have to be the
+    // Touring feature. Each section shows at most 3, by its order field.
     defineField({
       name: "role",
       title: "Homepage role",
@@ -64,11 +77,12 @@ export const artworkSchema = defineType({
       options: {
         list: [
           { title: "Hero (accordion banner)", value: "hero" },
-          { title: "Gallery (project grid)", value: "gallery" },
+          { title: "Touring (featured)", value: "touring" },
+          { title: "Commission (featured)", value: "commission" },
         ],
         layout: "radio",
       },
-      description: "Leave blank to show on Artworks page only.",
+      description: "Leave blank to show on the Artworks page only.",
     }),
     defineField({
       name: "heroOrder",
@@ -78,28 +92,29 @@ export const artworkSchema = defineType({
       hidden: ({ document }) => document?.role !== "hero",
     }),
     defineField({
-      name: "galleryOrder",
-      title: "Gallery order",
+      name: "touringOrder",
+      title: "Touring order",
       type: "number",
-      description: "Position in the homepage project grid (lower = first).",
-      hidden: ({ document }) => document?.role !== "gallery",
+      description: "Position in the homepage Touring section (lower = first). Only the first 3 show.",
+      hidden: ({ document }) => document?.role !== "touring",
+    }),
+    defineField({
+      name: "commissionOrder",
+      title: "Commission order",
+      type: "number",
+      description: "Position in the homepage Commission section (lower = first). Only the first 3 show.",
+      hidden: ({ document }) => document?.role !== "commission",
     }),
 
-    // ── Details ───────────────────────────────────────────────────────────────
+    // ── Future: Project page ─────────────────────────────────────────────────
+    // Not rendered anywhere yet. Reserved for the /projects/[slug] template —
+    // safe to write now, nothing breaks until that page reads it.
     defineField({ name: "description", title: "Description", type: "text" }),
-    // TODO: connect to FilterBar materials dropdown at launch
-    defineField({
-      name: "materials",
-      title: "Materials",
-      type: "array",
-      of: [{ type: "string" }],
-      description: "Materials used in this work. Drives the Materials filter on the projects page.",
-      options: { layout: "tags" },
-    }),
   ],
   orderings: [
     { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
     { title: "Hero order", name: "heroOrderAsc", by: [{ field: "heroOrder", direction: "asc" }] },
-    { title: "Gallery order", name: "galleryOrderAsc", by: [{ field: "galleryOrder", direction: "asc" }] },
+    { title: "Touring order", name: "touringOrderAsc", by: [{ field: "touringOrder", direction: "asc" }] },
+    { title: "Commission order", name: "commissionOrderAsc", by: [{ field: "commissionOrder", direction: "asc" }] },
   ],
 });

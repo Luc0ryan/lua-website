@@ -4,7 +4,7 @@ import { Heading } from "@/app/components/ui/Heading";
 import { Text } from "@/app/components/ui/Text";
 
 const colors = [
-  { name: "--fg", label: "Foreground", hex: "#111111", bg: "bg-fg", text: "text-bg" },
+  { name: "--fg", label: "Foreground", hex: "#1C1410", bg: "bg-fg", text: "text-bg" },
   { name: "--bg", label: "Background", hex: "#F2EFEA", bg: "bg-bg", text: "text-fg", border: true },
   { name: "--pink", label: "Pink", hex: "#DC738F", bg: "bg-pink", text: "text-bg" },
   { name: "--lua-pink", label: "Lua Pink", hex: "#C91F6E", bg: "bg-lua-pink", text: "text-bg" },
