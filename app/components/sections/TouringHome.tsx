@@ -11,7 +11,7 @@ export default async function TouringHome() {
       body="Our most unique pieces don’t have a forever home. That next home can be your event."
       cta={{ label: "Check out our touring catalogue", href: "/catalogue" }}
       projects={projects}
-      featuredSide="left"
+      featuredSide="right"
     />
   );
 }

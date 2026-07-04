@@ -9,8 +9,8 @@ export default function HomePage() {
     <>
       <HeroFull />
       <Editorial />
-      <TouringHome />
       <CommissionHome />
+      <TouringHome />
       <InstagramGrid />
     </>
   );

@@ -90,7 +90,11 @@ export default function HomeNav() {
               className="group flex cursor-pointer items-center justify-center p-1 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
             >
               {onImage ? (
-                <Menu size={32} strokeWidth={2} className="text-white transition-all duration-150 group-hover:drop-shadow-[2px_2px_0px_rgba(0,0,0,0.6)]" />
+                <Menu
+                  size={32}
+                  strokeWidth={2}
+                  className="text-white transition-all duration-150 [filter:drop-shadow(1px_1px_0_rgba(0,0,0,0.55))_drop-shadow(-1px_-1px_0_rgba(0,0,0,0.55))_drop-shadow(1px_-1px_0_rgba(0,0,0,0.55))_drop-shadow(-1px_1px_0_rgba(0,0,0,0.55))] group-hover:[filter:drop-shadow(1px_1px_0_rgba(0,0,0,0.8))_drop-shadow(-1px_-1px_0_rgba(0,0,0,0.8))_drop-shadow(1px_-1px_0_rgba(0,0,0,0.8))_drop-shadow(-1px_1px_0_rgba(0,0,0,0.8))]"
+                />
               ) : (
                 <Menu size={26} strokeWidth={1.5} className="transition-all duration-150 group-hover:drop-shadow-[1px_1px_0px_rgba(0,0,0,0.4)]" />
               )}

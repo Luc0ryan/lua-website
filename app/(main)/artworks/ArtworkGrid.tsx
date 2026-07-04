@@ -5,8 +5,14 @@ import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = { artworks: Artwork[] };
 
-function locationLine(a: Artwork) {
-  return a.placement === "touring" ? "Touring" : (a.city ?? "");
+// Subtitle rule: touring → "Touring"; temporary → "City · Temporary" (city
+// first, tag second — e.g. Burning Man pieces like SIRSANA); permanent → city.
+function subtitleLine(a: Artwork) {
+  if (a.placement === "touring") return "Touring";
+  if (a.placement === "temporary") {
+    return [a.city, "Temporary"].filter(Boolean).join(" · ");
+  }
+  return a.city ?? "";
 }
 
 function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featured: boolean; priority?: boolean }) {
@@ -14,38 +20,35 @@ function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featur
     ? urlFor(artwork.image).url()
     : null;
 
-  return (
-    <div
-      className="group cursor-pointer"
-    >
-      {/* Image */}
-      <div className="relative overflow-hidden bg-neutral-200 aspect-4/3">
-        {imgUrl ? (
-          <Image
-            src={imgUrl}
-            alt={artwork.title ?? ""}
-            fill
-            priority={priority}
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-            sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-neutral-300" />
-        )}
-      </div>
+  const subtitle = subtitleLine(artwork);
 
-      {/* Metadata */}
-      <p className="text-xs font-body uppercase tracking-widest text-fg/50 mt-3 mb-1">
-        {locationLine(artwork)}
-      </p>
-      <p
-        className={[
-          "font-heading font-bold text-fg uppercase leading-tight",
-          featured ? "text-[18px]" : "text-base",
-        ].join(" ")}
-      >
-        {artwork.title}
-      </p>
+  return (
+    <div className="group relative aspect-4/3 cursor-pointer overflow-hidden rounded-[2px] bg-neutral-200">
+      {imgUrl ? (
+        <Image
+          src={imgUrl}
+          alt={artwork.title ?? ""}
+          fill
+          priority={priority}
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-neutral-300" />
+      )}
+
+      {/* Overlay chip — matches the homepage gallery drop-shadow card, scaled
+          down for the tighter grid tiles */}
+      <div className="absolute bottom-3 right-3 flex max-w-[85%] flex-col items-start overflow-clip border-2 border-fg bg-bg px-4 py-3 shadow-[5px_5px_0_var(--fg)]">
+        {subtitle && (
+          <span className="font-body text-xs font-normal leading-snug text-fg">
+            {subtitle}
+          </span>
+        )}
+        <span className="font-body text-base font-semibold uppercase leading-snug text-fg">
+          {artwork.title}
+        </span>
+      </div>
     </div>
   );
 }

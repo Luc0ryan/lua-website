@@ -11,7 +11,7 @@ export default async function CommissionHome() {
       body="We work with civic institutions and private groups alike to build pieces that bring wonder to communities."
       cta={{ label: "Check out our touring catalogue", href: "/artworks#permanent" }}
       projects={projects}
-      featuredSide="right"
+      featuredSide="left"
     />
   );
 }
