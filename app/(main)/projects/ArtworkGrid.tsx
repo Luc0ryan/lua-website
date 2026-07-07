@@ -45,7 +45,7 @@ function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featur
             {subtitle}
           </span>
         )}
-        <span className="font-body text-base font-semibold uppercase leading-snug text-fg">
+        <span className="font-body text-base font-semibold project-title leading-snug text-fg">
           {artwork.title}
         </span>
       </div>

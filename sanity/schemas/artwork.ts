@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export const artworkSchema = defineType({
   name: "artwork",
-  title: "Artwork",
+  title: "Project",
   type: "document",
   fields: [
     // ── Core ──────────────────────────────────────────────────────────────────
@@ -47,7 +47,7 @@ export const artworkSchema = defineType({
       name: "interactive",
       title: "Interactive",
       type: "boolean",
-      description: "Enables the Interactive filter on the Artworks page.",
+      description: "Enables the Interactive filter on the Projects page.",
       initialValue: false,
     }),
     defineField({
@@ -61,7 +61,7 @@ export const artworkSchema = defineType({
       name: "displayOrder",
       title: "Display order",
       type: "number",
-      description: "Position on the Artworks page (lower = first). Falls back to creation date if unset.",
+      description: "Position on the Projects page (lower = first). Falls back to creation date if unset.",
     }),
     defineField({
       name: "materials",
@@ -69,7 +69,7 @@ export const artworkSchema = defineType({
       type: "array",
       of: [{ type: "string" }],
       description:
-        "Materials used in this work. Drives the Materials filter on the Artworks page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
+        "Materials used in this work. Drives the Materials filter on the Projects page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
       options: { layout: "tags" },
     }),
 
@@ -90,7 +90,7 @@ export const artworkSchema = defineType({
         ],
         layout: "radio",
       },
-      description: "Leave blank to show on the Artworks page only.",
+      description: "Leave blank to show on the Projects page only.",
     }),
     defineField({
       name: "heroOrder",

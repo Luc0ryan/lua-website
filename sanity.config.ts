@@ -19,10 +19,19 @@ export default defineConfig({
         S.list()
           .title("Content")
           .items([
-            S.documentTypeListItem("artwork").title("Artworks"),
+            S.documentTypeListItem("artwork").title("Projects"),
+            S.divider(),
+            S.listItem()
+              .id("siteSettings")
+              .title("Site Settings")
+              .child(
+                S.document()
+                  .schemaType("siteSettings")
+                  .documentId("siteSettings")
+              ),
             // add other types here as needed
             ...S.documentTypeListItems().filter(
-              (item) => item.getId() !== "artwork"
+              (item) => !["artwork", "siteSettings"].includes(item.getId() ?? "")
             ),
           ]),
     }),

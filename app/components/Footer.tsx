@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 const primaryNav = [
-  { label: "Projects", href: "/artworks" },
+  { label: "Projects", href: "/projects" },
   { label: "Community", href: "/community" },
   { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },

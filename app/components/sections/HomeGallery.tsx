@@ -50,7 +50,7 @@ function Chip({ project }: { project: GalleryProject }) {
             {project.subtitle}
           </span>
         )}
-        <span className="font-body text-xl font-semibold uppercase leading-normal text-fg">
+        <span className="font-body text-xl font-semibold project-title leading-normal text-fg">
           {project.title}
         </span>
       </div>

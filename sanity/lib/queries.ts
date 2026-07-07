@@ -69,6 +69,26 @@ export async function getArtworksIndex(): Promise<Artwork[]> {
   );
 }
 
+export type SiteSettings = {
+  uppercaseTitles: boolean;
+};
+
+// Global Studio-controlled settings. Defaults to uppercase titles when no
+// settings document exists yet or the fetch fails, so the site renders as
+// designed out of the box.
+export async function getSiteSettings(): Promise<SiteSettings> {
+  try {
+    const res = await client.fetch<{ uppercaseTitles?: boolean } | null>(
+      `*[_type == "siteSettings"][0]{ uppercaseTitles }`,
+      {},
+      { next: { revalidate: 60 } }
+    );
+    return { uppercaseTitles: res?.uppercaseTitles ?? true };
+  } catch {
+    return { uppercaseTitles: true };
+  }
+}
+
 export type InstagramPost = {
   _id: string;
   image: { asset: { _ref: string }; hotspot?: object };

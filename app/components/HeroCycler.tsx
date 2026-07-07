@@ -13,7 +13,7 @@ const HEADLINE =
   "Looking Up Art is a San Francisco based art firm building interactive art that brings people together";
 
 const doorLinks = [
-  { label: "Projects", href: "/artworks" },
+  { label: "Projects", href: "/projects" },
   { label: "Catalogue", href: "/catalogue" },
   { label: "Commission", href: "/commission" },
 ];

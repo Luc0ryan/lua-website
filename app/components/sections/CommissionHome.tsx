@@ -9,7 +9,7 @@ export default async function CommissionHome() {
     <HomeGallery
       title="Commission uniquely"
       body="We work with civic institutions and private groups alike to build pieces that bring wonder to communities."
-      cta={{ label: "Check out our touring catalogue", href: "/artworks#permanent" }}
+      cta={{ label: "Check out our touring catalogue", href: "/projects#permanent" }}
       projects={projects}
       featuredSide="left"
     />

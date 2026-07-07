@@ -65,7 +65,7 @@ export default async function ProjectPage({ params }: Props) {
       {/* Title card — straddles the hero/content seam, house "hero project card" style */}
       <div className="relative mx-auto w-full max-w-screen-2xl px-gutter">
         <div className="absolute -top-14 left-gutter max-w-[85%] bg-white px-8 py-6 shadow-[inset_0_0_0_2px_var(--fg),8px_8px_0_var(--fg)]">
-          <h1 className="font-heading text-4xl font-bold uppercase leading-tight text-fg">
+          <h1 className="font-heading text-4xl font-bold project-title leading-tight text-fg">
             {artwork.title}
           </h1>
           {subtitle && (

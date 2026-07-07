@@ -11,6 +11,12 @@ formats: ["image/avif", "image/webp"],
       },
     ],
   },
+  async redirects() {
+    return [
+      // The project index moved from /artworks to /projects.
+      { source: "/artworks", destination: "/projects", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

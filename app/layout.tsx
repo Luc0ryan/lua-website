@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, DM_Sans } from "next/font/google";
+import { getSiteSettings } from "@/sanity/lib/queries";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -19,14 +20,19 @@ export const metadata: Metadata = {
   description: "Interactive art built to bring people together.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { uppercaseTitles } = await getSiteSettings();
+
   return (
     <html lang="en" className={`${archivo.variable} ${dmSans.variable}`}>
-      <body className="min-h-screen flex flex-col">
+      <body
+        data-titlecase={uppercaseTitles ? "upper" : "normal"}
+        className="min-h-screen flex flex-col"
+      >
         {children}
       </body>
     </html>

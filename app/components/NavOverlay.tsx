@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { Mail, X } from "lucide-react";
 
 const primaryLinks = [
-  { label: "PROJECTS", href: "/artworks" },
+  { label: "PROJECTS", href: "/projects" },
   { label: "CATALOGUE", href: "/catalogue" },
   { label: "COMMISSION", href: "/commission" },
 ];

@@ -51,6 +51,17 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   letter-spacing: -0.02em;
 }
 
+/* Project-title casing, controlled by the Site Settings > "Uppercase project
+   titles" toggle in the Studio. The root layout mirrors that setting onto
+   <body data-titlecase>. Elements rendering a project's title get `.project-title`
+   instead of a hard-coded `uppercase` utility so the toggle can drive them. */
+[data-titlecase="upper"] .project-title {
+  text-transform: uppercase;
+}
+[data-titlecase="normal"] .project-title {
+  text-transform: none;
+}
+
 /* Scrollable strips that hide the scrollbar (hero project strip) */
 .no-scrollbar {
   scrollbar-width: none;
