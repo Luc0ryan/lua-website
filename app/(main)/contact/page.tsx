@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import ContactForm from "@/app/components/ContactForm";
 
 export const metadata: Metadata = {
@@ -14,5 +15,9 @@ export default function ContactPage() {
   //   const data = await client.fetch(`*[_type == "contactPage"][0]{ image }`)
   //   return <ContactForm sanityImage={data?.image} />
   //
-  return <ContactForm />;
+  return (
+    <Suspense fallback={null}>
+      <ContactForm />
+    </Suspense>
+  );
 }

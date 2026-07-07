@@ -8,7 +8,7 @@ import { Menu } from "lucide-react";
 import NavOverlay from "./NavOverlay";
 
 function isHeroRoute(pathname: string): boolean {
-  return pathname === "/";
+  return pathname === "/" || /^\/projects\/[^/]+$/.test(pathname);
 }
 
 

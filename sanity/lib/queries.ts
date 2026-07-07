@@ -3,6 +3,7 @@ import { client } from "./client";
 export type Artwork = {
   _id: string;
   title: string;
+  slug?: { current: string };
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
   year?: number;
@@ -16,7 +17,24 @@ export type Artwork = {
   touringOrder?: number;
   commissionOrder?: number;
   description?: string;
+  footprint?: string;
+  typology?: string;
+  status?: "available" | "retired";
+  quote?: string;
+  gallery?: { asset: { _ref: string }; hotspot?: object }[];
+  crew?: string[];
+  press?: { text?: string; url?: string }[];
 };
+
+export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
+  return client.fetch(
+    `*[_type == "artwork" && slug.current == $slug][0]{
+      _id, title, slug, image, city, year, placement, materials,
+      description, footprint, typology, status, quote, gallery, crew, press
+    }`,
+    { slug }
+  );
+}
 
 export async function getMarqueeArtworks(): Promise<Artwork[]> {
   return client.fetch(

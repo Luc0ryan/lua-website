@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
 
 // Matches the loose SanityImageSource type used throughout this codebase.
@@ -27,12 +28,18 @@ export default function ContactForm({
   sanityImage,
   email = "info@lookingup.art",
 }: ContactFormProps) {
-  const [form, setForm] = useState({
+  // ?piece=<slug>&title=<name> is set by the project detail page's "Inquire
+  // about booking this piece" link — prefills (not locks) the message so the
+  // visitor can still edit it before sending.
+  const searchParams = useSearchParams();
+  const pieceTitle = searchParams.get("title");
+
+  const [form, setForm] = useState(() => ({
     name: "",
     email: "",
-    message: "",
+    message: pieceTitle ? `I'm interested in booking: ${pieceTitle}` : "",
     newsletter: false,
-  });
+  }));
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 

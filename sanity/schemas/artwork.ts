@@ -8,6 +8,14 @@ export const artworkSchema = defineType({
     // ── Core ──────────────────────────────────────────────────────────────────
     defineField({ name: "title", title: "Title", type: "string" }),
     defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      description: "Used in the project page URL, e.g. /projects/rainbow-bridge.",
+      options: { source: "title", maxLength: 96 },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "image",
       title: "Image",
       type: "image",
@@ -106,10 +114,70 @@ export const artworkSchema = defineType({
       hidden: ({ document }) => document?.role !== "commission",
     }),
 
-    // ── Future: Project page ─────────────────────────────────────────────────
-    // Not rendered anywhere yet. Reserved for the /projects/[slug] template —
-    // safe to write now, nothing breaks until that page reads it.
+    // ── Project page ──────────────────────────────────────────────────────────
+    // Rendered on /projects/[slug].
     defineField({ name: "description", title: "Description", type: "text" }),
+    defineField({
+      name: "footprint",
+      title: "Footprint",
+      type: "string",
+      description: 'Physical size, e.g. "75ft x 30ft x 4ft".',
+    }),
+    defineField({
+      name: "typology",
+      title: "Typology",
+      type: "string",
+      description: 'Short type/category tag, e.g. "Walkable, LEDs".',
+    }),
+    defineField({
+      name: "status",
+      title: "Status",
+      type: "string",
+      description: "Controls the booking link on the project page — only shown when Available to Rent.",
+      options: {
+        list: [
+          { title: "Available to Rent", value: "available" },
+          { title: "Retired", value: "retired" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "available",
+    }),
+    defineField({
+      name: "quote",
+      title: "Quote",
+      type: "text",
+      description: "Optional pull quote shown alongside the description.",
+    }),
+    defineField({
+      name: "gallery",
+      title: "Gallery",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      description: "Image sequence shown below the main image. First image displays full-width, the rest in a 2-up grid.",
+    }),
+    defineField({
+      name: "crew",
+      title: "Crew",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Names only, one per entry.",
+    }),
+    defineField({
+      name: "press",
+      title: "Press",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "pressItem",
+          fields: [
+            defineField({ name: "text", title: "Text", type: "string" }),
+            defineField({ name: "url", title: "URL", type: "url" }),
+          ],
+        },
+      ],
+    }),
   ],
   orderings: [
     { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
