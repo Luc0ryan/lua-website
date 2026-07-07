@@ -185,7 +185,7 @@ export function DonationForm() {
         >
           {PRESET_AMOUNTS[mode].map((amt) => (
             <button
-              key={amt}
+              key={`${mode}-${amt}`}
               type="button"
               onClick={() => handlePresetClick(amt)}
               aria-pressed={selected === amt}

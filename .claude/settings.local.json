@@ -41,7 +41,15 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/artworks)",
       "Bash(lsof -ti:3000)",
       "Bash(xargs -I{} echo {})",
-      "Bash(kill 19918)"
+      "Bash(kill 19918)",
+      "mcp__a86917e9-12a6-4c21-8589-e5a2f067f1bf__get_design_context",
+      "Bash(sort -t: -k3)",
+      "Bash(awk -F'max-w-' '{print $2}')",
+      "Bash(awk '{print $1}')",
+      "mcp__a86917e9-12a6-4c21-8589-e5a2f067f1bf__get_metadata",
+      "WebSearch",
+      "Bash(python3 -c ' *)",
+      "Bash(xargs ls)"
     ]
   }
 }

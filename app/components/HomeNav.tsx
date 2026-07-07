@@ -13,14 +13,26 @@ function isHeroRoute(pathname: string): boolean {
 
 
 export default function HomeNav() {
-  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const overlay = isHeroRoute(pathname);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      // Small buffer so rubber-banding at the very top doesn't flicker it.
+      if (y <= 8) {
+        setHidden(false);
+      } else if (y > lastY) {
+        setHidden(true);
+      } else if (y < lastY) {
+        setHidden(false);
+      }
+      lastY = y;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -47,35 +59,45 @@ export default function HomeNav() {
 
   const closeMenu = () => {
     setMenuOpen(false);
-    menuButtonRef.current?.focus();
-  };
 
-  // Over a hero image (transparent + unscrolled) the chrome must survive any
-  // background; once scrolled onto the solid nav it matches the rest of the site.
-  const onImage = overlay && !scrolled;
+    // Return focus to the trigger for a11y, but suppress the focus ring for
+    // this programmatic call — it reappears normally on a later real Tab-focus.
+    const btn = menuButtonRef.current;
+    if (btn) {
+      btn.style.outline = "none";
+      btn.addEventListener(
+        "blur",
+        () => {
+          btn.style.outline = "";
+        },
+        { once: true }
+      );
+      btn.focus();
+    }
+  };
 
   return (
     <>
       <nav
-        className={`${overlay ? "fixed" : "sticky"} top-0 z-50 w-full pt-10 pb-5 transition-all duration-300 ${
-          scrolled
-            ? "bg-bg border-b border-black/10 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
-            : "bg-transparent"
-        }`}
+        className={`${overlay ? "fixed" : "sticky"} top-0 z-50 w-full pt-6 pb-4 transition-transform duration-300 ${
+          overlay
+            ? "bg-transparent"
+            : "bg-bg border-b border-black/10"
+        } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
       >
-        <div className="max-w-screen-2xl mx-auto px-gutter flex items-center justify-between">
-          <Link href="/" className="shrink-0">
+        {overlay && (
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/35 to-transparent" />
+        )}
+
+        <div className="relative max-w-screen-2xl mx-auto px-6 flex items-start justify-between">
+          <Link href="/" className="relative flex h-16 aspect-[120/48] shrink-0">
             <Image
-              src={
-                onImage
-                  ? "/logos/logo-opaque-1000.png"
-                  : "/logos/logo-black-1000.png"
-              }
+              src={overlay ? "/logos/logo-opaque-1000.png" : "/logos/logo-black-1000.png"}
               alt="Looking Up Arts"
-              width={120}
-              height={48}
-              className={`${onImage ? "h-16" : "h-14"} w-auto`}
-              preload
+              fill
+              sizes="160px"
+              className="object-contain object-left"
+              priority
             />
           </Link>
 
@@ -89,7 +111,7 @@ export default function HomeNav() {
               aria-label="Open menu"
               className="group flex cursor-pointer items-center justify-center p-1 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
             >
-              {onImage ? (
+              {overlay ? (
                 <Menu
                   size={32}
                   strokeWidth={2}

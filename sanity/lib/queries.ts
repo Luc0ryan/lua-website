@@ -89,19 +89,3 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   }
 }
 
-export type InstagramPost = {
-  _id: string;
-  image: { asset: { _ref: string }; hotspot?: object };
-  alt?: string;
-  postUrl?: string;
-};
-
-export async function getInstagramPosts(): Promise<InstagramPost[]> {
-  return client.fetch(
-    `*[_type == "instagramPost"] | order(_createdAt desc) [0...10] {
-      _id, image, alt, postUrl
-    }`,
-    {},
-    { next: { revalidate: 86400 } }
-  );
-}

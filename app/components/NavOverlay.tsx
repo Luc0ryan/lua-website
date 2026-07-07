@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { Mail, X } from "lucide-react";
 
+// Mirrors the footer's IA (Footer.tsx) — confirmed with the client as the
+// current, correct site structure. Keep these two in sync.
 const primaryLinks = [
   { label: "PROJECTS", href: "/projects" },
   { label: "CATALOGUE", href: "/catalogue" },
@@ -11,8 +13,9 @@ const primaryLinks = [
 ];
 
 const secondaryLinks = [
+  { label: "Where we work", href: "/map" },
+  { label: "About", href: "/about" },
   { label: "Donate", href: "/donate" },
-  { label: "Reach", href: "#" },
 ];
 
 type Props = {
@@ -23,13 +26,15 @@ type Props = {
 
 export default function NavOverlay({ open, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Initial focus, Esc to close, Tab trapped within the overlay
   useEffect(() => {
     if (!open) return;
 
-    closeButtonRef.current?.focus();
+    // Focus the panel itself rather than the close button so opening the
+    // overlay doesn't paint a focus ring on the X icon. Tab from here lands
+    // on the close button as normal, with a real (visible) focus ring.
+    overlayRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -76,20 +81,35 @@ export default function NavOverlay({ open, onClose }: Props) {
       {/* Panel */}
       <div
         ref={overlayRef}
+        tabIndex={-1}
         id="nav-overlay"
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className={`fixed inset-y-0 right-0 z-[60] w-full max-w-sm sm:max-w-md bg-bg flex flex-col overflow-y-auto transition-[transform,visibility] duration-300 ease-out motion-reduce:transition-none ${
+        className={`fixed inset-y-0 right-0 z-[60] w-full max-w-sm sm:max-w-md bg-bg flex flex-col overflow-y-auto overflow-x-hidden outline-none transition-[transform,visibility] duration-300 ease-out motion-reduce:transition-none ${
           open
             ? "translate-x-0 visible pointer-events-auto"
             : "translate-x-full invisible pointer-events-none"
         }`}
       >
+        {/* Benday-dot accent wedge */}
+        <div
+          aria-hidden="true"
+          className="absolute left-0 bottom-0 pointer-events-none"
+          style={{
+            width: 190,
+            height: 120,
+            clipPath: "polygon(0 100%, 0 22%, 58% 58%, 100% 100%)",
+            backgroundImage:
+              "radial-gradient(circle, #191919 1.6px, transparent 2px), radial-gradient(circle, #191919 1.6px, transparent 2px)",
+            backgroundSize: "9px 9px, 9px 9px",
+            backgroundPosition: "0 0, 4.5px 4.5px",
+          }}
+        />
+
         {/* Close button */}
         <div className="px-gutter pt-5 pb-10 flex items-center justify-end shrink-0">
           <button
-            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label="Close menu"
@@ -108,7 +128,7 @@ export default function NavOverlay({ open, onClose }: Props) {
                   <Link
                     href={href}
                     onClick={onClose}
-                    className="inline-block text-4xl sm:text-5xl font-heading font-bold uppercase leading-[0.95] text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+                    className="inline-block text-3xl sm:text-4xl font-heading font-bold uppercase leading-[0.95] text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
                   >
                     {label}
                   </Link>
@@ -125,7 +145,7 @@ export default function NavOverlay({ open, onClose }: Props) {
                   <Link
                     href={href}
                     onClick={onClose}
-                    className="inline-block text-2xl sm:text-3xl font-body font-medium text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+                    className="inline-block text-xl sm:text-2xl font-body font-medium text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
                   >
                     {label}
                   </Link>
@@ -139,13 +159,13 @@ export default function NavOverlay({ open, onClose }: Props) {
             <Link
               href="/contact"
               onClick={onClose}
-              className="inline-block text-lg font-body font-semibold text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+              className="inline-block text-lg sm:text-xl font-body font-semibold text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
             >
               Contact us
             </Link>
             <a
               href="mailto:info@lookingup.art"
-              className="inline-flex items-center gap-1.5 text-base font-body text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+              className="inline-flex items-center gap-1.5 text-sm sm:text-base font-body text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
             >
               <Mail size={15} strokeWidth={1.75} aria-hidden="true" />
               info@lookingup.art
