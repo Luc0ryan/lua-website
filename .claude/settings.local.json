@@ -49,7 +49,12 @@
       "mcp__a86917e9-12a6-4c21-8589-e5a2f067f1bf__get_metadata",
       "WebSearch",
       "Bash(python3 -c ' *)",
-      "Bash(xargs ls)"
+      "Bash(xargs ls)",
+      "mcp__Sanity__query_documents",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__navigate",
+      "Bash(node -e \"console.log\\(require\\('sharp'\\)\\)\")",
+      "mcp__claude-in-chrome__computer"
     ]
   }
 }

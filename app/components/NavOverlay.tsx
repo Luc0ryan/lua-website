@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Mail, X } from "lucide-react";
 
 // Mirrors the footer's IA (Footer.tsx) — confirmed with the client as the
@@ -28,12 +28,23 @@ export default function NavOverlay({ open, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Initial focus, Esc to close, Tab trapped within the overlay
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return;
 
     // Focus the panel itself rather than the close button so opening the
     // overlay doesn't paint a focus ring on the X icon. Tab from here lands
     // on the close button as normal, with a real (visible) focus ring.
+    //
+    // Must run in useLayoutEffect, not useEffect: the panel is always in the
+    // DOM (visibility toggles via class), and a passive effect fires on a
+    // delay after paint, racing the browser's own default click-to-focus on
+    // the trigger button. If that native focus resolves after our call, or
+    // if this fires before the visibility transition's style has committed,
+    // the focus() call silently no-ops and focus is left on (or reverts to)
+    // a `focus-visible:outline-pink` element — sometimes the close button —
+    // painting the ring the instant the overlay opens. useLayoutEffect runs
+    // synchronously right after DOM mutations, before paint, so it always
+    // wins.
     overlayRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {

@@ -1,10 +1,31 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { getArtworkBySlug, type Artwork } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const sectionBodyComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+  },
+  marks: {
+    strong: ({ children }) => <strong className="font-semibold text-fg">{children}</strong>,
+    em: ({ children }) => <em>{children}</em>,
+    link: ({ value, children }) => (
+      <a
+        href={value?.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 text-fg transition-colors hover:text-fg/70"
+      >
+        {children}
+      </a>
+    ),
+  },
+};
 
 // Same rule as the gallery card overlay: touring → "Touring";
 // permanent/temporary → "city · year".
@@ -115,6 +136,27 @@ export default async function ProjectPage({ params }: Props) {
           </div>
         )}
       </div>
+
+      {/* Optional content-break sections */}
+      {artwork.sections?.map((section, i) => (
+        <div key={i} className="mx-auto w-full max-w-screen-2xl px-gutter pb-16">
+          <div className="group relative aspect-16/9 w-full overflow-hidden rounded-[2px]">
+            <Image
+              src={urlFor(section.image).url()}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            />
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <h2 className="font-heading text-2xl font-bold uppercase text-fg">{section.title}</h2>
+            <div className="font-body text-base leading-relaxed text-fg/80">
+              <PortableText value={section.body} components={sectionBodyComponents} />
+            </div>
+          </div>
+        </div>
+      ))}
 
       {/* Image sequence */}
       {firstImage && (

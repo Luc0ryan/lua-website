@@ -22,6 +22,14 @@ export default defineConfig({
             S.documentTypeListItem("artwork").title("Projects"),
             S.divider(),
             S.listItem()
+              .id("homepage")
+              .title("Homepage")
+              .child(
+                S.document()
+                  .schemaType("homepage")
+                  .documentId("homepage")
+              ),
+            S.listItem()
               .id("siteSettings")
               .title("Site Settings")
               .child(
@@ -31,7 +39,7 @@ export default defineConfig({
               ),
             // add other types here as needed
             ...S.documentTypeListItems().filter(
-              (item) => !["artwork", "siteSettings"].includes(item.getId() ?? "")
+              (item) => !["artwork", "homepage", "siteSettings"].includes(item.getId() ?? "")
             ),
           ]),
     }),

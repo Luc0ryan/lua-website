@@ -1,4 +1,11 @@
+import type { PortableTextBlock } from "@portabletext/react";
 import { client } from "./client";
+
+export type ProjectSection = {
+  image: { asset: { _ref: string }; hotspot?: object };
+  title: string;
+  body: PortableTextBlock[];
+};
 
 export type Artwork = {
   _id: string;
@@ -12,15 +19,12 @@ export type Artwork = {
   interactive?: boolean;
   featured?: boolean;
   displayOrder?: number;
-  role?: "hero" | "touring" | "commission";
-  heroOrder?: number;
-  touringOrder?: number;
-  commissionOrder?: number;
   description?: string;
   footprint?: string;
   typology?: string;
   status?: "available" | "retired";
   quote?: string;
+  sections?: ProjectSection[];
   gallery?: { asset: { _ref: string }; hotspot?: object }[];
   crew?: string[];
   press?: { text?: string; url?: string }[];
@@ -30,33 +34,36 @@ export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
   return client.fetch(
     `*[_type == "artwork" && slug.current == $slug][0]{
       _id, title, slug, image, city, year, placement, materials,
-      description, footprint, typology, status, quote, gallery, crew, press
+      description, footprint, typology, status, quote, sections, gallery, crew, press
     }`,
     { slug }
   );
 }
 
+// coalesce(...) covers the case where the "homepage" singleton hasn't been
+// created yet in Studio — without it, `[0].field` on a missing document
+// resolves to `null` (not an empty array), which breaks .map/.filter callers.
 export async function getMarqueeArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork" && role == "hero"] | order(heroOrder asc) {
+    `coalesce(*[_type == "homepage"][0].heroProjects[]-> {
       _id, title, city, year, placement, image
-    }`
+    }, [])`
   );
 }
 
 export async function getTouringArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork" && role == "touring"] | order(touringOrder asc) [0...3] {
+    `coalesce(*[_type == "homepage"][0].touringProjects[0...3]-> {
       _id, title, city, year, placement, materials, image
-    }`
+    }, [])`
   );
 }
 
 export async function getCommissionArtworks(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork" && role == "commission"] | order(commissionOrder asc) [0...3] {
+    `coalesce(*[_type == "homepage"][0].commissionProjects[0...3]-> {
       _id, title, city, year, placement, materials, image
-    }`
+    }, [])`
   );
 }
 

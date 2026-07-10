@@ -25,7 +25,8 @@ export const artworkSchema = defineType({
       name: "city",
       title: "Location",
       type: "string",
-      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN". Leave blank for touring works.',
+      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN".',
+      hidden: ({ document }) => document?.placement === "touring",
     }),
     defineField({
       name: "placement",
@@ -40,78 +41,43 @@ export const artworkSchema = defineType({
         layout: "radio",
       },
     }),
-    defineField({ name: "year", title: "Year", type: "number" }),
-
-    // ── Filters ───────────────────────────────────────────────────────────────
+    defineField({ name: "year", title: "Year", type: "number", hidden: ({ document }) => document?.placement === "touring" }),
     defineField({
-      name: "interactive",
-      title: "Interactive",
-      type: "boolean",
-      description: "Enables the Interactive filter on the Projects page.",
-      initialValue: false,
-    }),
-    defineField({
-      name: "featured",
-      title: "Featured",
-      type: "boolean",
-      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
-      initialValue: false,
-    }),
-    defineField({
-      name: "displayOrder",
-      title: "Display order",
-      type: "number",
-      description: "Position on the Projects page (lower = first). Falls back to creation date if unset.",
-    }),
-    defineField({
-      name: "materials",
-      title: "Materials",
+      name: "touringLocations",
+      title: "Touring Locations",
       type: "array",
-      of: [{ type: "string" }],
       description:
-        "Materials used in this work. Drives the Materials filter on the Projects page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
-      options: { layout: "tags" },
-    }),
-
-    // ── Homepage ──────────────────────────────────────────────────────────────
-    // `role` decides which homepage section (if any) shows this piece. It's
-    // independent of `placement` above — a permanently-installed piece can still
-    // be the Commission feature, and a touring piece doesn't have to be the
-    // Touring feature. Each section shows at most 3, by its order field.
-    defineField({
-      name: "role",
-      title: "Homepage role",
-      type: "string",
-      options: {
-        list: [
-          { title: "Hero (accordion banner)", value: "hero" },
-          { title: "Touring (featured)", value: "touring" },
-          { title: "Commission (featured)", value: "commission" },
-        ],
-        layout: "radio",
-      },
-      description: "Leave blank to show on the Projects page only.",
-    }),
-    defineField({
-      name: "heroOrder",
-      title: "Hero order",
-      type: "number",
-      description: "Position in the hero accordion (lower = first).",
-      hidden: ({ document }) => document?.role !== "hero",
-    }),
-    defineField({
-      name: "touringOrder",
-      title: "Touring order",
-      type: "number",
-      description: "Position in the homepage Touring section (lower = first). Only the first 3 show.",
-      hidden: ({ document }) => document?.role !== "touring",
-    }),
-    defineField({
-      name: "commissionOrder",
-      title: "Commission order",
-      type: "number",
-      description: "Position in the homepage Commission section (lower = first). Only the first 3 show.",
-      hidden: ({ document }) => document?.role !== "commission",
+        'Add a stop for each place this piece has toured. Year must be entered as a 4-digit year, e.g. "2024". Location is freeform — city and state/country works well, e.g. "Austin, TX" or "Berlin, Germany".',
+      of: [
+        {
+          type: "object",
+          name: "touringLocation",
+          fields: [
+            defineField({
+              name: "location",
+              title: "Location",
+              type: "string",
+              description: 'Freeform, e.g. "Austin, TX" or "Berlin, Germany".',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "year",
+              title: "Year",
+              type: "number",
+              description: 'Enter as a 4-digit year, e.g. "2024".',
+              validation: (Rule) =>
+                Rule.required().integer().min(1900).max(2100).error("Enter a 4-digit year, e.g. 2024."),
+            }),
+          ],
+          preview: {
+            select: { location: "location", year: "year" },
+            prepare: ({ location, year }) => ({
+              title: [location, year].filter(Boolean).join(" · ") || "Untitled stop",
+            }),
+          },
+        },
+      ],
+      hidden: ({ document }) => document?.placement !== "touring",
     }),
 
     // ── Project page ──────────────────────────────────────────────────────────
@@ -150,6 +116,70 @@ export const artworkSchema = defineType({
       description: "Optional pull quote shown alongside the description.",
     }),
     defineField({
+      name: "sections",
+      title: "Sections",
+      type: "array",
+      description:
+        "Optional — add up to 3 content breaks (image + title + body) for best results; no hard limit. Each section needs all three fields once added.",
+      of: [
+        {
+          type: "object",
+          name: "projectSection",
+          fields: [
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "body",
+              title: "Body",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  lists: [],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                    ],
+                    annotations: [
+                      {
+                        name: "link",
+                        type: "object",
+                        title: "Link",
+                        fields: [{ name: "href", title: "URL", type: "url" }],
+                      },
+                    ],
+                  },
+                },
+              ],
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: "title", media: "image" },
+            prepare: ({ title, media }) => ({
+              title: title || "Untitled section",
+              media,
+            }),
+          },
+        },
+      ],
+      validation: (Rule) =>
+        Rule.max(3).warning("Consider keeping this to 3 sections for readability."),
+    }),
+    defineField({
       name: "gallery",
       title: "Gallery",
       type: "array",
@@ -178,11 +208,39 @@ export const artworkSchema = defineType({
         },
       ],
     }),
+
+    // ── Filters ───────────────────────────────────────────────────────────────
+    defineField({
+      name: "interactive",
+      title: "Interactive",
+      type: "boolean",
+      description: "Enables the Interactive filter on the Projects page.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "displayOrder",
+      title: "Display order",
+      type: "number",
+      description: "Position on the Projects page (lower = first). Falls back to creation date if unset.",
+    }),
+    defineField({
+      name: "materials",
+      title: "Materials",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Materials used in this work. Drives the Materials filter on the Projects page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
+      options: { layout: "tags" },
+    }),
   ],
   orderings: [
     { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
-    { title: "Hero order", name: "heroOrderAsc", by: [{ field: "heroOrder", direction: "asc" }] },
-    { title: "Touring order", name: "touringOrderAsc", by: [{ field: "touringOrder", direction: "asc" }] },
-    { title: "Commission order", name: "commissionOrderAsc", by: [{ field: "commissionOrder", direction: "asc" }] },
   ],
 });
