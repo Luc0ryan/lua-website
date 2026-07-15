@@ -14,7 +14,7 @@ export type Artwork = {
   image: { asset: { _ref: string }; hotspot?: object };
   city?: string;
   year?: number;
-  placement?: "touring" | "permanent" | "temporary";
+  placement?: "touring" | "permanent" | "exhibition";
   materials?: string[];
   interactive?: boolean;
   featured?: boolean;
@@ -32,7 +32,7 @@ export type Artwork = {
 
 export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
   return client.fetch(
-    `*[_type == "artwork" && slug.current == $slug][0]{
+    `*[_type == "project" && slug.current == $slug][0]{
       _id, title, slug, image, city, year, placement, materials,
       description, footprint, typology, status, quote, sections, gallery, crew, press
     }`,
@@ -69,10 +69,36 @@ export async function getCommissionArtworks(): Promise<Artwork[]> {
 
 export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
-    `*[_type == "artwork"]
+    `*[_type == "project"]
       | order(displayOrder asc, _createdAt asc) {
         _id, title, image, city, interactive, placement, featured, displayOrder, materials
       }`
+  );
+}
+
+export type MapLocation = {
+  _id: string;
+  venueName?: string;
+  city?: string;
+  year?: number;
+  geopoint: { lat: number; lng: number };
+  locationState: "current" | "past";
+  project: {
+    _id: string;
+    title: string;
+    slug?: string;
+    image?: { asset: { _ref: string }; hotspot?: object };
+  };
+};
+
+// `defined(geopoint)` filters at the query layer — locations with a venue
+// name but no coordinates yet (not geocoded in Studio) never reach the map.
+export async function getMapLocations(): Promise<MapLocation[]> {
+  return client.fetch(
+    `*[_type == "location" && defined(geopoint)]{
+      _id, venueName, city, year, geopoint, locationState,
+      "project": project->{ _id, title, "slug": slug.current, "image": image }
+    }`
   );
 }
 

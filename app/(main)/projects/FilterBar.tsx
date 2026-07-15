@@ -168,7 +168,7 @@ export default function FilterBar({ artworks }: Props) {
   const searchParams = useSearchParams();
 
   const interactive = searchParams.get("interactive") === "true";
-  const placement = searchParams.get("placement") as "touring" | "permanent" | "temporary" | null;
+  const placement = searchParams.get("placement") as "touring" | "permanent" | "exhibition" | null;
   const citySlug = searchParams.get("city");
   const material = searchParams.get("material");
   const q = searchParams.get("q") ?? "";
@@ -206,7 +206,7 @@ export default function FilterBar({ artworks }: Props) {
 
   const placementOptions = [
     { label: "Permanent", value: "permanent" },
-    { label: "Temporary", value: "temporary" },
+    { label: "Exhibition", value: "exhibition" },
     { label: "Touring", value: "touring" },
   ];
 

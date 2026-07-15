@@ -1,7 +1,7 @@
 import { defineField, defineType } from "sanity";
 
-export const artworkSchema = defineType({
-  name: "artwork",
+export const projectSchema = defineType({
+  name: "project",
   title: "Project",
   type: "document",
   fields: [
@@ -30,12 +30,14 @@ export const artworkSchema = defineType({
     }),
     defineField({
       name: "placement",
-      title: "Touring / Permanent",
+      title: "Touring / Permanent / Exhibition",
       type: "string",
+      description:
+        "Permanent/Exhibition = one fixed site. Touring = multiple stops over time, tracked via Locations below. (Exhibition replaces the old \"Temporary\" label.)",
       options: {
         list: [
           { title: "Permanent", value: "permanent" },
-          { title: "Temporary", value: "temporary" },
+          { title: "Exhibition", value: "exhibition" },
           { title: "Touring", value: "touring" },
         ],
         layout: "radio",
@@ -44,10 +46,11 @@ export const artworkSchema = defineType({
     defineField({ name: "year", title: "Year", type: "number", hidden: ({ document }) => document?.placement === "touring" }),
     defineField({
       name: "touringLocations",
-      title: "Touring Locations",
+      title: "Touring Locations (Deprecated)",
       type: "array",
       description:
-        'Add a stop for each place this piece has toured. Year must be entered as a 4-digit year, e.g. "2024". Location is freeform — city and state/country works well, e.g. "Austin, TX" or "Berlin, Germany".',
+        "Superseded by Location documents — use + Add Location below for new stops. Kept read-only for historical reference.",
+      readOnly: true,
       of: [
         {
           type: "object",

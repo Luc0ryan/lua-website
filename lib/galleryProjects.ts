@@ -3,7 +3,7 @@ import { urlFor } from "@/sanity/lib/image";
 import type { GalleryProject } from "@/app/components/sections/HomeGallery";
 
 /**
- * Subtitle rule (AGENTS.md "Gallery card overlay"): permanent/temporary pieces
+ * Subtitle rule (AGENTS.md "Gallery card overlay"): permanent/exhibition pieces
  * show `city · year`; touring pieces show their first material, or "Touring"
  * if none is set.
  */

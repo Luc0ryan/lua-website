@@ -44,7 +44,7 @@ function toReferences(artworks) {
 
 async function populate() {
   const artworks = await client.fetch(
-    `*[_type == "artwork" && defined(role)]{ _id, role, heroOrder, touringOrder, commissionOrder }`
+    `*[_type == "project" && defined(role)]{ _id, role, heroOrder, touringOrder, commissionOrder }`
   );
 
   const hero = artworks
@@ -78,7 +78,7 @@ async function populate() {
 }
 
 async function cleanup() {
-  const artworks = await client.fetch(`*[_type == "artwork" && defined(role)]{ _id }`);
+  const artworks = await client.fetch(`*[_type == "project" && defined(role)]{ _id }`);
   console.log(`Unsetting role fields on ${artworks.length} artwork document(s)...`);
 
   const tx = client.transaction();

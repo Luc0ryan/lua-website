@@ -28,7 +28,7 @@ const sectionBodyComponents: PortableTextComponents = {
 };
 
 // Same rule as the gallery card overlay: touring → "Touring";
-// permanent/temporary → "city · year".
+// permanent/exhibition → "city · year".
 function subtitleLine(artwork: Artwork): string {
   if (artwork.placement === "touring") return "Touring";
   return [artwork.city, artwork.year].filter(Boolean).join(" · ");

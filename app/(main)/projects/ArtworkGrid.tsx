@@ -5,12 +5,12 @@ import type { Artwork } from "@/sanity/lib/queries";
 
 type Props = { artworks: Artwork[] };
 
-// Subtitle rule: touring → "Touring"; temporary → "City · Temporary" (city
+// Subtitle rule: touring → "Touring"; exhibition → "City · Exhibition" (city
 // first, tag second — e.g. Burning Man pieces like SIRSANA); permanent → city.
 function subtitleLine(a: Artwork) {
   if (a.placement === "touring") return "Touring";
-  if (a.placement === "temporary") {
-    return [a.city, "Temporary"].filter(Boolean).join(" · ");
+  if (a.placement === "exhibition") {
+    return [a.city, "Exhibition"].filter(Boolean).join(" · ");
   }
   return a.city ?? "";
 }

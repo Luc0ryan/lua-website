@@ -1,6 +1,7 @@
-import { artworkSchema } from "./artwork";
+import { projectSchema } from "./project";
+import { locationSchema } from "./location";
 import { homepageSchema } from "./homepage";
 import { instagramPostSchema } from "./instagramPost";
 import { siteSettingsSchema } from "./siteSettings";
 
-export const schemaTypes = [artworkSchema, homepageSchema, instagramPostSchema, siteSettingsSchema];
+export const schemaTypes = [projectSchema, locationSchema, homepageSchema, instagramPostSchema, siteSettingsSchema];

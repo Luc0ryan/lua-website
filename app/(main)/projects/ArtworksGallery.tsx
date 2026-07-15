@@ -21,7 +21,7 @@ function applyFilters(artworks: Artwork[], params: URLSearchParams): Artwork[] {
   }
 
   const placement = params.get("placement");
-  if (placement === "touring" || placement === "permanent" || placement === "temporary") {
+  if (placement === "touring" || placement === "permanent" || placement === "exhibition") {
     result = result.filter((a) => a.placement === placement);
   }
 
