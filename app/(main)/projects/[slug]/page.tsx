@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { getArtworkBySlug, type Artwork } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { buildGalleryRows } from "./buildGalleryRows";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -53,7 +54,7 @@ export default async function ProjectPage({ params }: Props) {
     { label: "Status", value: artwork.status === "retired" ? "Retired" : "Available to rent" },
   ].filter((m) => m.value);
 
-  const [firstImage, ...restImages] = artwork.gallery ?? [];
+  const galleryRows = buildGalleryRows(artwork.gallery ?? []);
   const hasCrewMaterialsPress =
     (artwork.crew && artwork.crew.length > 0) ||
     (artwork.materials && artwork.materials.length > 0) ||
@@ -158,33 +159,39 @@ export default async function ProjectPage({ params }: Props) {
         </div>
       ))}
 
-      {/* Image sequence */}
-      {firstImage && (
-        <div className="mx-auto w-full max-w-screen-2xl px-gutter pb-4">
-          <div className="group relative aspect-16/9 w-full overflow-hidden rounded-[2px]">
-            <Image
-              src={urlFor(firstImage).url()}
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-            />
-          </div>
-        </div>
-      )}
-      {restImages.length > 0 && (
-        <div className="mx-auto grid w-full max-w-screen-2xl grid-cols-1 gap-4 px-gutter pb-16 md:grid-cols-2">
-          {restImages.map((img, i) => (
-            <div key={i} className="group relative aspect-4/5 overflow-hidden rounded-[2px]">
-              <Image
-                src={urlFor(img).url()}
-                alt=""
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-              />
-            </div>
-          ))}
+      {/* Gallery — large rows go full width, small rows group into a 3-up grid */}
+      {galleryRows.length > 0 && (
+        <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-1 px-gutter pb-16">
+          {galleryRows.map((row, i) => {
+            const gridCols =
+              row.items.length === 3 ? "grid-cols-3" : row.items.length === 2 ? "grid-cols-2" : "grid-cols-1";
+            const smallSizes =
+              row.items.length === 3
+                ? "(max-width: 768px) 100vw, 33vw"
+                : row.items.length === 2
+                  ? "(max-width: 768px) 100vw, 50vw"
+                  : "100vw";
+            return (
+              <div key={i} className={row.size === "large" ? "" : `grid gap-1 ${gridCols}`}>
+                {row.items.map((img, j) => (
+                  <div
+                    key={j}
+                    className={`group relative overflow-hidden rounded-[2px] ${
+                      row.size === "large" ? "aspect-16/9 w-full" : "aspect-4/5"
+                    }`}
+                  >
+                    <Image
+                      src={urlFor(img.image).url()}
+                      alt=""
+                      fill
+                      sizes={row.size === "large" ? "100vw" : smallSizes}
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
 
