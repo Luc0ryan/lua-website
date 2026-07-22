@@ -169,9 +169,45 @@ export const projectSchema = defineType({
       name: "gallery",
       title: "Gallery",
       type: "array",
-      of: [{ type: "image", options: { hotspot: true } }],
-      description: "Image sequence shown below the main image. First image displays full-width, the rest in a 2-up grid.",
-      group: "page",
+      of: [
+        {
+          type: "object",
+          name: "galleryImage",
+          fields: [
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              options: { hotspot: true },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "size",
+              title: "Size",
+              type: "string",
+              description: "Full width for standout landscape shots. Grid for candids — three per row.",
+              options: {
+                list: [
+                  { title: "Full width", value: "large" },
+                  { title: "Grid (3-up)", value: "small" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "small",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: { media: "image", size: "size" },
+            prepare: ({ media, size }) => ({
+              title: size === "large" ? "Full width" : "Grid",
+              media,
+            }),
+          },
+        },
+      ],
+      description:
+        "Photo dump for the project page. Drag to reorder. Mark each image Full width or Grid — consecutive Grid images group into rows of three.",
     }),
     defineField({
       name: "crew",

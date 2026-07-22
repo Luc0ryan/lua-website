@@ -7,6 +7,11 @@ export type ProjectSection = {
   body: PortableTextBlock[];
 };
 
+export type GalleryImage = {
+  image: { asset: { _ref: string }; hotspot?: object };
+  size?: "large" | "small";
+};
+
 export type Artwork = {
   _id: string;
   title: string;
@@ -25,7 +30,7 @@ export type Artwork = {
   status?: "available" | "retired";
   quote?: string;
   sections?: ProjectSection[];
-  gallery?: { asset: { _ref: string }; hotspot?: object }[];
+  gallery?: GalleryImage[];
   crew?: string[];
   press?: { text?: string; url?: string }[];
 };
