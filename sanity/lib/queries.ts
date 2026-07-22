@@ -67,6 +67,19 @@ export async function getCommissionArtworks(): Promise<Artwork[]> {
   );
 }
 
+// "Commissioned" isn't a separate flag in this schema — permanent placement
+// *is* a commission in LUA's client model (touring/exhibition pieces aren't
+// site-specific commissions). Newest first, so this is literally "the last
+// 3 commissioned projects uploaded."
+export async function getRecentCommissionedArtworks(): Promise<Artwork[]> {
+  return client.fetch(
+    `*[_type == "project" && placement == "permanent"]
+      | order(_createdAt desc)[0...3] {
+        _id, title, slug, city, year, image
+      }`
+  );
+}
+
 export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "project"]
@@ -99,6 +112,23 @@ export async function getMapLocations(): Promise<MapLocation[]> {
       _id, venueName, city, year, geopoint, locationState,
       "project": project->{ _id, title, "slug": slug.current, "image": image }
     }`
+  );
+}
+
+export type StaffMember = {
+  _id: string;
+  name: string;
+  role?: string;
+  photo?: { asset: { _ref: string }; hotspot?: object };
+  displayOrder?: number;
+};
+
+export async function getStaffMembers(): Promise<StaffMember[]> {
+  return client.fetch(
+    `*[_type == "staffMember"]
+      | order(displayOrder asc, _createdAt asc) {
+        _id, name, role, photo, displayOrder
+      }`
   );
 }
 

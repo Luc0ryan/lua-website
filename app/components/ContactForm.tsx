@@ -120,7 +120,7 @@ export default function ContactForm({
     <section className="relative flex-1 flex flex-col lg:flex-row min-h-screen max-w-screen-2xl mx-auto w-full px-gutter pt-16 pb-32">
       {/* ── Mobile: a peek of the image in the left gutter, below lg where
           the full image is hidden. Sized to exactly fill that gutter strip. ── */}
-      <div className="lg:hidden absolute top-0 h-[880px] left-0 w-[var(--gutter)] rounded-r-2xl overflow-hidden" aria-hidden="true">
+      <div className="lg:hidden absolute top-0 h-[880px] left-0 w-[var(--gutter)] rounded-r-[2px] overflow-hidden" aria-hidden="true">
         <Image src={imageSrc} alt="" fill className="object-cover" sizes="64px" />
       </div>
 
@@ -130,7 +130,7 @@ export default function ContactForm({
           HomeNav (max-w-screen-2xl mx-auto px-gutter) so the form column's
           right edge lines up with the CONTACT US button above it. ── */}
       <div className="hidden lg:block lg:w-1/2 shrink-0 relative">
-        <div className="absolute inset-y-0 right-4 left-[calc(-1*((100vw-min(96rem,100vw))/2+var(--gutter)))] rounded-r-2xl overflow-hidden">
+        <div className="absolute inset-y-0 right-4 left-[calc(-1*((100vw-min(96rem,100vw))/2+var(--gutter)))] rounded-r-[2px] overflow-hidden">
           <Image
             src={imageSrc}
             alt={imageAlt}

@@ -194,10 +194,10 @@ export default function HeroCycler({ projects }: Props) {
             </div>
           )}
 
-          {/* Project card — stroke + solid drop shadow */}
+          {/* Project card — stroke only, no drop shadow */}
           <div
             key={index}
-            className="inline-block bg-white px-5 py-4 shadow-[inset_0_0_0_2px_var(--fg),4px_4px_0_var(--fg)] motion-safe:[animation:hero-card-in_550ms_cubic-bezier(0.22,1,0.36,1)_100ms_both]"
+            className="inline-block bg-white px-5 py-4 shadow-[inset_0_0_0_2px_var(--fg)] motion-safe:[animation:hero-card-in_550ms_cubic-bezier(0.22,1,0.36,1)_100ms_both]"
           >
             {active.meta && (
               <span className="block font-sans text-[13px] font-semibold uppercase tracking-widest text-gray-label">

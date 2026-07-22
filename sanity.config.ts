@@ -27,6 +27,7 @@ export default defineConfig({
           .items([
             S.documentTypeListItem("project").title("Projects"),
             S.documentTypeListItem("location").title("Locations"),
+            S.documentTypeListItem("staffMember").title("Staff"),
             S.divider(),
             S.listItem()
               .id("homepage")
@@ -46,7 +47,8 @@ export default defineConfig({
               ),
             // add other types here as needed
             ...S.documentTypeListItems().filter(
-              (item) => !["project", "location", "homepage", "siteSettings"].includes(item.getId() ?? "")
+              (item) =>
+                !["project", "location", "homepage", "siteSettings", "staffMember"].includes(item.getId() ?? "")
             ),
           ]),
     }),

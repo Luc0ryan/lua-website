@@ -203,7 +203,7 @@ export default function Footer() {
               href="https://www.instagram.com/lookinguparts/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-base font-heading font-bold text-fg hover:text-text-muted transition-colors"
+              className="flex items-center gap-2 text-base font-heading font-bold text-fg hover:text-lua-pink transition-colors"
             >
               <InstagramIcon size={16} />
               FOLLOW US ON INSTAGRAM

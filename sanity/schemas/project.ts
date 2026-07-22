@@ -4,9 +4,15 @@ export const projectSchema = defineType({
   name: "project",
   title: "Project",
   type: "document",
+  groups: [
+    { name: "core", title: "Core", default: true },
+    { name: "page", title: "Project Page" },
+    { name: "filters", title: "Filters" },
+    { name: "legacy", title: "Legacy" },
+  ],
   fields: [
     // ── Core ──────────────────────────────────────────────────────────────────
-    defineField({ name: "title", title: "Title", type: "string" }),
+    defineField({ name: "title", title: "Title", type: "string", group: "core" }),
     defineField({
       name: "slug",
       title: "Slug",
@@ -14,12 +20,14 @@ export const projectSchema = defineType({
       description: "Used in the project page URL, e.g. /projects/rainbow-bridge.",
       options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
+      group: "core",
     }),
     defineField({
       name: "image",
       title: "Image",
       type: "image",
       options: { hotspot: true },
+      group: "core",
     }),
     defineField({
       name: "city",
@@ -27,6 +35,7 @@ export const projectSchema = defineType({
       type: "string",
       description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN".',
       hidden: ({ document }) => document?.placement === "touring",
+      group: "core",
     }),
     defineField({
       name: "placement",
@@ -42,61 +51,32 @@ export const projectSchema = defineType({
         ],
         layout: "radio",
       },
+      group: "core",
     }),
-    defineField({ name: "year", title: "Year", type: "number", hidden: ({ document }) => document?.placement === "touring" }),
     defineField({
-      name: "touringLocations",
-      title: "Touring Locations (Deprecated)",
-      type: "array",
-      description:
-        "Superseded by Location documents — use + Add Location below for new stops. Kept read-only for historical reference.",
-      readOnly: true,
-      of: [
-        {
-          type: "object",
-          name: "touringLocation",
-          fields: [
-            defineField({
-              name: "location",
-              title: "Location",
-              type: "string",
-              description: 'Freeform, e.g. "Austin, TX" or "Berlin, Germany".',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "year",
-              title: "Year",
-              type: "number",
-              description: 'Enter as a 4-digit year, e.g. "2024".',
-              validation: (Rule) =>
-                Rule.required().integer().min(1900).max(2100).error("Enter a 4-digit year, e.g. 2024."),
-            }),
-          ],
-          preview: {
-            select: { location: "location", year: "year" },
-            prepare: ({ location, year }) => ({
-              title: [location, year].filter(Boolean).join(" · ") || "Untitled stop",
-            }),
-          },
-        },
-      ],
-      hidden: ({ document }) => document?.placement !== "touring",
+      name: "year",
+      title: "Year",
+      type: "number",
+      hidden: ({ document }) => document?.placement === "touring",
+      group: "core",
     }),
 
     // ── Project page ──────────────────────────────────────────────────────────
     // Rendered on /projects/[slug].
-    defineField({ name: "description", title: "Description", type: "text" }),
+    defineField({ name: "description", title: "Description", type: "text", group: "page" }),
     defineField({
       name: "footprint",
       title: "Footprint",
       type: "string",
       description: 'Physical size, e.g. "75ft x 30ft x 4ft".',
+      group: "page",
     }),
     defineField({
       name: "typology",
       title: "Typology",
       type: "string",
       description: 'Short type/category tag, e.g. "Walkable, LEDs".',
+      group: "page",
     }),
     defineField({
       name: "status",
@@ -111,12 +91,14 @@ export const projectSchema = defineType({
         layout: "radio",
       },
       initialValue: "available",
+      group: "page",
     }),
     defineField({
       name: "quote",
       title: "Quote",
       type: "text",
       description: "Optional pull quote shown alongside the description.",
+      group: "page",
     }),
     defineField({
       name: "sections",
@@ -124,6 +106,7 @@ export const projectSchema = defineType({
       type: "array",
       description:
         "Optional — add up to 3 content breaks (image + title + body) for best results; no hard limit. Each section needs all three fields once added.",
+      group: "page",
       of: [
         {
           type: "object",
@@ -188,6 +171,7 @@ export const projectSchema = defineType({
       type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
       description: "Image sequence shown below the main image. First image displays full-width, the rest in a 2-up grid.",
+      group: "page",
     }),
     defineField({
       name: "crew",
@@ -195,6 +179,7 @@ export const projectSchema = defineType({
       type: "array",
       of: [{ type: "string" }],
       description: "Names only, one per entry.",
+      group: "page",
     }),
     defineField({
       name: "press",
@@ -210,6 +195,17 @@ export const projectSchema = defineType({
           ],
         },
       ],
+      group: "page",
+    }),
+    defineField({
+      name: "materials",
+      title: "Materials",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Materials used in this work. Also drives the Materials filter on the Projects page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
+      options: { layout: "tags" },
+      group: "page",
     }),
 
     // ── Filters ───────────────────────────────────────────────────────────────
@@ -219,6 +215,7 @@ export const projectSchema = defineType({
       type: "boolean",
       description: "Enables the Interactive filter on the Projects page.",
       initialValue: false,
+      group: "filters",
     }),
     defineField({
       name: "featured",
@@ -226,21 +223,55 @@ export const projectSchema = defineType({
       type: "boolean",
       description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
       initialValue: false,
+      group: "filters",
     }),
     defineField({
       name: "displayOrder",
       title: "Display order",
       type: "number",
       description: "Position on the Projects page (lower = first). Falls back to creation date if unset.",
+      group: "filters",
     }),
+
+    // ── Legacy ────────────────────────────────────────────────────────────────
     defineField({
-      name: "materials",
-      title: "Materials",
+      name: "touringLocations",
+      title: "Touring Locations (Deprecated)",
       type: "array",
-      of: [{ type: "string" }],
       description:
-        "Materials used in this work. Drives the Materials filter on the Projects page. Free-text tags — the filter matches case-insensitively, so reuse existing wording (e.g. \"Steel\", not \"steel\") where it applies, but new tags are always fine to add.",
-      options: { layout: "tags" },
+        "Superseded by Location documents — use + Add Location below for new stops. Kept read-only for historical reference.",
+      readOnly: true,
+      group: "legacy",
+      of: [
+        {
+          type: "object",
+          name: "touringLocation",
+          fields: [
+            defineField({
+              name: "location",
+              title: "Location",
+              type: "string",
+              description: 'Freeform, e.g. "Austin, TX" or "Berlin, Germany".',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "year",
+              title: "Year",
+              type: "number",
+              description: 'Enter as a 4-digit year, e.g. "2024".',
+              validation: (Rule) =>
+                Rule.required().integer().min(1900).max(2100).error("Enter a 4-digit year, e.g. 2024."),
+            }),
+          ],
+          preview: {
+            select: { location: "location", year: "year" },
+            prepare: ({ location, year }) => ({
+              title: [location, year].filter(Boolean).join(" · ") || "Untitled stop",
+            }),
+          },
+        },
+      ],
+      hidden: ({ document }) => document?.placement !== "touring",
     }),
   ],
   orderings: [

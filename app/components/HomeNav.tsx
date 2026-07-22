@@ -8,7 +8,11 @@ import { Menu } from "lucide-react";
 import NavOverlay from "./NavOverlay";
 
 function isHeroRoute(pathname: string): boolean {
-  return pathname === "/" || /^\/projects\/[^/]+$/.test(pathname);
+  return (
+    pathname === "/" ||
+    pathname === "/commission" ||
+    /^\/projects\/[^/]+$/.test(pathname)
+  );
 }
 
 
@@ -85,10 +89,6 @@ export default function HomeNav() {
             : "bg-bg border-b border-black/10"
         } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
       >
-        {overlay && (
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/35 to-transparent" />
-        )}
-
         <div className="relative max-w-screen-2xl mx-auto px-6 flex items-start justify-between">
           <Link href="/" className="relative flex h-16 aspect-[120/48] shrink-0">
             <Image
@@ -124,7 +124,7 @@ export default function HomeNav() {
 
             <Link
               href="/contact"
-              className="hidden md:inline-block border border-fg bg-bg text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_var(--fg)] transition-all duration-150 hover:shadow-[4px_4px_0_#DC738F] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none]"
+              className="hidden md:inline-block border border-fg bg-bg text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_var(--fg)] transition-all duration-150 hover:shadow-[4px_4px_0_var(--lua-pink)] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none]"
             >
               CONTACT US
             </Link>

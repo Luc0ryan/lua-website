@@ -6,6 +6,8 @@
   --pink: #DC738F;
   --lua-pink: #C91F6E;
   --pink-fill: #fdf1f5;
+  /* Commission page only — not the site-wide accent, keep scoped to that page's components */
+  --purple-commission: #7E22CE;
   --gray-label: #888;
   --text-muted: #666666;
   --footer-bg: #E8E4DF;
@@ -19,6 +21,7 @@
   --color-pink: var(--pink);
   --color-lua-pink: var(--lua-pink);
   --color-pink-fill: var(--pink-fill);
+  --color-purple-commission: var(--purple-commission);
   --color-gray-label: var(--gray-label);
   --color-text-muted: var(--text-muted);
   --color-footer-bg: var(--footer-bg);

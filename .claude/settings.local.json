@@ -54,7 +54,9 @@
       "mcp__claude-in-chrome__tabs_context_mcp",
       "mcp__claude-in-chrome__navigate",
       "Bash(node -e \"console.log\\(require\\('sharp'\\)\\)\")",
-      "mcp__claude-in-chrome__computer"
+      "mcp__claude-in-chrome__computer",
+      "Bash(file public/images/commission/testimonial-bg.jpg)",
+      "Bash(sips -g pixelWidth -g pixelHeight public/images/commission/testimonial-bg.jpg)"
     ]
   }
 }
