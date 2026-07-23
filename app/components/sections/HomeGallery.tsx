@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import BenDayField from "../BenDayField";
 
 /**
  * Single source of truth for the homepage gallery sections (Figma 1140:1604 /
- * 1145). Owns the 12-col desktop grid, the tiles, the Ben Day dot layer, and
- * the desktop/mobile order logic. The `touringHome` / `commissionHome` wrappers
- * are thin — they only vary `featuredSide` and the CTA target.
+ * 1145). Owns the 12-col desktop grid, the tiles, and the desktop/mobile
+ * order logic. The `touringHome` / `commissionHome` wrappers are thin — they
+ * only vary `featuredSide` and the CTA target.
  *
  * Layout (desktop): a 7/5 split over two rows.
  *  - Top row: featured (wide, 7) + text cell (narrow, 5); `featuredSide` swaps
@@ -104,11 +103,6 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
 
   return (
     <section className="mx-auto w-full max-w-screen-2xl px-gutter py-10">
-      {/* Pronounced horizontal rule above each section (Figma Line38, 2px).
-          mb-9 (36px) is the band of space the Ben Day dots fill above the
-          featured image. */}
-      <hr className="mb-9 border-t-2 border-fg" />
-
       <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:grid-rows-[auto_auto]">
         {/* Text cell */}
         <div className={`flex flex-col justify-between gap-6 px-3 py-6 ${textPlacement}`}>
@@ -132,11 +126,9 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
           </Link>
         </div>
 
-        {/* Featured cell — the dot band anchors to its top edge (bottom-full),
-            filling the 36px gap above the image */}
+        {/* Featured cell */}
         {featured && (
-          <div className={`relative ${featuredPlacement}`}>
-            <BenDayField />
+          <div className={featuredPlacement}>
             <Tile project={featured} aspect={wideAspect} sizes="(max-width: 768px) 100vw, 600px" />
           </div>
         )}

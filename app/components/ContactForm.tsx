@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
@@ -37,6 +38,7 @@ export default function ContactForm({
   const [form, setForm] = useState(() => ({
     name: "",
     email: "",
+    reason: "",
     message: pieceTitle ? `I'm interested in booking: ${pieceTitle}` : "",
     newsletter: false,
   }));
@@ -67,6 +69,7 @@ export default function ContactForm({
       //   firstname     → default Contact property
       //   lastname      → default Contact property (empty string if single name given)
       //   email         → default Contact property
+      //   inquiry_type  → create a single-line/dropdown Contact property named "inquiry_type"
       //   message       → create a multi-line text Contact property named "message"
       //   newsletter_opt_in → create a single checkbox Contact property named "newsletter_opt_in"
 
@@ -80,6 +83,7 @@ export default function ContactForm({
           { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "firstname", value: firstName },
           { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "lastname", value: lastName },
           { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "email", value: form.email },
+          { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "inquiry_type", value: form.reason },
           { objectTypeId: HUBSPOT_CONTACT_TYPE_ID, name: "message", value: form.message },
           {
             objectTypeId: HUBSPOT_CONTACT_TYPE_ID,
@@ -120,7 +124,7 @@ export default function ContactForm({
     <section className="relative flex-1 flex flex-col lg:flex-row min-h-screen max-w-screen-2xl mx-auto w-full px-gutter pt-16 pb-32">
       {/* ── Mobile: a peek of the image in the left gutter, below lg where
           the full image is hidden. Sized to exactly fill that gutter strip. ── */}
-      <div className="lg:hidden absolute top-0 h-[880px] left-0 w-[var(--gutter)] rounded-r-[2px] overflow-hidden" aria-hidden="true">
+      <div className="lg:hidden absolute top-0 h-[880px] left-0 w-[var(--gutter)] rounded-r-[4px] overflow-hidden shadow-[inset_0_0_0_2px_var(--fg)]" aria-hidden="true">
         <Image src={imageSrc} alt="" fill className="object-cover" sizes="64px" />
       </div>
 
@@ -130,7 +134,7 @@ export default function ContactForm({
           HomeNav (max-w-screen-2xl mx-auto px-gutter) so the form column's
           right edge lines up with the CONTACT US button above it. ── */}
       <div className="hidden lg:block lg:w-1/2 shrink-0 relative">
-        <div className="absolute inset-y-0 right-4 left-[calc(-1*((100vw-min(96rem,100vw))/2+var(--gutter)))] rounded-r-[2px] overflow-hidden">
+        <div className="absolute inset-y-0 right-4 left-[calc(-1*((100vw-min(96rem,100vw))/2+var(--gutter)))] rounded-r-[4px] overflow-hidden shadow-[inset_0_0_0_2px_var(--fg)]">
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -211,6 +215,45 @@ export default function ContactForm({
                     onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                     className="bg-footer-bg border border-fg/20 rounded px-4 py-3 font-body text-fg placeholder:text-fg/30 focus:outline-none focus:border-fg/60 transition-colors"
                   />
+                </div>
+
+                {/* Inquiry type */}
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="contact-reason"
+                    className="text-xs font-sans font-semibold tracking-widest uppercase"
+                  >
+                    What are you looking to do?
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="contact-reason"
+                      required
+                      value={form.reason}
+                      onChange={(e) => setForm((f) => ({ ...f, reason: e.target.value }))}
+                      className="w-full appearance-none bg-footer-bg border border-fg/20 rounded px-4 py-3 pr-10 font-body text-fg focus:outline-none focus:border-fg/60 transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled>
+                        Select one
+                      </option>
+                      <option value="Bring existing work to our event or venue">
+                        Bring existing work to our event or venue
+                      </option>
+                      <option value="Commission a new artwork">
+                        Commission a new artwork
+                      </option>
+                      <option value="Explore a partnership or collaboration">
+                        Explore a partnership or collaboration
+                      </option>
+                      <option value="Press or media">Press or media</option>
+                      <option value="Something else">Something else</option>
+                    </select>
+                    <ChevronDown
+                      size={18}
+                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-fg/50"
+                      aria-hidden="true"
+                    />
+                  </div>
                 </div>
 
                 {/* Message */}

@@ -7,9 +7,9 @@ export default async function CommissionHome() {
 
   return (
     <HomeGallery
-      title="Commission uniquely"
-      body="We work with civic institutions and private groups alike to build pieces that bring wonder to communities."
-      cta={{ label: "Check out our touring catalogue", href: "/projects#permanent" }}
+      title="Built to belong somewhere"
+      body="We partner with civic institutions and private clients to design and fabricate permanent work — sculpture built for a specific site, and built to last."
+      cta={{ label: "See our permanent installations", href: "/projects#permanent" }}
       projects={projects}
       featuredSide="left"
     />
