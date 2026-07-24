@@ -62,8 +62,10 @@ export default async function ProjectPage({ params }: Props) {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative -mt-2 h-[70svh] min-h-[420px] w-full overflow-hidden">
+      {/* Hero — aspect-ratio driven so the crop stays close to the source
+          image's own proportions instead of an arbitrary viewport fraction;
+          max-h keeps hero + card confined to the fold on short viewports. */}
+      <section className="relative -mt-2 aspect-16/9 max-h-[85svh] min-h-[420px] w-full overflow-hidden">
         {heroUrl && (
           <Image
             src={heroUrl}
@@ -82,19 +84,20 @@ export default async function ProjectPage({ params }: Props) {
             background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 16%)",
           }}
         />
-      </section>
 
-      {/* Title card — straddles the hero/content seam, house "hero project card" style */}
-      <div className="relative mx-auto w-full max-w-screen-2xl px-gutter">
-        <div className="absolute -top-14 left-gutter max-w-[85%] bg-white px-8 py-6 shadow-[inset_0_0_0_2px_var(--fg),8px_8px_0_var(--fg)]">
-          <h1 className="font-heading text-4xl font-bold project-title leading-tight text-fg">
-            {artwork.title}
-          </h1>
-          {subtitle && (
-            <p className="mt-1 font-body text-xl uppercase text-gray-label">{subtitle}</p>
-          )}
+        {/* Title card — sits on the image itself, anchored near the hero's
+            bottom edge, house "hero project card" style */}
+        <div className="absolute inset-x-0 bottom-8 mx-auto w-full max-w-screen-2xl px-gutter">
+          <div className="max-w-[85%] bg-white px-8 py-6 shadow-[inset_0_0_0_2px_var(--fg),8px_8px_0_var(--fg)]">
+            <h1 className="font-heading text-4xl font-bold project-title leading-tight text-fg">
+              {artwork.title}
+            </h1>
+            {subtitle && (
+              <p className="mt-1 font-body text-xl uppercase text-gray-label">{subtitle}</p>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Metadata row, booking link, quote + body */}
       <div className="mx-auto w-full max-w-screen-2xl px-gutter pt-24 pb-16">
@@ -111,26 +114,17 @@ export default async function ProjectPage({ params }: Props) {
           </div>
         )}
 
-        {canBook && (
-          <Link
-            href={contactHref}
-            className="mt-4 inline-block font-body text-base text-fg underline underline-offset-2 transition-colors hover:text-fg/70"
-          >
-            Inquire about booking this piece
-          </Link>
-        )}
-
-        {(metadata.length > 0 || canBook) && <hr className="mt-8 border-t border-fg/20" />}
+        {metadata.length > 0 && <hr className="mt-8 border-t border-fg/20" />}
 
         {(artwork.quote || artwork.description) && (
-          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,2fr)]">
             {artwork.quote && (
-              <p className="font-body text-xl italic leading-relaxed text-fg">
+              <p className="font-body text-xl italic leading-relaxed text-fg md:col-start-1">
                 &ldquo;{artwork.quote}&rdquo;
               </p>
             )}
             {artwork.description && (
-              <div className="whitespace-pre-line font-body text-base leading-relaxed text-fg/80">
+              <div className="whitespace-pre-line font-body text-base leading-relaxed text-fg/80 md:col-start-3">
                 {artwork.description}
               </div>
             )}
@@ -181,7 +175,7 @@ export default async function ProjectPage({ params }: Props) {
                     }`}
                   >
                     <Image
-                      src={urlFor(img.image).url()}
+                      src={urlFor(img).url()}
                       alt=""
                       fill
                       sizes={row.size === "large" ? "100vw" : smallSizes}
@@ -195,55 +189,69 @@ export default async function ProjectPage({ params }: Props) {
         </div>
       )}
 
-      {/* Crew / Materials / Press */}
-      {hasCrewMaterialsPress && (
+      {/* Booking + Crew / Materials / Press — rule separates this footer
+          metadata from the gallery/sections above */}
+      {(canBook || hasCrewMaterialsPress) && (
         <div className="mx-auto w-full max-w-screen-2xl px-gutter pb-24">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {artwork.crew && artwork.crew.length > 0 && (
-              <div>
-                <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
-                  Crew
-                </p>
-                <p className="mt-2 font-body text-base text-fg/70">{artwork.crew.join(", ")}</p>
-              </div>
-            )}
-            {artwork.materials && artwork.materials.length > 0 && (
-              <div>
-                <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
-                  Materials
-                </p>
-                <p className="mt-2 font-body text-base text-fg/70">
-                  {artwork.materials.join(", ")}
-                </p>
-              </div>
-            )}
-            {artwork.press && artwork.press.length > 0 && (
-              <div>
-                <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
-                  Press
-                </p>
-                <div className="mt-2 flex flex-col gap-1">
-                  {artwork.press.map((p, i) =>
-                    p.url ? (
-                      <a
-                        key={i}
-                        href={p.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-body text-base text-fg/70 underline underline-offset-2 transition-colors hover:text-fg"
-                      >
-                        {p.text}
-                      </a>
-                    ) : (
-                      <span key={i} className="font-body text-base text-fg/70">
-                        {p.text}
-                      </span>
-                    )
-                  )}
+          <hr className="mb-8 border-t border-fg/20" />
+
+          {canBook && (
+            <Link
+              href={contactHref}
+              className="mb-8 inline-block font-body text-base text-fg underline underline-offset-2 transition-colors hover:text-fg/70"
+            >
+              Inquire about booking this piece
+            </Link>
+          )}
+
+          {hasCrewMaterialsPress && (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              {artwork.crew && artwork.crew.length > 0 && (
+                <div>
+                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
+                    Crew
+                  </p>
+                  <p className="mt-2 font-body text-base text-fg/70">{artwork.crew.join(", ")}</p>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+              {artwork.materials && artwork.materials.length > 0 && (
+                <div>
+                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
+                    Materials
+                  </p>
+                  <p className="mt-2 font-body text-base text-fg/70">
+                    {artwork.materials.join(", ")}
+                  </p>
+                </div>
+              )}
+              {artwork.press && artwork.press.length > 0 && (
+                <div>
+                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
+                    Press
+                  </p>
+                  <div className="mt-2 flex flex-col gap-1">
+                    {artwork.press.map((p, i) =>
+                      p.url ? (
+                        <a
+                          key={i}
+                          href={p.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-body text-base text-fg/70 underline underline-offset-2 transition-colors hover:text-fg"
+                        >
+                          {p.text}
+                        </a>
+                      ) : (
+                        <span key={i} className="font-body text-base text-fg/70">
+                          {p.text}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </main>

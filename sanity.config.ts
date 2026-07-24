@@ -9,6 +9,7 @@ import {
   AddLocationAction,
   ResolveToPermanentAction,
   wrapPublishForLocationAutoSwap,
+  wrapPublishForRequiredSlug,
 } from "./sanity/actions/documentActions";
 
 export default defineConfig({
@@ -76,7 +77,13 @@ export default defineConfig({
   document: {
     actions: (prev, context) => {
       if (context.schemaType === "project") {
-        return [...prev, AddLocationAction, ResolveToPermanentAction];
+        return [
+          ...prev.map((action) =>
+            action.action === "publish" ? wrapPublishForRequiredSlug(action) : action
+          ),
+          AddLocationAction,
+          ResolveToPermanentAction,
+        ];
       }
       if (context.schemaType === "location") {
         return prev.map((action) =>

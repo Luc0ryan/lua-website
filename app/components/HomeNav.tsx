@@ -89,7 +89,7 @@ export default function HomeNav() {
             : "bg-bg border-b border-black/10"
         } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
       >
-        <div className="relative max-w-screen-2xl mx-auto px-6 flex items-start justify-between">
+        <div className="relative w-full max-w-screen-2xl mx-auto px-gutter flex items-start justify-between">
           <Link href="/" className="relative flex h-16 aspect-[120/48] shrink-0">
             <Image
               src={overlay ? "/logos/logo-opaque-1000.png" : "/logos/logo-black-1000.png"}

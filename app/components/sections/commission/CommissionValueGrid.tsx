@@ -34,7 +34,7 @@ export default function CommissionValueGrid() {
       <div className="grid grid-cols-1 gap-x-6 gap-y-24 sm:grid-cols-3 sm:gap-y-0">
         {cards.map((card, i) => (
           <div key={card.title} className={i === 1 ? "sm:mt-8" : ""}>
-            <div className="relative aspect-[336/448] w-full overflow-hidden rounded-[2px]">
+            <div className="relative aspect-336/448 w-full overflow-hidden rounded-xs">
               <Image
                 src={card.image}
                 alt={card.alt}
@@ -43,7 +43,7 @@ export default function CommissionValueGrid() {
                 className="object-cover"
               />
             </div>
-            <div className="relative z-10 -mt-16 ml-0 flex w-[85%] max-w-[320px] flex-col gap-1 rounded-[2px] border-[1.5px] border-purple-commission bg-white p-4">
+            <div className="relative z-10 -mt-24 ml-0 flex w-[90%] flex-col gap-1 rounded-xs border-2 border-purple-commission bg-white p-4">
               <p className="font-heading font-medium text-2xl tracking-tight text-fg">
                 {card.title}
               </p>

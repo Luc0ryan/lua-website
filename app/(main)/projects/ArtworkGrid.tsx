@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { buildRows } from "./buildRows";
 import type { Artwork } from "@/sanity/lib/queries";
@@ -21,9 +22,10 @@ function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featur
     : null;
 
   const subtitle = subtitleLine(artwork);
+  const href = artwork.slug?.current ? `/projects/${artwork.slug.current}` : null;
 
-  return (
-    <div className="group relative aspect-4/3 cursor-pointer overflow-hidden rounded-[2px] bg-neutral-200">
+  const card = (
+    <div className="group relative aspect-4/3 overflow-hidden rounded-[2px] bg-neutral-200">
       {imgUrl ? (
         <Image
           src={imgUrl}
@@ -50,6 +52,14 @@ function ArtworkCard({ artwork, featured, priority }: { artwork: Artwork; featur
         </span>
       </div>
     </div>
+  );
+
+  if (!href) return card;
+
+  return (
+    <Link href={href} className="block">
+      {card}
+    </Link>
   );
 }
 

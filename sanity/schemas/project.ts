@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { AutoSlugInput } from "../components/AutoSlugInput";
 
 export const projectSchema = defineType({
   name: "project",
@@ -8,7 +9,6 @@ export const projectSchema = defineType({
     { name: "core", title: "Core", default: true },
     { name: "page", title: "Project Page" },
     { name: "filters", title: "Filters" },
-    { name: "legacy", title: "Legacy" },
   ],
   fields: [
     // ── Core ──────────────────────────────────────────────────────────────────
@@ -18,8 +18,13 @@ export const projectSchema = defineType({
       title: "Slug",
       type: "slug",
       description: "Used in the project page URL, e.g. /projects/rainbow-bridge.",
-      options: { source: "title", maxLength: 96 },
-      validation: (Rule) => Rule.required(),
+      components: { input: AutoSlugInput },
+      group: "core",
+    }),
+    defineField({
+      name: "year",
+      title: "Year (of creation)",
+      type: "number",
       group: "core",
     }),
     defineField({
@@ -27,14 +32,6 @@ export const projectSchema = defineType({
       title: "Image",
       type: "image",
       options: { hotspot: true },
-      group: "core",
-    }),
-    defineField({
-      name: "city",
-      title: "Location",
-      type: "string",
-      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN".',
-      hidden: ({ document }) => document?.placement === "touring",
       group: "core",
     }),
     defineField({
@@ -54,10 +51,12 @@ export const projectSchema = defineType({
       group: "core",
     }),
     defineField({
-      name: "year",
-      title: "Year",
-      type: "number",
-      hidden: ({ document }) => document?.placement === "touring",
+      name: "city",
+      title: "Location",
+      type: "string",
+      description: 'City / region shown on cards and in the hero, e.g. "Jackson, TN".',
+      hidden: ({ document }) =>
+        document?.placement !== "permanent" && document?.placement !== "exhibition",
       group: "core",
     }),
 
@@ -171,43 +170,13 @@ export const projectSchema = defineType({
       type: "array",
       of: [
         {
-          type: "object",
-          name: "galleryImage",
-          fields: [
-            defineField({
-              name: "image",
-              title: "Image",
-              type: "image",
-              options: { hotspot: true },
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "size",
-              title: "Size",
-              type: "string",
-              description: "Full width for standout landscape shots. Grid for candids — three per row.",
-              options: {
-                list: [
-                  { title: "Full width", value: "large" },
-                  { title: "Grid (3-up)", value: "small" },
-                ],
-                layout: "radio",
-              },
-              initialValue: "small",
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: { media: "image", size: "size" },
-            prepare: ({ media, size }) => ({
-              title: size === "large" ? "Full width" : "Grid",
-              media,
-            }),
-          },
+          type: "image",
+          options: { hotspot: true },
         },
       ],
       description:
-        "Photo dump for the project page. Drag to reorder. Mark each image Full width or Grid — consecutive Grid images group into rows of three.",
+        "Photo dump for the project page — drop in multiple files at once, just like the media library. Drag to reorder. Full width vs grid layout is picked automatically from each photo's aspect ratio (landscape → full width, square/portrait → grid).",
+      group: "page",
     }),
     defineField({
       name: "crew",
@@ -253,64 +222,5 @@ export const projectSchema = defineType({
       initialValue: false,
       group: "filters",
     }),
-    defineField({
-      name: "featured",
-      title: "Featured",
-      type: "boolean",
-      description: "Featured pieces appear in the wider 2-up rows of the asymmetric grid.",
-      initialValue: false,
-      group: "filters",
-    }),
-    defineField({
-      name: "displayOrder",
-      title: "Display order",
-      type: "number",
-      description: "Position on the Projects page (lower = first). Falls back to creation date if unset.",
-      group: "filters",
-    }),
-
-    // ── Legacy ────────────────────────────────────────────────────────────────
-    defineField({
-      name: "touringLocations",
-      title: "Touring Locations (Deprecated)",
-      type: "array",
-      description:
-        "Superseded by Location documents — use + Add Location below for new stops. Kept read-only for historical reference.",
-      readOnly: true,
-      group: "legacy",
-      of: [
-        {
-          type: "object",
-          name: "touringLocation",
-          fields: [
-            defineField({
-              name: "location",
-              title: "Location",
-              type: "string",
-              description: 'Freeform, e.g. "Austin, TX" or "Berlin, Germany".',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "year",
-              title: "Year",
-              type: "number",
-              description: 'Enter as a 4-digit year, e.g. "2024".',
-              validation: (Rule) =>
-                Rule.required().integer().min(1900).max(2100).error("Enter a 4-digit year, e.g. 2024."),
-            }),
-          ],
-          preview: {
-            select: { location: "location", year: "year" },
-            prepare: ({ location, year }) => ({
-              title: [location, year].filter(Boolean).join(" · ") || "Untitled stop",
-            }),
-          },
-        },
-      ],
-      hidden: ({ document }) => document?.placement !== "touring",
-    }),
-  ],
-  orderings: [
-    { title: "Display order", name: "displayOrderAsc", by: [{ field: "displayOrder", direction: "asc" }] },
   ],
 });

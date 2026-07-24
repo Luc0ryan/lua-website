@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "sanity/router";
 import { useClient, type DocumentActionComponent } from "sanity";
-import { Box, Button, Card, Flex, Radio, Stack, Text } from "@sanity/ui";
+import { Box, Button, Card, Flex, Radio, Stack, Text, useToast } from "@sanity/ui";
 
 const API_VERSION = "2024-01-01";
 
@@ -70,6 +70,38 @@ export function wrapPublishForLocationAutoSwap(
   };
   AutoSwapPublish.action = "publish";
   return AutoSwapPublish;
+}
+
+// Wraps the built-in `publish` action for `project` documents: the slug
+// field has no `required()` validation (so it stays quiet while the editor
+// is still filling out the title), but publishing without one would break
+// the project page URL. This blocks the actual publish attempt and surfaces
+// a toast instead, so the error only appears when it's actually relevant.
+export function wrapPublishForRequiredSlug(
+  originalPublish: DocumentActionComponent
+): DocumentActionComponent {
+  const RequireSlugPublish: DocumentActionComponent = (props) => {
+    const toast = useToast();
+    const original = originalPublish(props);
+    const slug = (props.draft?.slug ?? props.published?.slug) as { current?: string } | undefined;
+
+    if (!original || slug?.current) {
+      return original;
+    }
+
+    return {
+      ...original,
+      onHandle: () => {
+        toast.push({
+          status: "error",
+          title: "Add a slug before publishing",
+          description: "The Slug field under Core is required to generate the project page URL.",
+        });
+      },
+    };
+  };
+  RequireSlugPublish.action = "publish";
+  return RequireSlugPublish;
 }
 
 // "Resolve to permanent" — appended to the `project` document type's action

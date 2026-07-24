@@ -8,8 +8,11 @@ export type ProjectSection = {
 };
 
 export type GalleryImage = {
-  image: { asset: { _ref: string }; hotspot?: object };
-  size?: "large" | "small";
+  asset: { _ref: string };
+  hotspot?: object;
+  // Derived at query time from the asset's own dimensions — drives the
+  // full-width vs grid layout instead of a manual per-image toggle.
+  aspectRatio?: number;
 };
 
 export type Artwork = {
@@ -22,8 +25,6 @@ export type Artwork = {
   placement?: "touring" | "permanent" | "exhibition";
   materials?: string[];
   interactive?: boolean;
-  featured?: boolean;
-  displayOrder?: number;
   description?: string;
   footprint?: string;
   typology?: string;
@@ -39,7 +40,8 @@ export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
   return client.fetch(
     `*[_type == "project" && slug.current == $slug][0]{
       _id, title, slug, image, city, year, placement, materials,
-      description, footprint, typology, status, quote, sections, gallery, crew, press
+      description, footprint, typology, status, quote, sections, crew, press,
+      gallery[]{ ..., "aspectRatio": asset->metadata.dimensions.aspectRatio }
     }`,
     { slug }
   );
@@ -88,8 +90,8 @@ export async function getRecentCommissionedArtworks(): Promise<Artwork[]> {
 export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "project"]
-      | order(displayOrder asc, _createdAt asc) {
-        _id, title, image, city, interactive, placement, featured, displayOrder, materials
+      | order(_createdAt asc) {
+        _id, title, slug, image, city, interactive, placement, materials
       }`
   );
 }
