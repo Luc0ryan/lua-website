@@ -88,7 +88,7 @@ export default async function ProjectPage({ params }: Props) {
         {/* Title card — sits on the image itself, anchored near the hero's
             bottom edge, house "hero project card" style */}
         <div className="absolute inset-x-0 bottom-8 mx-auto w-full max-w-screen-2xl px-gutter">
-          <div className="max-w-[85%] bg-white px-8 py-6 shadow-[inset_0_0_0_2px_var(--fg),8px_8px_0_var(--fg)]">
+          <div className="w-fit max-w-[85%] bg-white px-8 py-6 shadow-[inset_0_0_0_2px_var(--fg),8px_8px_0_var(--fg)]">
             <h1 className="font-heading text-4xl font-bold project-title leading-tight text-fg">
               {artwork.title}
             </h1>
