@@ -15,11 +15,15 @@ function slugify(input: string): string {
 // directly into the slug field it detaches and stops following title,
 // until the slug is cleared back to empty.
 export function AutoSlugInput(props: SlugInputProps) {
-  const { onChange, value } = props;
+  const { onChange, value, readOnly } = props;
   const title = useFormValue(["title"]) as string | undefined;
   const lastAutoSlug = useRef<string>(value?.current ?? "");
 
   useEffect(() => {
+    // e.g. viewing a draft-only document under the "Published" perspective —
+    // there's nothing to patch, so mirroring the title would throw.
+    if (readOnly) return;
+
     const currentSlug = value?.current ?? "";
     if (currentSlug !== lastAutoSlug.current && currentSlug !== "") return;
 
@@ -28,7 +32,7 @@ export function AutoSlugInput(props: SlugInputProps) {
 
     lastAutoSlug.current = nextSlug;
     onChange(nextSlug ? set({ _type: "slug", current: nextSlug }) : unset());
-  }, [title, value, onChange]);
+  }, [title, value, onChange, readOnly]);
 
   return props.renderDefault(props);
 }

@@ -54,7 +54,10 @@ export default async function ProjectPage({ params }: Props) {
     { label: "Status", value: artwork.status === "retired" ? "Retired" : "Available to rent" },
   ].filter((m) => m.value);
 
-  const galleryRows = buildGalleryRows(artwork.gallery ?? []);
+  // Filters out empty array slots (added in Studio but never uploaded to) —
+  // those have no asset ref and would crash urlFor() downstream.
+  const galleryImages = (artwork.gallery ?? []).filter((img) => img.asset?._ref);
+  const galleryRows = buildGalleryRows(galleryImages);
   const hasCrewMaterialsPress =
     (artwork.crew && artwork.crew.length > 0) ||
     (artwork.materials && artwork.materials.length > 0) ||
@@ -120,7 +123,7 @@ export default async function ProjectPage({ params }: Props) {
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,2fr)]">
             {artwork.quote && (
               <p className="font-body text-xl italic leading-relaxed text-fg md:col-start-1">
-                &ldquo;{artwork.quote}&rdquo;
+                {artwork.quote}
               </p>
             )}
             {artwork.description && (
