@@ -51,11 +51,17 @@ export default function DesignPage() {
           <div>
             <Text variant="label" className="mb-4 block">Archivo — font-heading</Text>
             <div className="space-y-3">
+              <Heading as="h2" level="display">Display</Heading>
               <Heading level="h1">Heading One</Heading>
               <Heading level="h2">Heading Two</Heading>
               <Heading level="h3">Heading Three</Heading>
               <Heading level="h4">Heading Four</Heading>
             </div>
+            <Text variant="muted" size="sm" className="mt-3 block">
+              Display is fluid (clamp, scales continuously with viewport) — reserve it for one-off
+              hero/section-opener moments, not routine section headings. Weight defaults to bold;
+              pass <code className="font-mono">weight=&quot;normal&quot;</code> etc. to override any level.
+            </Text>
           </div>
           <div className="border-t border-fg/10 pt-6">
             <Text variant="label" className="mb-4 block">DM Sans — font-sans</Text>

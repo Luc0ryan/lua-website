@@ -24,7 +24,7 @@ function Chip({
     <button
       onClick={onClick}
       className={[
-        "px-4 py-1.5 text-base font-body font-bold border-[1.5px] transition-shadow cursor-pointer whitespace-nowrap",
+        "px-4 py-1.5 text-base font-body font-bold border-2 transition-shadow cursor-pointer whitespace-nowrap",
         selected
           ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
           : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
@@ -69,7 +69,7 @@ function DropdownFilter({
     <div className="relative" ref={ref}>
       <div
         className={[
-          "flex items-center border-[1.5px] transition-shadow",
+          "flex items-center border-2 transition-shadow",
           selected
             ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
             : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
@@ -97,7 +97,7 @@ function DropdownFilter({
       </div>
 
       {open && options.length > 0 && (
-        <div className="absolute top-full left-0 mt-1 w-52 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
+        <div className="absolute top-full left-0 mt-1 w-52 bg-bg border-2 border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
           <ul>
             {options.map(({ label: optLabel, value }) => (
               <li key={value}>
@@ -244,7 +244,7 @@ export default function FilterBar({ artworks }: Props) {
         <div className="relative" ref={popoverRef}>
           <div
             className={[
-              "flex items-center border-[1.5px] transition-shadow",
+              "flex items-center border-2 transition-shadow",
               citySlug
                 ? "border-pink shadow-[4px_4px_0_0_#DC738F]"
                 : "border-fg hover:shadow-[4px_4px_0_0_var(--fg)]",
@@ -273,7 +273,7 @@ export default function FilterBar({ artworks }: Props) {
           </div>
 
           {locationOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-[1.5px] border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
+            <div className="absolute top-full left-0 mt-1 w-64 bg-bg border-2 border-fg shadow-[4px_4px_0_0_var(--fg)] z-50">
               <div className="p-2 border-b border-fg/20">
                 <input
                   autoFocus
@@ -318,7 +318,7 @@ export default function FilterBar({ artworks }: Props) {
         {/* Search — full-width on mobile, inline on desktop */}
         <div
           className={[
-            "flex items-center border-[1.5px] transition-shadow w-full sm:w-auto sm:ml-auto",
+            "flex items-center border-2 transition-shadow w-full sm:w-auto sm:ml-auto",
             q ? "border-pink shadow-[4px_4px_0_0_#DC738F]" : "border-fg focus-within:shadow-[4px_4px_0_0_var(--fg)]",
           ].join(" ")}
         >

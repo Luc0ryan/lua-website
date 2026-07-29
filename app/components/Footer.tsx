@@ -134,7 +134,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="flex flex-col gap-4 w-[227px]">
+            <div className="flex flex-col gap-4 w-[14.1875rem]">
               <p className="text-base font-heading font-bold text-fg">VISIT</p>
               <p className="text-sm font-sans text-text-muted">
                 <span className="font-medium">UPSIDE ARTSPACE</span>
@@ -156,7 +156,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter */}
-          <div className="w-full max-w-[394px] lg:shrink-0">
+          <div className="w-full max-w-[24.625rem] lg:shrink-0">
             <p className="text-xl font-heading font-bold text-fg tracking-tight mb-3">
               NEWSLETTER
             </p>
@@ -173,7 +173,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="shrink-0 border-2 border-fg bg-fg text-bg px-3 py-3 text-lg font-heading font-medium tracking-tight hover:opacity-85 transition-opacity disabled:opacity-60 cursor-pointer"
+                  className="shrink-0 border-2 border-fg bg-lua-pink text-bg px-3 py-3 text-lg font-heading font-medium tracking-tight hover:opacity-85 transition-opacity disabled:opacity-60 cursor-pointer"
                 >
                   {status === "loading" ? "…" : "SIGN UP"}
                 </button>
@@ -193,7 +193,7 @@ export default function Footer() {
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <p
             className="font-[family-name:var(--font-heading-narrow)] font-semibold text-fg leading-[0.85] break-words"
-            style={{ fontSize: "clamp(2.5rem, 10vw, 8rem)", letterSpacing: "-0.04em" }}
+            style={{ fontSize: "clamp(2.25rem, 9vw, 7rem)", letterSpacing: "-0.06em" }}
           >
             LOOKING UP ART
           </p>

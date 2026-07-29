@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Heading } from "@/app/components/ui/Heading";
 
 // "IMAGINATION IS OUR CRAFT" editorial block — Figma node 1140:1591.
 // Title over a body row over a four-tile mosaic filled with the edit photos,
@@ -7,11 +8,11 @@ export default function Editorial() {
   return (
     <section className="mx-auto w-full max-w-screen-2xl px-gutter py-10">
       <div className="flex flex-col gap-10">
-        <h2 className="font-heading text-[clamp(2.5rem,6vw,4rem)] font-normal uppercase leading-none text-fg">
+        <Heading as="h2" level="display" weight="normal" className="uppercase text-fg">
           Imagination is our craft
-        </h2>
+        </Heading>
 
-        <p className="max-w-[687px] font-body text-xl leading-normal text-fg">
+        <p className="max-w-[42.9375rem] font-body text-xl leading-normal text-fg">
           We don&rsquo;t think any project has a single right answer. The work gets better when
           more people have a hand in it, so we leave room in almost everything we build for someone
           else to step in and make it theirs.

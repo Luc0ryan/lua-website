@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Heading } from "@/app/components/ui/Heading";
 
 /**
  * Single source of truth for the homepage gallery sections (Figma 1140:1604 /
@@ -107,9 +108,9 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
         {/* Text cell */}
         <div className={`flex flex-col justify-between gap-6 px-3 py-6 ${textPlacement}`}>
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-5xl font-semibold uppercase leading-tight text-fg">
+            <Heading level="h2" className="uppercase leading-tight text-fg">
               {title}
-            </h2>
+            </Heading>
             <p className="font-body text-xl leading-normal text-fg">{body}</p>
           </div>
           <Link

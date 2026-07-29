@@ -109,17 +109,21 @@ export default function HomeNav() {
               aria-expanded={menuOpen}
               aria-controls="nav-overlay"
               aria-label="Open menu"
-              className="group flex cursor-pointer items-center justify-center p-1 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
+              className="group flex cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
             >
-              {overlay ? (
-                <Menu
-                  size={32}
-                  strokeWidth={2}
-                  className="text-white transition-all duration-150 [filter:drop-shadow(1px_1px_0_rgba(0,0,0,0.55))_drop-shadow(-1px_-1px_0_rgba(0,0,0,0.55))_drop-shadow(1px_-1px_0_rgba(0,0,0,0.55))_drop-shadow(-1px_1px_0_rgba(0,0,0,0.55))] group-hover:[filter:drop-shadow(1px_1px_0_rgba(0,0,0,0.8))_drop-shadow(-1px_-1px_0_rgba(0,0,0,0.8))_drop-shadow(1px_-1px_0_rgba(0,0,0,0.8))_drop-shadow(-1px_1px_0_rgba(0,0,0,0.8))]"
-                />
-              ) : (
-                <Menu size={26} strokeWidth={1.5} className="transition-all duration-150 group-hover:drop-shadow-[1px_1px_0px_rgba(0,0,0,0.4)]" />
-              )}
+              {/* Mobile: white circle, black stroke, black icon — legible over any hero image without a drop-shadow outline */}
+              <span className="md:hidden flex items-center justify-center w-11 h-11 rounded-full bg-white border-2 border-fg">
+                <Menu size={20} strokeWidth={2} className="text-fg" />
+              </span>
+
+              {/* Desktop */}
+              <span className="hidden md:flex items-center justify-center p-1">
+                {overlay ? (
+                  <Menu size={32} strokeWidth={2} className="text-white transition-colors duration-150 group-hover:text-lua-pink" />
+                ) : (
+                  <Menu size={26} strokeWidth={1.5} className="text-fg transition-colors duration-150 group-hover:text-lua-pink" />
+                )}
+              </span>
             </button>
 
             <Link

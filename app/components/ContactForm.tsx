@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
+import { Heading } from "@/app/components/ui/Heading";
 
 // Matches the loose SanityImageSource type used throughout this codebase.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,7 +147,7 @@ export default function ContactForm({
       </div>
 
       {/* ── Right: form ───────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col justify-center pl-[20px] lg:pl-0 pt-8 pb-16">
+      <div className="flex-1 flex flex-col justify-center pl-5 lg:pl-0 pt-8 pb-16">
         <div className="max-w-xl w-full mx-auto">
           {/* Email link */}
           <p className="text-sm font-body mb-6">
@@ -162,18 +163,18 @@ export default function ContactForm({
           {/* ── Success state ── */}
           {status === "success" ? (
             <div className="py-4">
-              <h1 className="font-sans text-5xl font-bold leading-tight mb-4">
+              <Heading level="h1" className="leading-tight mb-4">
                 Thank you.
-              </h1>
+              </Heading>
               <p className="font-body text-fg/70 text-base leading-relaxed">
                 We&apos;ve received your message and will be in touch soon.
               </p>
             </div>
           ) : (
             <>
-              <h1 className="font-sans text-5xl font-bold leading-tight mb-3">
+              <Heading level="h1" className="leading-tight mb-3">
                 Start the conversation
-              </h1>
+              </Heading>
               <p className="font-body font-normal text-fg mb-8 text-base">
                 Request our full art deck and get in touch
               </p>

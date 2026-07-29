@@ -7,6 +7,7 @@ import {
   TrustStrip,
   FaqAccordion,
 } from "./DonateClient";
+import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
   title: "Donate — Looking Up Art",
@@ -80,9 +81,9 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
       <main className="flex-1 px-gutter pt-10 md:pt-14 pb-20 md:pb-32 max-w-6xl mx-auto w-full">
         {/* Page header */}
         <header className="max-w-3xl mb-10">
-          <h1 className="font-sans text-5xl md:text-6xl font-bold leading-tight mb-5">
+          <Heading level="h1" className="leading-tight mb-5">
             Art belongs to everyone
-          </h1>
+          </Heading>
           <p className="font-body text-fg/70 text-lg leading-relaxed">
             Looking Up Art is a collective of artists and builders who channel
             100% of donations back into art. That only works because people like
@@ -105,9 +106,9 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
 
           {/* Right — FAQ */}
           <div className="pt-1">
-            <h2 className="font-sans text-xl font-bold mb-3">
+            <Heading as="h2" level="h4" className="mb-3">
               Donation FAQs
-            </h2>
+            </Heading>
             <div className="w-full h-0.5 mb-5" style={{ backgroundColor: "#B8622A" }} aria-hidden="true" />
             <FaqAccordion />
           </div>

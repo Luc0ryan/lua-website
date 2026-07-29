@@ -76,7 +76,7 @@ function locationSubtitle(props: LocationProperties): string {
 function buildSingleLocationPopup(props: LocationProperties): HTMLElement {
   const card = el(
     "div",
-    "flex items-start gap-3 bg-white border-2 border-fg shadow-[5px_5px_0_var(--fg)] rounded-[2px] p-3 max-w-[240px]"
+    "flex items-start gap-3 bg-white border-2 border-fg shadow-[5px_5px_0_var(--fg)] rounded-[2px] p-3 max-w-[15rem]"
   );
   card.appendChild(buildThumb(props.thumb, "w-14 h-14"));
 
@@ -124,7 +124,7 @@ function buildClusterRow(props: LocationProperties, onSelect: () => void): HTMLE
 function buildClusterPopup(leaves: LocationProperties[], onSelect: (projectRef: string) => void): HTMLElement {
   const card = el(
     "div",
-    "bg-white border-2 border-fg shadow-[5px_5px_0_var(--fg)] rounded-[2px] max-w-[280px] max-h-[320px] overflow-y-auto"
+    "bg-white border-2 border-fg shadow-[5px_5px_0_var(--fg)] rounded-[2px] max-w-[17.5rem] max-h-[20rem] overflow-y-auto"
   );
   const header = el(
     "div",

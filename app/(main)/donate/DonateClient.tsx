@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Heading } from "@/app/components/ui/Heading";
 
 // TODO: wire up your analytics system here
 function trackEvent(name: string, props: Record<string, unknown>) {
@@ -137,9 +138,9 @@ export function DonationForm() {
   return (
     <div className="flex flex-col items-center gap-6 text-center">
       <div>
-        <h2 className="font-sans text-3xl font-bold leading-tight mb-2">
+        <Heading as="h2" level="h3" className="leading-tight mb-2">
           Fund the work
-        </h2>
+        </Heading>
         <p className="font-body text-fg/60 text-sm leading-relaxed">
           Every contribution, whatever its size, goes directly to artists,
           materials, and making the work happen.

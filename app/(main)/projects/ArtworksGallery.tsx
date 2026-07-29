@@ -4,6 +4,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FilterBar from "./FilterBar";
 import ArtworkGrid from "./ArtworkGrid";
 import type { Artwork } from "@/sanity/lib/queries";
+import { Heading } from "@/app/components/ui/Heading";
 
 type Props = { artworks: Artwork[] };
 
@@ -50,7 +51,7 @@ export default function ArtworksGallery({ artworks }: Props) {
 
   return (
     <div className="w-full max-w-screen-2xl mx-auto px-gutter pt-8 pb-16">
-      <h1 className="font-heading text-5xl sm:text-6xl font-bold uppercase mb-8">All Projects</h1>
+      <Heading level="h1" className="uppercase mb-8">All Projects</Heading>
       <FilterBar artworks={artworks} />
 
       {filtered.length === 0 ? (

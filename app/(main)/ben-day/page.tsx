@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DotField } from "@/app/components/dot-system";
+import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
   title: "Ben-Day Dot System — Looking Up Art",
@@ -35,9 +36,9 @@ export default function BenDayPage() {
         <p className="font-sans text-xs font-semibold tracking-widest uppercase text-pink mb-3">
           Design system
         </p>
-        <h1 className="font-sans text-5xl md:text-6xl font-bold leading-tight mb-4">
+        <Heading level="h1" className="leading-tight mb-4">
           Dot variants
-        </h1>
+        </Heading>
         <p className="font-body text-fg/60 text-lg leading-relaxed">
           Three models drawn from print history — Ben-Day, Halftone, and
           Screentone — each available as a drop-in{" "}
@@ -102,7 +103,7 @@ export default function BenDayPage() {
 
       {/* Usage reference */}
       <section className="mt-24">
-        <h2 className="font-sans text-2xl font-bold mb-6">Usage</h2>
+        <Heading as="h2" level="h3" className="mb-6">Usage</Heading>
         <pre className="font-mono text-sm bg-fg/5 rounded-xl p-6 overflow-x-auto leading-relaxed text-fg/80">{`// Ben-Day — uniform rotated grid
 <DotField variant="ben-day" dotColor="#DC738F" intensity={0.55} angle={45} />
 

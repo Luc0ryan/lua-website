@@ -13,7 +13,7 @@ export default function CommissionTestimonial() {
       />
       <div className="absolute inset-0 flex items-end">
         <div className="mx-auto flex w-full max-w-screen-2xl justify-end px-gutter pb-8 md:pb-12">
-          <div className="max-w-[796px] border-[1.5px] border-fg bg-white p-8 shadow-[4px_4px_0_var(--fg)]">
+          <div className="max-w-[49.75rem] border-2 border-fg bg-white p-8 shadow-[4px_4px_0_var(--fg)]">
             <p className="font-sans font-medium text-lg md:text-xl text-fg">
               To put it simply, without Looking Up Arts The Wabash Lights would
               have never happened – they took our vision and turned it into

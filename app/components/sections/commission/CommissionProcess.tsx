@@ -43,7 +43,7 @@ export default function CommissionProcess() {
               i > 0 ? "border-t-2 border-fg" : ""
             }`}
           >
-            <div className="flex items-baseline gap-4 md:w-[280px] md:shrink-0">
+            <div className="flex items-baseline gap-4 md:w-[17.5rem] md:shrink-0">
               <span className="font-heading font-light text-4xl text-gray-label tracking-tight">
                 {step.number}
               </span>
@@ -54,7 +54,7 @@ export default function CommissionProcess() {
                 <span className="font-sans text-lg text-text-muted">{step.duration}</span>
               </div>
             </div>
-            <p className="font-sans text-base text-fg md:max-w-[600px]">{step.body}</p>
+            <p className="font-sans text-base text-fg md:max-w-[37.5rem]">{step.body}</p>
           </div>
         ))}
       </div>

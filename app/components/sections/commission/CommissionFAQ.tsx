@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CirclePlus, CircleMinus } from "lucide-react";
+import { Heading } from "@/app/components/ui/Heading";
 
 type FaqItem = { question: string; answer: string };
 
@@ -44,13 +45,13 @@ export default function CommissionFAQ() {
   return (
     <section className="pt-16 pb-16">
       <div className="flex flex-col gap-8 md:flex-row md:gap-16">
-        <h2 className="font-sans font-bold text-4xl text-fg tracking-tight leading-tight shrink-0">
+        <Heading level="h2" className="text-fg tracking-tight leading-tight shrink-0">
           Frequently
           <br />
           Asked
           <br />
           Questions
-        </h2>
+        </Heading>
         <div className="flex flex-1 flex-col">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;

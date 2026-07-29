@@ -200,11 +200,11 @@ export default function HeroCycler({ projects }: Props) {
             className="inline-block bg-white px-5 py-4 shadow-[inset_0_0_0_2px_var(--fg)] motion-safe:[animation:hero-card-in_550ms_cubic-bezier(0.22,1,0.36,1)_100ms_both]"
           >
             {active.meta && (
-              <span className="block font-sans text-[13px] font-semibold uppercase tracking-widest text-gray-label">
+              <span className="block font-sans text-[0.8125rem] font-semibold uppercase tracking-widest text-gray-label">
                 {active.meta}
               </span>
             )}
-            <span className="mt-0.5 block font-heading font-normal leading-tight text-black text-[28px]">
+            <span className="mt-0.5 block font-heading font-normal leading-tight text-black text-[1.75rem]">
               {active.title}
             </span>
           </div>

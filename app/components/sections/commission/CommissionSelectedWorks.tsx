@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getRecentCommissionedArtworks } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { Heading } from "@/app/components/ui/Heading";
 
 export default async function CommissionSelectedWorks() {
   const artworks = await getRecentCommissionedArtworks();
@@ -9,9 +10,9 @@ export default async function CommissionSelectedWorks() {
 
   return (
     <section className="pt-16 pb-16">
-      <h2 className="font-sans font-bold text-4xl text-fg tracking-tight mb-8 md:mb-11">
+      <Heading level="h2" className="text-fg tracking-tight mb-8 md:mb-11">
         Selected Works
-      </h2>
+      </Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {artworks.map((artwork) => (
           <Link
