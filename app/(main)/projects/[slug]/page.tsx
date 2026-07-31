@@ -2,9 +2,10 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { getArtworkBySlug, type Artwork } from "@/sanity/lib/queries";
+import { getArtworkBySlug, getRelatedArtworks, type Artwork } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { buildGalleryRows } from "./buildGalleryRows";
+import RelatedWorks from "./RelatedWorks";
 import { Heading } from "@/app/components/ui/Heading";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -40,6 +41,8 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const artwork = await getArtworkBySlug(slug);
   if (!artwork) notFound();
+
+  const related = await getRelatedArtworks(artwork._id, artwork.placement);
 
   const heroUrl = artwork.image ? urlFor(artwork.image).url() : null;
   const subtitle = subtitleLine(artwork);
@@ -259,6 +262,8 @@ export default async function ProjectPage({ params }: Props) {
           )}
         </div>
       )}
+
+      <RelatedWorks artworks={related} />
     </main>
   );
 }

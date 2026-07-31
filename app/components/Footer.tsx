@@ -135,7 +135,7 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-4 w-[14.1875rem]">
-              <p className="text-base font-heading font-bold text-fg">VISIT</p>
+              <p className="text-base font-heading font-bold text-fg">VISIT US</p>
               <p className="text-sm font-sans text-text-muted">
                 <span className="font-medium">UPSIDE ARTSPACE</span>
                 <br />
@@ -150,6 +150,13 @@ export default function Footer() {
                   className="underline underline-offset-2 hover:text-fg transition-colors"
                 >
                   (415) 967-1333
+                </a>
+                <br />
+                <a
+                  href="mailto:info@lookingup.art"
+                  className="underline underline-offset-2 hover:text-fg transition-colors"
+                >
+                  info@lookingup.art
                 </a>
               </p>
             </div>
@@ -189,29 +196,54 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Wordmark + Instagram/copyright — wordmark left, tag block right */}
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+        {/* Wordmark + Instagram — wordmark left, follow link aligned to its top */}
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between mb-8">
           <p
             className="font-[family-name:var(--font-heading-narrow)] font-semibold text-fg leading-[0.85] break-words"
             style={{ fontSize: "clamp(2.25rem, 9vw, 7rem)", letterSpacing: "-0.06em" }}
           >
-            LOOKING UP ART
+            LOOKING UP ARTS
           </p>
 
-          <div className="flex flex-col items-start sm:items-end gap-2 shrink-0">
+          <a
+            href="https://www.instagram.com/lookinguparts/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-base font-heading font-bold text-fg hover:text-lua-pink transition-colors shrink-0"
+          >
+            <InstagramIcon size={16} />
+            FOLLOW US ON INSTAGRAM
+          </a>
+        </div>
+
+        {/* Legal bar — nonprofit/EIN, site credit, copyright */}
+        <div className="pt-6 border-t border-fg/10 flex flex-col gap-2 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
+          <p className="text-sm font-sans text-text-muted">
+            Looking Up Arts is a registered 501(c)(3) nonprofit.{" "}
             <a
-              href="https://www.instagram.com/lookinguparts/"
+              href="https://projects.propublica.org/nonprofits/organizations/825362991"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-base font-heading font-bold text-fg hover:text-lua-pink transition-colors"
+              className="font-medium text-fg underline underline-offset-2 hover:text-lua-pink transition-colors"
             >
-              <InstagramIcon size={16} />
-              FOLLOW US ON INSTAGRAM
+              EIN 82-5362991
             </a>
-            <p className="text-sm font-sans text-text-muted">
-              © {new Date().getFullYear()} LOOKING UP ARTS
-            </p>
-          </div>
+          </p>
+          <p className="text-sm font-sans text-text-muted">
+            Built By{" "}
+            {/* TODO: swap in Lucas Ryan's real portfolio URL before launch */}
+            <a
+              href="https://luc0ryan.github.io/my-react-portfolio/#/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-fg transition-colors"
+            >
+              Lucas Ryan
+            </a>
+          </p>
+          <p className="text-sm font-sans text-text-muted">
+            © {new Date().getFullYear()} LOOKING UP ARTS
+          </p>
         </div>
       </div>
     </footer>

@@ -96,6 +96,36 @@ export async function getArtworksIndex(): Promise<Artwork[]> {
   );
 }
 
+// Prefers other projects with the same placement (touring↔touring,
+// permanent/exhibition↔permanent/exhibition); falls back to the most
+// recently created projects site-wide to fill up to 3 when a placement
+// type doesn't have enough siblings yet (e.g. after archiving).
+export async function getRelatedArtworks(
+  currentId: string,
+  placement?: Artwork["placement"]
+): Promise<Artwork[]> {
+  const projection = `_id, title, slug, image, city, year, placement, materials`;
+
+  const primary = placement
+    ? await client.fetch<Artwork[]>(
+        `*[_type == "project" && _id != $id && placement == $placement]
+          | order(_createdAt desc)[0...3]{${projection}}`,
+        { id: currentId, placement }
+      )
+    : [];
+
+  if (primary.length >= 3) return primary;
+
+  const excludeIds = [currentId, ...primary.map((p) => p._id)];
+  const fallback = await client.fetch<Artwork[]>(
+    `*[_type == "project" && !(_id in $excludeIds)]
+      | order(_createdAt desc)[0...3]{${projection}}`,
+    { excludeIds }
+  );
+
+  return [...primary, ...fallback].slice(0, 3);
+}
+
 export type MapLocation = {
   _id: string;
   venueName?: string;

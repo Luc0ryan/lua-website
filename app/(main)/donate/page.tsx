@@ -121,8 +121,7 @@ export default async function DonatePage({ searchParams }: DonatePageProps) {
         <p className="mt-16 font-body text-xs text-fg/40 text-center">
           Looking Up Art is a registered 501(c)(3) nonprofit. All donations are
           tax-deductible to the full extent allowed by law.{" "}
-          {/* TODO: insert EIN */}
-          EIN: [INSERT EIN].{" "}
+          EIN: 82-5362991.{" "}
           <Link
             href="/contact"
             className="underline underline-offset-2 hover:text-fg/70 transition-colors"

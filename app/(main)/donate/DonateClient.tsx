@@ -49,8 +49,7 @@ export function TrustStrip() {
     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-y border-fg/10 py-6 my-16 font-body text-xs text-fg/50">
       <span>501(c)(3) nonprofit</span>
       <span className="hidden sm:inline text-fg/20">·</span>
-      {/* TODO: insert EIN */}
-      <span>EIN: [INSERT EIN]</span>
+      <span>EIN: 82-5362991</span>
       <span className="hidden sm:inline text-fg/20">·</span>
       <span>All gifts are tax-deductible</span>
       <span className="hidden sm:inline text-fg/20">·</span>
@@ -339,8 +338,7 @@ const FAQ_ITEMS: FaqItem[] = [
         Yes. Recommend a grant to Looking Up Art from your DAF. Our legal name
         is <strong>[INSERT LEGAL ORG NAME]</strong>
         {/* TODO: insert legal org name */} and our EIN is{" "}
-        <strong>[INSERT EIN]</strong>
-        {/* TODO: insert EIN */}. Contact us if your DAF sponsor needs
+        <strong>82-5362991</strong>. Contact us if your DAF sponsor needs
         additional information.
       </>
     ),
@@ -361,9 +359,8 @@ const FAQ_ITEMS: FaqItem[] = [
       <>
         Looking Up Art is a registered 501(c)(3) nonprofit. All donations are
         tax-deductible to the full extent allowed by law. Our EIN is{" "}
-        <strong>[INSERT EIN]</strong>
-        {/* TODO: insert EIN */}. You will receive a receipt for any gift made
-        online.
+        <strong>82-5362991</strong>. You will receive a receipt for any gift
+        made online.
       </>
     ),
   },
