@@ -56,7 +56,8 @@
       "Bash(node -e \"console.log\\(require\\('sharp'\\)\\)\")",
       "mcp__claude-in-chrome__computer",
       "Bash(file public/images/commission/testimonial-bg.jpg)",
-      "Bash(sips -g pixelWidth -g pixelHeight public/images/commission/testimonial-bg.jpg)"
+      "Bash(sips -g pixelWidth -g pixelHeight public/images/commission/testimonial-bg.jpg)",
+      "Bash(lsof -i :3000 -sTCP:LISTEN -t)"
     ]
   }
 }

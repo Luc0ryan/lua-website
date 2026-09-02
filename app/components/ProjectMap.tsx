@@ -22,7 +22,7 @@ type LocationProperties = {
   thumb: string | null;
 };
 
-type Props = { locations: MapLocation[] };
+type Props = { locations: MapLocation[]; className?: string };
 
 function toFeatureCollection(
   locations: MapLocation[]
@@ -138,7 +138,7 @@ function buildClusterPopup(leaves: LocationProperties[], onSelect: (projectRef: 
   return card;
 }
 
-export default function ProjectMap({ locations }: Props) {
+export default function ProjectMap({ locations, className = "" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
@@ -306,7 +306,7 @@ export default function ProjectMap({ locations }: Props) {
 
   if (missingToken) {
     return (
-      <div className="flex h-[70vh] min-h-[420px] w-full items-center justify-center rounded-[2px] border-2 border-fg bg-neutral-100">
+      <div className={`flex items-center justify-center bg-neutral-100 ${className}`}>
         <p className="font-body text-sm text-fg/60">
           Map unavailable — missing NEXT_PUBLIC_MAPBOX_TOKEN.
         </p>
@@ -314,10 +314,5 @@ export default function ProjectMap({ locations }: Props) {
     );
   }
 
-  return (
-    <div
-      ref={containerRef}
-      className="h-[70vh] min-h-[420px] w-full overflow-hidden rounded-[2px] border-2 border-fg"
-    />
-  );
+  return <div ref={containerRef} className={className} />;
 }
