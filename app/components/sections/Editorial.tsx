@@ -25,13 +25,17 @@ export default function Editorial() {
             The feature column owns an explicit aspect-ratio, so the fill image always
             has a definite height from its own width — never borrowed from grid tracks
             (which can collapse to 0). The other columns stretch to match its height. */}
+        {/* `sizes` mirror the grid at every width (it never collapses on mobile):
+            content maxes out at 1408px, so 2fr ≈ 688px and 1fr ≈ 344px. edit2 is a
+            3:4 photo covering a ~1:2 cell, so it's height-bound and needs ~1.5× the
+            cell width to stay sharp. */}
         <div className="grid grid-cols-[2fr_1fr_1fr] gap-4">
           <div className="relative aspect-square overflow-hidden rounded-[2px] bg-neutral-200">
             <Image
               src="/images/edit1.webp"
               alt="Editorial photo"
               fill
-              sizes="(max-width: 768px) 50vw, 512px"
+              sizes="(max-width: 1536px) 50vw, 688px"
               className="object-cover"
             />
           </div>
@@ -40,7 +44,7 @@ export default function Editorial() {
               src="/images/edit2.webp"
               alt="Editorial photo"
               fill
-              sizes="(max-width: 768px) 25vw, 256px"
+              sizes="(max-width: 1536px) 38vw, 520px"
               className="object-cover"
             />
           </div>
@@ -50,7 +54,7 @@ export default function Editorial() {
                 src="/images/edit3.webp"
                 alt="Editorial photo"
                 fill
-                sizes="(max-width: 768px) 25vw, 256px"
+                sizes="(max-width: 1536px) 25vw, 344px"
                 className="object-cover"
               />
             </div>
@@ -59,7 +63,7 @@ export default function Editorial() {
                 src="/images/edit4.webp"
                 alt="Editorial photo"
                 fill
-                sizes="(max-width: 768px) 25vw, 256px"
+                sizes="(max-width: 1536px) 25vw, 344px"
                 className="object-cover"
               />
             </div>

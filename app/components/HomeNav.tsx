@@ -7,40 +7,24 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import NavOverlay from "./NavOverlay";
 
+// Routes whose first section is a full-bleed hero image/video the nav should
+// float over. This is the ONLY thing that decides overlay vs solid styling —
+// deliberately route-based, not scroll-based, so it can never flicker.
 function isHeroRoute(pathname: string): boolean {
   return (
     pathname === "/" ||
     pathname === "/commission" ||
+    pathname === "/about" ||
+    pathname.startsWith("/donate") ||
     /^\/projects\/[^/]+$/.test(pathname)
   );
 }
 
-
 export default function HomeNav() {
-  const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const overlay = isHeroRoute(pathname);
-
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      // Small buffer so rubber-banding at the very top doesn't flicker it.
-      if (y <= 8) {
-        setHidden(false);
-      } else if (y > lastY) {
-        setHidden(true);
-      } else if (y < lastY) {
-        setHidden(false);
-      }
-      lastY = y;
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Prevent body scroll while the overlay is open.
   // Compensate for the scrollbar width so the content doesn't shift right when
@@ -83,20 +67,28 @@ export default function HomeNav() {
   return (
     <>
       <nav
-        className={`${overlay ? "fixed" : "sticky"} top-0 z-50 w-full pt-6 pb-4 transition-transform duration-300 ${
-          overlay
-            ? "bg-transparent"
-            : "bg-bg border-b border-black/10"
-        } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
+        className={`absolute top-0 z-nav w-full pt-6 pb-4 ${
+          overlay ? "bg-transparent" : "bg-bg border-b border-black/10"
+        }`}
       >
+        {/* Scrim — keeps the white logo/icons legible over any hero image,
+            without needing a hard-edged solid bar. Overlay mode only. */}
+        {overlay && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/35 to-transparent"
+          />
+        )}
+
         <div className="relative w-full max-w-screen-2xl mx-auto px-gutter flex items-start justify-between">
-          <Link href="/" className="relative flex h-16 aspect-[120/48] shrink-0">
+          <Link href="/" className="flex h-16 shrink-0 cursor-pointer">
             <Image
               src={overlay ? "/logos/logo-opaque-1000.png" : "/logos/logo-black-1000.png"}
               alt="Looking Up Arts"
-              fill
+              width={1000}
+              height={863}
               sizes="160px"
-              className="object-contain object-left"
+              className="h-full w-auto object-contain"
               priority
             />
           </Link>
@@ -111,7 +103,7 @@ export default function HomeNav() {
               aria-label="Open menu"
               className="group flex cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
             >
-              {/* Mobile: white circle, black stroke, black icon — legible over any hero image without a drop-shadow outline */}
+              {/* Mobile: white circle, black stroke, black icon — legible over any hero image */}
               <span className="md:hidden flex items-center justify-center w-11 h-11 rounded-full bg-white border-2 border-fg">
                 <Menu size={20} strokeWidth={2} className="text-fg" />
               </span>
@@ -119,16 +111,16 @@ export default function HomeNav() {
               {/* Desktop */}
               <span className="hidden md:flex items-center justify-center p-1">
                 {overlay ? (
-                  <Menu size={32} strokeWidth={2} className="text-white transition-colors duration-150 group-hover:text-lua-pink" />
+                  <Menu size={40} strokeWidth={2.5} className="text-white transition-opacity duration-150 group-hover:opacity-60" />
                 ) : (
-                  <Menu size={26} strokeWidth={1.5} className="text-fg transition-colors duration-150 group-hover:text-lua-pink" />
+                  <Menu size={34} strokeWidth={2} className="text-fg transition-opacity duration-150 group-hover:opacity-60" />
                 )}
               </span>
             </button>
 
             <Link
               href="/contact"
-              className="hidden md:inline-block border border-fg bg-bg text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_var(--fg)] transition-all duration-150 hover:shadow-[4px_4px_0_var(--lua-pink)] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none]"
+              className="hidden md:inline-block border border-fg bg-bg text-base font-body font-semibold tracking-wide px-4 py-2.5 text-fg shadow-[4px_4px_0_var(--fg)] transition-all duration-150 hover:shadow-[2px_2px_0_var(--fg)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:[transition:none]"
             >
               CONTACT US
             </Link>

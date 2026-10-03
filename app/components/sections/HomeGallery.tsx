@@ -101,6 +101,9 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
       : "md:col-start-6 md:col-span-7 md:row-start-1";
 
   const wideAspect = "aspect-[597/415]";
+  // Tile widths in the 12-col grid (content maxes at 1408px): 7 cols ≈ 811px, 5 cols ≈ 573px.
+  const wideSizes = "(max-width: 768px) 100vw, (max-width: 1536px) 58vw, 820px";
+  const squareSizes = "(max-width: 768px) 100vw, (max-width: 1536px) 42vw, 580px";
 
   return (
     <section className="mx-auto w-full max-w-screen-2xl px-gutter py-10">
@@ -130,19 +133,19 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
         {/* Featured cell */}
         {featured && (
           <div className={featuredPlacement}>
-            <Tile project={featured} aspect={wideAspect} sizes="(max-width: 768px) 100vw, 600px" />
+            <Tile project={featured} aspect={wideAspect} sizes={wideSizes} />
           </div>
         )}
 
         {/* Bottom row — wide image left, square right (fixed) */}
         {tile2 && (
           <div className="md:col-start-1 md:col-span-7 md:row-start-2">
-            <Tile project={tile2} aspect={wideAspect} sizes="(max-width: 768px) 100vw, 600px" />
+            <Tile project={tile2} aspect={wideAspect} sizes={wideSizes} />
           </div>
         )}
         {tile3 && (
           <div className="md:col-start-8 md:col-span-5 md:row-start-2">
-            <Tile project={tile3} aspect="aspect-square" sizes="(max-width: 768px) 100vw, 420px" />
+            <Tile project={tile3} aspect="aspect-square" sizes={squareSizes} />
           </div>
         )}
       </div>

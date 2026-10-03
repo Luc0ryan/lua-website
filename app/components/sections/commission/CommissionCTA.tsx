@@ -3,6 +3,8 @@ import Link from "next/link";
 export default function CommissionCTA() {
   return (
     <section className="flex flex-col items-start gap-6 pt-16 pb-16 md:flex-row md:items-center">
+            <div className="md:flex md:flex-1 md:justify-center">
+
       <p className="font-heading font-normal tracking-tight leading-tight">
         <span className="block text-purple-commission text-[clamp(2rem,5vw,3.5rem)]">
           Start the conversation
@@ -11,6 +13,7 @@ export default function CommissionCTA() {
           Tell us about your site and budget
         </span>
       </p>
+      </div>
       <div className="md:flex md:flex-1 md:justify-center">
         <Link
           href="/contact"

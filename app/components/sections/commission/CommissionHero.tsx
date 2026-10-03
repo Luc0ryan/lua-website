@@ -1,8 +1,9 @@
 import Image from "next/image";
+import ScrollCue from "@/app/components/ScrollCue";
 
 export default function CommissionHero() {
   return (
-    <div className="relative h-[88vh] min-h-[560px] w-full">
+    <div className="relative -mt-28 h-svh min-h-[560px] w-full">
       <Image
         src="/images/commission/hero.jpg"
         alt="A telehandler lifts a large sculpted head onto its base at a Looking Up Art fabrication yard"
@@ -12,6 +13,7 @@ export default function CommissionHero() {
         className="object-cover"
         quality={90}
       />
+      <ScrollCue />
     </div>
   );
 }

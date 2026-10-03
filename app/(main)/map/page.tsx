@@ -12,7 +12,7 @@ export default async function MapPage() {
   const locations = await getMapLocations();
 
   return (
-    <main className="relative -mt-2 h-[100svh] w-full overflow-hidden">
+    <main className="relative h-svh w-full overflow-hidden">
       <ProjectMap locations={locations} className="absolute inset-0 h-full w-full" />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 mx-auto w-full max-w-screen-2xl px-gutter pt-8">
         <Heading

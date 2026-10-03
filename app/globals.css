@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #F2EFEA;
+  --bg: #FFFFFF;
   --fg: #1C1410;
   --pink: #DC738F;
   --lua-pink: #C91F6E;
@@ -10,9 +10,18 @@
   --purple-commission: #7E22CE;
   --gray-label: #888;
   --text-muted: #666666;
-  --footer-bg: #E8E4DF;
+  --footer-bg: #F5F3F0;
   /* Single source-of-truth for all horizontal rhythm */
   --gutter: clamp(24px, 4vw, 64px);
+
+  /* Single source-of-truth z-index scale for the nav system (main nav,
+     back-to-top, and the slide-out nav overlay). Keep every stacking
+     decision for these pieces here — never hardcode a z-index for them
+     elsewhere — so relative order stays obvious as pieces are added. */
+  --z-nav: 50;
+  --z-backtotop: 40;
+  --z-overlay-backdrop: 59;
+  --z-overlay-panel: 60;
 }
 
 @theme inline {
@@ -28,6 +37,11 @@
   --font-sans: var(--font-dm-sans);
   --font-heading: var(--font-archivo);
   --font-heading-narrow: var(--font-archivo-narrow);
+  /* Exposes the nav z-index scale as z-nav / z-backtotop / z-overlay-backdrop / z-overlay-panel utilities. */
+  --z-index-nav: var(--z-nav);
+  --z-index-backtotop: var(--z-backtotop);
+  --z-index-overlay-backdrop: var(--z-overlay-backdrop);
+  --z-index-overlay-panel: var(--z-overlay-panel);
   /* Exposes --gutter as the `gutter` spacing key: px-gutter, mx-gutter, etc. */
   --spacing-gutter: var(--gutter);
 }
@@ -40,7 +54,6 @@ html {
   background: var(--bg);
   color: var(--fg);
   scroll-snap-type: y proximity;
-
 }
 
 body {
@@ -85,3 +98,17 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     transform: translateY(0);
   }
 }
+
+/* Map popups: strip Mapbox's white wrapper so the custom card (own 2px border
+   + hard shadow) is the only chrome. Specificity (0,2,0) beats mapbox-gl.css
+   regardless of import order. */
+.lua-popup .mapboxgl-popup-content {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.lua-popup .mapboxgl-popup-tip {
+  display: none;
+}
+

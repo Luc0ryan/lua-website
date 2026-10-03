@@ -94,10 +94,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-bg relative overflow-hidden mt-auto">
-      {/* Top rule — full width until ~1600px, then centers with margins */}
-      <div className="max-w-[1600px] w-full mx-auto h-[2px] bg-fg" />
-
+    <footer className="bg-footer-bg relative overflow-hidden mt-auto">
       <div className="max-w-screen-2xl mx-auto px-gutter pt-12 pb-10">
         {/* Nav columns + newsletter — first three grouped left, newsletter pinned right */}
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between mb-20">

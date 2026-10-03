@@ -79,7 +79,7 @@ export default function HeroCycler({ projects }: Props) {
   const active = projects[index];
 
   return (
-    <section className="relative -mt-2 flex h-[90svh] flex-col justify-end overflow-hidden">
+    <section className="relative -mt-28 flex h-[90svh] flex-col justify-end overflow-hidden">
       {/* Cycling background — layered crossfade */}
       <div className="absolute inset-0">
         {projects.map((p, i) => (
@@ -98,16 +98,6 @@ export default function HeroCycler({ projects }: Props) {
           />
         ))}
       </div>
-
-      {/* Top scrim — just enough to keep nav chrome readable */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 16%)",
-        }}
-      />
 
       {/* Bottom-left text scrim — three low-opacity layers composited so no single layer reads as an overlay */}
       <div

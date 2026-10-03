@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { activeCampaign } from "@/config/campaign";
-import {
-  DonationForm,
-  CancelledNotice,
-  TrustStrip,
-  FaqAccordion,
-} from "./DonateClient";
+import { getDonorFundedArtworks } from "@/sanity/lib/queries";
+import { ArtworkCard } from "@/app/components/ArtworkCard";
+import { FaqList } from "@/app/components/ui/FaqList";
 import { Heading } from "@/app/components/ui/Heading";
+import { DonationForm } from "./DonateClient";
+import { DONATE_FAQS } from "./faqs";
 
 export const metadata: Metadata = {
   title: "Donate — Looking Up Art",
@@ -27,109 +27,117 @@ function isCampaignActive(): boolean {
   return true;
 }
 
-function CampaignBanner() {
+function CampaignCallout() {
   const campaign = activeCampaign;
   const endsAt = campaign.endsAt ? new Date(campaign.endsAt) : null;
 
   return (
-    <div className="w-full bg-pink text-bg px-gutter py-6">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-        <div className="flex flex-col gap-1">
-          <p className="text-xs font-sans font-semibold tracking-widest uppercase opacity-80">
-            Active campaign
-            {endsAt && (
-              <>
-                {" "}
-                &mdash; ends{" "}
-                {endsAt.toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </>
-            )}
+    <section className="mt-16 flex flex-col items-start gap-6 border-2 border-fg bg-pink-fill p-6 md:flex-row md:items-center md:justify-between md:p-8">
+      <div className="flex flex-col gap-2">
+        {endsAt && (
+          <p className="font-sans text-sm text-text-muted">
+            Ends{" "}
+            {endsAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
           </p>
-          <p className="font-sans font-bold text-xl leading-tight">
-            {campaign.title}
-          </p>
-          <p className="font-body text-sm opacity-90 leading-snug max-w-prose">
-            {campaign.description}
-          </p>
-        </div>
-        <a
-          href={campaign.ctaUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 inline-block bg-bg text-fg font-sans font-semibold tracking-widest uppercase text-sm px-6 py-3 rounded transition-opacity hover:opacity-80 whitespace-nowrap"
-        >
-          {campaign.ctaLabel}
-        </a>
+        )}
+        <Heading level="h3" className="text-fg">
+          {campaign.title}
+        </Heading>
+        <p className="max-w-prose font-sans text-base text-fg">{campaign.description}</p>
       </div>
-    </div>
+      <a
+        href={campaign.ctaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="shrink-0 border-2 border-fg bg-white px-5 py-3 font-sans text-lg text-fg transition-colors hover:bg-fg hover:text-bg"
+      >
+        {campaign.ctaLabel}
+      </a>
+    </section>
+  );
+}
+
+function PhotoCaption({ className = "" }: { className?: string }) {
+  return (
+    <Link
+      href="/projects/sirsasana"
+      className={`group inline-flex flex-col border-2 border-fg bg-white px-3 py-2 ${className}`}
+    >
+      <span className="font-sans text-xs text-text-muted">Pictured · Black Rock City</span>
+      <span className="font-sans text-sm font-semibold text-fg project-title group-hover:text-lua-pink transition-colors">
+        Sirsasana
+      </span>
+    </Link>
   );
 }
 
 export default async function DonatePage({ searchParams }: DonatePageProps) {
-  const params = await searchParams;
+  const [params, artworks] = await Promise.all([searchParams, getDonorFundedArtworks()]);
   const showCancelled = params.cancelled === "1";
-  const campaignActive = isCampaignActive();
 
   return (
     <div className="flex-1 flex flex-col">
-      {campaignActive && <CampaignBanner />}
-
-      <main className="flex-1 px-gutter pt-10 md:pt-14 pb-20 md:pb-32 max-w-6xl mx-auto w-full">
-        {/* Page header */}
-        <header className="max-w-3xl mb-10">
-          <Heading level="h1" className="leading-tight mb-5">
-            Art belongs to everyone
-          </Heading>
-          <p className="font-body text-fg/70 text-lg leading-relaxed">
-            Looking Up Art is a collective of artists and builders who channel
-            100% of donations back into art. That only works because people like
-            you choose to be part of the community.
-          </p>
-        </header>
-
-        {showCancelled && (
-          <div className="mb-8">
-            <CancelledNotice />
-          </div>
-        )}
-
-        {/* Two-col: donation form (left) + FAQ (right) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* Left — donation form card */}
-          <div className="bg-footer-bg border border-fg/10 rounded-sm p-8 md:p-10">
-            <DonationForm />
-          </div>
-
-          {/* Right — FAQ */}
-          <div className="pt-1">
-            <Heading as="h2" level="h4" className="mb-3">
-              Donation FAQs
-            </Heading>
-            <div className="w-full h-0.5 mb-5" style={{ backgroundColor: "#B8622A" }} aria-hidden="true" />
-            <FaqAccordion />
-          </div>
+      {/* Hero: the photo frames the form. Below lg the photo is a band the
+          panel overlaps; from lg up it's a full-bleed backdrop and the panel
+          sits in the left half, clear of the sculpture. */}
+      <section className="relative -mt-28">
+        <div className="relative h-[60svh] min-h-[380px] w-full lg:absolute lg:inset-0 lg:h-auto">
+          <Image
+            src="/images/donate/hero.jpg"
+            alt="Sirsasana, a tall wooden lattice sculpture with teal fabric canopies, on the playa at Black Rock City as a dust devil passes"
+            fill
+            priority
+            sizes="100vw"
+            quality={90}
+            className="object-cover object-[62%_center]"
+          />
+          <PhotoCaption className="absolute bottom-6 right-gutter hidden lg:inline-flex" />
         </div>
 
-        {/* Trust strip */}
-        <TrustStrip />
+        <div className="relative mx-auto w-full max-w-screen-2xl px-gutter lg:grid lg:min-h-svh lg:grid-cols-2 lg:items-center lg:pt-28 lg:pb-16">
+          <div className="relative z-10 -mt-36 mx-auto w-full max-w-[460px] border-2 border-fg bg-white p-6 md:p-8 lg:mt-0">
+            {showCancelled && (
+              <p role="alert" className="mb-6 border-2 border-fg bg-pink-fill px-4 py-3 font-sans text-sm text-fg">
+                Checkout was cancelled and no charge was made. Try again whenever you&apos;re ready.
+              </p>
+            )}
+            <Heading as="h1" level="display" weight="medium" className="text-fg">
+              DONATE
+            </Heading>
+            <p className="mt-3 mb-6 font-sans text-base text-fg">
+              Every dollar goes to artists, materials, and getting ambitious work built.
+            </p>
+            <DonationForm />
+          </div>
+          <div className="mt-6 flex justify-center lg:hidden">
+            <PhotoCaption />
+          </div>
+        </div>
+      </section>
 
-        {/* Fine print */}
-        <p className="mt-16 font-body text-xs text-fg/40 text-center">
-          Looking Up Art is a registered 501(c)(3) nonprofit. All donations are
-          tax-deductible to the full extent allowed by law.{" "}
-          EIN: 82-5362991.{" "}
-          <Link
-            href="/contact"
-            className="underline underline-offset-2 hover:text-fg/70 transition-colors"
-          >
-            Questions? Contact us.
-          </Link>
-        </p>
-      </main>
+      <div className="mx-auto w-full max-w-screen-2xl px-gutter">
+        {isCampaignActive() && <CampaignCallout />}
+
+        {artworks.length > 0 && (
+          <section className="pt-20 md:pt-24">
+            <div className="mb-8 flex flex-col gap-2">
+              <Heading level="h2" className="text-fg uppercase tracking-tight">
+                What your gift builds
+              </Heading>
+              <p className="max-w-prose font-sans text-lg text-fg">
+                Looking Up grants fund large, interactive festival installations like these.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {artworks.map((artwork) => (
+                <ArtworkCard key={artwork._id} artwork={artwork} featured={false} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <FaqList items={DONATE_FAQS} />
+      </div>
     </div>
   );
 }

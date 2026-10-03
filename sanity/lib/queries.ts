@@ -87,6 +87,18 @@ export async function getRecentCommissionedArtworks(): Promise<Artwork[]> {
   );
 }
 
+// Donate page "what your gift builds" row. Exhibition pieces are the
+// grant-funded festival works — permanent pieces are paid commissions, so
+// showing them next to a donate form would overclaim what gifts fund.
+export async function getDonorFundedArtworks(): Promise<Artwork[]> {
+  return client.fetch(
+    `*[_type == "project" && placement == "exhibition" && defined(image)]
+      | order(_createdAt desc)[0...3] {
+        _id, title, slug, city, year, placement, image
+      }`
+  );
+}
+
 export async function getArtworksIndex(): Promise<Artwork[]> {
   return client.fetch(
     `*[_type == "project"]

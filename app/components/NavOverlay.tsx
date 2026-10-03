@@ -1,22 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Mail, X } from "lucide-react";
 
 // Mirrors the footer's IA (Footer.tsx) — confirmed with the client as the
 // current, correct site structure. Keep these two in sync.
-const primaryLinks = [
-  { label: "PROJECTS", href: "/projects" },
-  { label: "CATALOGUE", href: "/catalogue" },
-  { label: "COMMISSION", href: "/commission" },
-];
-
-const secondaryLinks = [
-  { label: "Where we work", href: "/map" },
-  { label: "About", href: "/about" },
-  { label: "Donate", href: "/donate" },
-];
+const navLinks = [
+  { label: "Projects", href: "/projects", tier: "primary" },
+  { label: "Commission", href: "/commission", tier: "primary" },
+  { label: "Where we work", href: "/map", tier: "secondary" },
+  { label: "About", href: "/about", tier: "secondary" },
+  { label: "Donate", href: "/donate", tier: "secondary" },
+] as const;
 
 type Props = {
   open: boolean;
@@ -26,6 +23,13 @@ type Props = {
 
 export default function NavOverlay({ open, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Portal to document.body once mounted (SSR has no document) — guarantees
+  // the backdrop/panel are the last nodes in the DOM, so they can never be
+  // out-ranked by a `relative`/`transform`/`fixed` element added anywhere
+  // else on the page, regardless of z-index.
+  const [mounted, setMounted] = useState(false);
+  useLayoutEffect(() => setMounted(true), []);
 
   // Initial focus, Esc to close, Tab trapped within the overlay
   useLayoutEffect(() => {
@@ -78,13 +82,15 @@ export default function NavOverlay({ open, onClose }: Props) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
         aria-hidden="true"
         onClick={onClose}
-        className={`fixed inset-0 z-[59] bg-black/40 transition-[opacity,visibility] duration-300 ease-out motion-reduce:transition-none ${
+        className={`fixed inset-0 z-overlay-backdrop bg-black/40 transition-[opacity,visibility] duration-300 ease-out motion-reduce:transition-none ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       />
@@ -97,7 +103,7 @@ export default function NavOverlay({ open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className={`fixed inset-y-0 right-0 z-[60] w-full max-w-sm sm:max-w-md bg-bg flex flex-col overflow-y-auto overflow-x-hidden outline-none transition-[transform,visibility] duration-300 ease-out motion-reduce:transition-none ${
+        className={`fixed inset-y-0 right-0 z-overlay-panel w-full max-w-sm sm:max-w-md bg-bg flex flex-col overflow-y-auto overflow-x-hidden outline-none transition-[transform,visibility] duration-300 ease-out motion-reduce:transition-none ${
           open
             ? "translate-x-0 visible pointer-events-auto"
             : "translate-x-full invisible pointer-events-none"
@@ -124,66 +130,62 @@ export default function NavOverlay({ open, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close menu"
-            className="flex items-center justify-center p-1 text-fg transition-colors duration-200 hover:text-pink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink cursor-pointer"
+            className="flex items-center justify-center p-1 text-fg transition-opacity duration-200 hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink cursor-pointer"
           >
             <X size={52} strokeWidth={1.5} />
           </button>
         </div>
 
         <div className="px-gutter pb-10 flex-1 flex flex-col items-end text-right gap-10 justify-center">
-          {/* Primary links */}
+          {/* Nav links — equal size/weight; color carries the tier */}
           <nav aria-label="Primary">
-            <ul className="flex flex-col gap-2 items-end">
-              {primaryLinks.map(({ label, href }) => (
+            <ul className="flex flex-col gap-3 items-end">
+              {navLinks.map(({ label, href, tier }) => (
                 <li key={label}>
                   <Link
                     href={href}
                     onClick={onClose}
-                    className="inline-block text-3xl sm:text-4xl font-heading font-bold uppercase leading-[0.95] text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+                    className={`group relative inline-block text-3xl sm:text-4xl font-heading font-normal leading-[0.95] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink ${
+                      tier === "primary"
+                        ? "text-fg"
+                        : "text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg"
+                    }`}
                   >
                     {label}
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-1 right-0 h-[3px] w-0 bg-fg transition-all duration-200 ease-out group-hover:w-full"
+                    />
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Secondary links */}
-          <nav aria-label="Secondary">
-            <ul className="flex flex-col gap-2 items-end">
-              {secondaryLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    onClick={onClose}
-                    className="inline-block text-xl sm:text-2xl font-body font-medium text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Contact */}
+          {/* Contact — isolated, lower hierarchy than every link above */}
           <div className="mt-auto flex flex-col items-end gap-3">
             <Link
               href="/contact"
               onClick={onClose}
-              className="inline-block text-lg sm:text-xl font-body font-semibold text-fg transition-colors duration-200 hover:text-pink focus-visible:text-pink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+              className="group relative inline-block text-base sm:text-lg font-body font-normal text-gray-label/80 transition-colors duration-200 hover:text-gray-label focus-visible:text-gray-label focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
             >
               Contact us
+              <span
+                aria-hidden="true"
+                className="absolute -bottom-0.5 right-0 h-px w-0 bg-gray-label transition-all duration-200 ease-out group-hover:w-full"
+              />
             </Link>
             <a
               href="mailto:info@lookingup.art"
-              className="inline-flex items-center gap-1.5 text-sm sm:text-base font-body text-gray-label transition-colors duration-200 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
+              className="inline-flex items-center gap-1.5 text-sm font-body text-gray-label/80 transition-colors duration-200 hover:text-gray-label focus-visible:text-gray-label focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
             >
-              <Mail size={15} strokeWidth={1.75} aria-hidden="true" />
+              <Mail size={14} strokeWidth={1.75} aria-hidden="true" />
               info@lookingup.art
             </a>
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

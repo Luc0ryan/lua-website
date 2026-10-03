@@ -72,7 +72,7 @@ export default async function ProjectPage({ params }: Props) {
       {/* Hero — aspect-ratio driven so the crop stays close to the source
           image's own proportions instead of an arbitrary viewport fraction;
           max-h keeps hero + card confined to the fold on short viewports. */}
-      <section className="relative -mt-2 aspect-video max-h-[85svh] min-h-105 w-full overflow-hidden">
+      <section className="relative -mt-28 aspect-video max-h-[85svh] min-h-105 w-full overflow-hidden">
         {heroUrl && (
           <Image
             src={heroUrl}
@@ -83,15 +83,6 @@ export default async function ProjectPage({ params }: Props) {
             className="object-cover"
           />
         )}
-        {/* Top scrim — keeps nav chrome readable over the image */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 16%)",
-          }}
-        />
-
         {/* Title card — sits on the image itself, anchored near the hero's
             bottom edge, house "hero project card" style */}
         <div className="absolute inset-x-0 bottom-8 mx-auto w-full max-w-screen-2xl px-gutter">

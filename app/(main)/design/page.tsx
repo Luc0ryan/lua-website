@@ -5,10 +5,10 @@ import { Text } from "@/app/components/ui/Text";
 
 const colors = [
   { name: "--fg", label: "Foreground", hex: "#1C1410", bg: "bg-fg", text: "text-bg" },
-  { name: "--bg", label: "Background", hex: "#F2EFEA", bg: "bg-bg", text: "text-fg", border: true },
+  { name: "--bg", label: "Background", hex: "#FFFFFF", bg: "bg-bg", text: "text-fg", border: true },
   { name: "--pink", label: "Pink", hex: "#DC738F", bg: "bg-pink", text: "text-bg" },
   { name: "--lua-pink", label: "Lua Pink", hex: "#C91F6E", bg: "bg-lua-pink", text: "text-bg" },
-  { name: "--footer-bg", label: "Footer BG", hex: "#E8E4DF", bg: "bg-footer-bg", text: "text-fg", border: true },
+  { name: "--footer-bg", label: "Footer BG", hex: "#F5F3F0", bg: "bg-footer-bg", text: "text-fg", border: true },
   { name: "--gray-label", label: "Gray Label", hex: "#888888", bg: "bg-gray-label", text: "text-bg" },
 ];
 
