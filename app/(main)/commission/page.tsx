@@ -10,9 +10,9 @@ import CommissionFAQ from "@/app/components/sections/commission/CommissionFAQ";
 import CommissionCTA from "@/app/components/sections/commission/CommissionCTA";
 
 export const metadata: Metadata = {
-  title: "Commission — Looking Up Art",
+  title: "Commission — Looking Up Arts",
   description:
-    "Looking Up Art works with civic institutions and private groups to build large-scale art that outlasts everyone.",
+    "Looking Up Arts works with civic institutions and private groups to build large-scale art that outlasts everyone.",
 };
 
 export default function CommissionPage() {

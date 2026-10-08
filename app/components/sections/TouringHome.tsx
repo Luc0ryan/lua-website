@@ -8,8 +8,8 @@ export default async function TouringHome() {
   return (
     <HomeGallery
       title="Built to travel"
-      body="Some pieces aren’t meant to stay put. Rent from our touring catalogue and bring a moment of wonder to your next event."
-      cta={{ label: "Browse the touring catalogue", href: "/catalogue" }}
+      body="Some pieces aren’t meant to stay put. See where our touring work has traveled and where it’s showing now on our interactive map, then get in touch to bring a piece to your event."
+      cta={{ label: "Explore the touring map", href: "/map" }}
       projects={projects}
       featuredSide="right"
     />

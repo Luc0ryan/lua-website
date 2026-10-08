@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,10 @@ import { Heading } from "@/app/components/ui/Heading";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Rich-text links come from Studio; allow only web, mail, tel and relative
+// links so a stray javascript: URL can never render.
+const SAFE_HREF = /^(https?:|mailto:|tel:|\/)/i;
+
 const sectionBodyComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
@@ -19,7 +24,7 @@ const sectionBodyComponents: PortableTextComponents = {
     em: ({ children }) => <em>{children}</em>,
     link: ({ value, children }) => (
       <a
-        href={value?.href}
+        href={SAFE_HREF.test(value?.href ?? "") ? value.href : undefined}
         target="_blank"
         rel="noopener noreferrer"
         className="underline underline-offset-2 text-fg transition-colors hover:text-fg/70"
@@ -35,6 +40,32 @@ const sectionBodyComponents: PortableTextComponents = {
 function subtitleLine(artwork: Artwork): string {
   if (artwork.placement === "touring") return "Touring";
   return [artwork.city, artwork.year].filter(Boolean).join(" · ");
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const artwork = await getArtworkBySlug(slug);
+  if (!artwork) return {};
+
+  const description =
+    artwork.description?.trim() ||
+    [artwork.title, subtitleLine(artwork)].filter(Boolean).join(" — ");
+  const image = artwork.image
+    ? urlFor(artwork.image).width(1200).height(630).fit("crop").url()
+    : undefined;
+
+  return {
+    title: `${artwork.title} — Looking Up Arts`,
+    description,
+    alternates: { canonical: `/projects/${slug}` },
+    openGraph: {
+      title: artwork.title,
+      description,
+      type: "article",
+      images: image ? [{ url: image, width: 1200, height: 630, alt: artwork.title }] : undefined,
+    },
+    twitter: { card: "summary_large_image" },
+  };
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -98,20 +129,18 @@ export default async function ProjectPage({ params }: Props) {
       </section>
 
       {/* Metadata row, booking link, quote + body */}
-      <div className="mx-auto w-full max-w-screen-xl px-gutter pt-24 pb-16">
+      <div className="mx-auto w-full max-w-screen-2xl px-gutter pt-24 pb-16">
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
-          {/* Metadata — cols 1-2, with a vertical rule marking the column */}
+          {/* Metadata — cols 1-2, "Category value" with a bold category */}
           {metadata.length > 0 && (
-            <div className="col-span-12 flex flex-col gap-6 border-l border-fg/20 pl-4 md:col-span-2">
+            <dl className="col-span-12 grid grid-cols-[6rem_1fr] gap-x-4 gap-y-2 font-body text-base md:col-span-2 md:grid-cols-[5.5rem_1fr]">
               {metadata.map((m) => (
-                <div key={m.label}>
-                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
-                    {m.label}
-                  </p>
-                  <p className="mt-1 font-body text-base text-fg/70">{m.value}</p>
+                <div key={m.label} className="contents">
+                  <dt className="font-semibold text-fg">{m.label}</dt>
+                  <dd className="text-text-muted">{m.value}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           )}
 
           {/* Text — offset to cols 4-11 (8 of 12), leaving a column of
@@ -122,7 +151,7 @@ export default async function ProjectPage({ params }: Props) {
                 <p className="font-body text-xl italic leading-relaxed text-fg">{artwork.quote}</p>
               )}
               {artwork.description && (
-                <div className="whitespace-pre-line font-body text-base leading-relaxed text-fg/80">
+                <div className="whitespace-pre-line font-body text-base leading-relaxed text-fg">
                   {artwork.description}
                 </div>
               )}
@@ -134,18 +163,19 @@ export default async function ProjectPage({ params }: Props) {
       {/* Optional content-break sections */}
       {artwork.sections?.map((section, i) => (
         <div key={i} className="mx-auto w-full max-w-screen-2xl px-gutter pb-16">
-          <div className="group relative aspect-16/9 w-full overflow-hidden rounded-[2px]">
+          <div className="relative aspect-16/9 w-full overflow-hidden rounded-[2px]">
             <Image
               src={urlFor(section.image).url()}
               alt=""
               fill
               sizes="100vw"
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className="object-cover"
             />
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-            <Heading level="h3" className="uppercase text-fg">{section.title}</Heading>
-            <div className="font-body text-base leading-relaxed text-fg/80">
+          {/* 1:4:1 — title, text, empty pillar. Gap is 1/3 of a column: 6w + 5(w/3) = 100% → gap = 100%/23. */}
+          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[repeat(6,minmax(0,1fr))] md:gap-x-[calc(100%/23)]">
+            <Heading level="h3" className="uppercase text-fg [overflow-wrap:anywhere]">{section.title}</Heading>
+            <div className="font-body text-base font-normal leading-relaxed text-fg md:col-span-4">
               <PortableText value={section.body} components={sectionBodyComponents} />
             </div>
           </div>
@@ -169,7 +199,7 @@ export default async function ProjectPage({ params }: Props) {
                 {row.items.map((img, j) => (
                   <div
                     key={j}
-                    className={`group relative overflow-hidden rounded-[2px] ${
+                    className={`relative overflow-hidden rounded-[2px] ${
                       row.size === "large" ? "aspect-16/9 w-full" : "aspect-4/5"
                     }`}
                   >
@@ -178,7 +208,7 @@ export default async function ProjectPage({ params }: Props) {
                       alt=""
                       fill
                       sizes={row.size === "large" ? "100vw" : smallSizes}
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      className="object-cover"
                     />
                   </div>
                 ))}
@@ -210,7 +240,7 @@ export default async function ProjectPage({ params }: Props) {
                   <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
                     Crew
                   </p>
-                  <p className="mt-2 font-body text-base text-fg/70">{artwork.crew.join(", ")}</p>
+                  <p className="mt-2 font-body text-base text-text-muted">{artwork.crew.join(", ")}</p>
                 </div>
               )}
               {artwork.materials && artwork.materials.length > 0 && (
@@ -218,7 +248,7 @@ export default async function ProjectPage({ params }: Props) {
                   <p className="font-body text-xs font-semibold uppercase tracking-widest text-fg">
                     Materials
                   </p>
-                  <p className="mt-2 font-body text-base text-fg/70">
+                  <p className="mt-2 font-body text-base text-text-muted">
                     {artwork.materials.join(", ")}
                   </p>
                 </div>
@@ -236,12 +266,12 @@ export default async function ProjectPage({ params }: Props) {
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-body text-base text-fg/70 underline underline-offset-2 transition-colors hover:text-fg"
+                          className="font-body text-base text-text-muted underline underline-offset-2 transition-colors hover:text-fg"
                         >
                           {p.text}
                         </a>
                       ) : (
-                        <span key={i} className="font-body text-base text-fg/70">
+                        <span key={i} className="font-body text-base text-text-muted">
                           {p.text}
                         </span>
                       )

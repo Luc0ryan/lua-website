@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Quote } from "lucide-react";
 
 export default function CommissionTestimonial() {
   return (

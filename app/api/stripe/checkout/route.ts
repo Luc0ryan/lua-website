@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import { getStripe, getSiteUrl, parseDonationAmount, donationErrorMessage } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2026-05-27.dahlia",
-  });
   try {
-    const { amountCents } = (await req.json()) as { amountCents: number };
-
-    if (!Number.isInteger(amountCents) || amountCents < 100) {
-      return NextResponse.json(
-        { error: "Minimum donation is $1." },
-        { status: 400 }
-      );
+    const parsed = parseDonationAmount(await req.json().catch(() => null));
+    if ("error" in parsed) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
+    const { amountCents } = parsed;
 
-    const origin = req.headers.get("origin") ?? "http://localhost:3000";
+    const stripe = getStripe();
+    const origin = getSiteUrl();
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -26,7 +21,7 @@ export async function POST(req: NextRequest) {
             currency: "usd",
             unit_amount: amountCents,
             product_data: {
-              name: "Donation — Looking Up Art",
+              name: "Donation — Looking Up Arts",
               description:
                 "Your gift directly supports artists and large-scale community art.",
             },
@@ -35,9 +30,9 @@ export async function POST(req: NextRequest) {
       ],
       payment_intent_data: {
         // Tags the charge clearly on donor bank statements
-        statement_descriptor_suffix: "LOOKING UP ART",
+        statement_descriptor_suffix: "LOOKING UP ARTS",
         metadata: {
-          organization: "Looking Up Art",
+          organization: "Looking Up Arts",
           donation_type: "one_time",
         },
       },
@@ -50,10 +45,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[stripe/checkout]", err);
-    const message =
-      err instanceof Stripe.errors.StripeError
-        ? err.message
-        : "Unable to start checkout. Please try again.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: donationErrorMessage(err) }, { status: 500 });
   }
 }

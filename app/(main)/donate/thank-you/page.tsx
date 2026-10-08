@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
-  title: "Thank You — Looking Up Art",
-  description: "Your donation has been received. Thank you for supporting Looking Up Art.",
+  title: "Thank You — Looking Up Arts",
+  description: "Your donation has been received. Thank you for supporting Looking Up Arts.",
 };
 
 const linkClass =

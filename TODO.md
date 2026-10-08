@@ -3,6 +3,10 @@
 ## Near launch
 - [ ] Add webhooks to track where potential LUA clients end up landing on "Contact Us" from — i.e. which page/section they came from before converting.
 - [ ] Delete `app/components/_archive/` folder (unused hero/section variants, see CLEANUP.md)
+- [ ] Delete unused `app/components/StageIndex.tsx` and `app/components/dot-system/` (only the removed `/ben-day` page and the archive used them)
+- [ ] Refresh `PROJECT.md` (still describes `/artworks`, `Nav.tsx`, the `artwork` schema, `InstagramGrid`)
+- [ ] Add a default 1200×630 Open Graph image to `app/layout.tsx` metadata
+- [ ] Decide fate of unused Sanity pieces: `staffMember`, `instagramPost`, `homepage` schemas; `getStaffMembers`
 
 ## Map handoff (after client sign-off on `/map/demo`)
 - [ ] Create the client's own Google account/Cloud project (use their email), enable billing, and generate a new Maps API key.

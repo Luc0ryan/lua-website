@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "@portabletext/react";
+import { cache } from "react";
 import { client } from "./client";
 
 export type ProjectSection = {
@@ -36,7 +37,8 @@ export type Artwork = {
   press?: { text?: string; url?: string }[];
 };
 
-export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
+// cache() dedupes the fetch between generateMetadata and the page render.
+export const getArtworkBySlug = cache(async (slug: string): Promise<Artwork | null> => {
   return client.fetch(
     `*[_type == "project" && slug.current == $slug][0]{
       _id, title, slug, image, city, year, placement, materials,
@@ -44,6 +46,12 @@ export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
       gallery[]{ ..., "aspectRatio": asset->metadata.dimensions.aspectRatio }
     }`,
     { slug }
+  );
+});
+
+export async function getProjectSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
+  return client.fetch(
+    `*[_type == "project" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }`
   );
 }
 

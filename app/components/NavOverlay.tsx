@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { Mail, X } from "lucide-react";
 
@@ -21,6 +21,8 @@ type Props = {
   onClose: () => void;
 };
 
+const noopSubscribe = () => () => {};
+
 export default function NavOverlay({ open, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -28,8 +30,11 @@ export default function NavOverlay({ open, onClose }: Props) {
   // the backdrop/panel are the last nodes in the DOM, so they can never be
   // out-ranked by a `relative`/`transform`/`fixed` element added anywhere
   // else on the page, regardless of z-index.
-  const [mounted, setMounted] = useState(false);
-  useLayoutEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false
+  );
 
   // Initial focus, Esc to close, Tab trapped within the overlay
   useLayoutEffect(() => {

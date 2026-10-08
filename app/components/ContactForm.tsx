@@ -50,7 +50,7 @@ export default function ContactForm({
   const imageSrc = sanityImage
     ? urlFor(sanityImage).width(900).url()
     : "/images/contactHero.webp";
-  const imageAlt = sanityImage?.alt ?? "Looking Up Art — contact";
+  const imageAlt = sanityImage?.alt ?? "Looking Up Arts — contact";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

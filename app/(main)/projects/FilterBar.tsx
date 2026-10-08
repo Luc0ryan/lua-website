@@ -190,7 +190,8 @@ export default function FilterBar({ artworks }: Props) {
   const setParam = useCallback(
     (key: string, value: string | null) => {
       const params = new URLSearchParams(searchParams.toString());
-      value === null ? params.delete(key) : params.set(key, value);
+      if (value === null) params.delete(key);
+      else params.set(key, value);
       const qs = params.toString();
       router.replace(pathname + (qs ? `?${qs}` : ""));
     },

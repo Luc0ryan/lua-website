@@ -16,6 +16,8 @@ Artwork cards in the homepage gallery use a white box overlay on the image, anch
 - Border radius: `rounded-[2px]` on all image containers
 
 ## Hover-scale on images
+Only for images that link somewhere (cards). Decorative/static images — project page sections and gallery — get no hover effect.
+
 Standard: `group-hover:scale-[1.03] transition-transform duration-500 ease-out` on the `<Image>`, with `group` on the wrapping `<div>`.
 - Scale: `[1.03]` — subtle, not `scale-105` or `scale-110`
 - Always use `group-hover` (not direct `hover:`) so the whole card is the hit target

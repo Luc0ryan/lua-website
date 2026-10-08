@@ -10,9 +10,9 @@ import { DonationForm } from "./DonateClient";
 import { DONATE_FAQS } from "./faqs";
 
 export const metadata: Metadata = {
-  title: "Donate — Looking Up Art",
+  title: "Donate — Looking Up Arts",
   description:
-    "Support Looking Up Art. Your gift funds artists and large-scale community art installations.",
+    "Support Looking Up Arts. Your gift funds artists and large-scale community art installations.",
 };
 
 interface DonatePageProps {

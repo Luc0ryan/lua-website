@@ -10,11 +10,10 @@ import type { HeroProject } from "@/lib/heroProjects";
 const CYCLE_MS = 6500;
 
 const HEADLINE =
-  "Looking Up Art is a San Francisco based art firm building interactive art that brings people together";
+  "Looking Up Arts is a San Francisco based art firm building interactive art that brings people together";
 
 const doorLinks = [
   { label: "Projects", href: "/projects" },
-  { label: "Catalogue", href: "/catalogue" },
   { label: "Commission", href: "/commission" },
 ];
 

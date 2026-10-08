@@ -3,7 +3,7 @@ import { DotField } from "@/app/components/dot-system";
 import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
-  title: "Ben-Day Dot System — Looking Up Art",
+  title: "Ben-Day Dot System — Looking Up Arts",
   robots: { index: false, follow: false },
 };
 

@@ -3,6 +3,7 @@ import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { googleMapsInput } from "@sanity/google-maps-input";
 import { schemaTypes } from "./sanity/schemas";
+import { projectId, dataset } from "./sanity/lib/env";
 import { media } from 'sanity-plugin-media';
 import { StructureBuilder } from "sanity/structure";
 import {
@@ -17,8 +18,8 @@ export default defineConfig({
   title: "LUA Studio",
   basePath: "/studio",
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "your-project-id",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+  projectId,
+  dataset,
 
   plugins: [
     structureTool({

@@ -9,7 +9,7 @@
   /* Commission page only — not the site-wide accent, keep scoped to that page's components */
   --purple-commission: #7E22CE;
   --gray-label: #888;
-  --text-muted: #666666;
+  --text-muted: #6d6d6d;
   --footer-bg: #F5F3F0;
   /* Single source-of-truth for all horizontal rhythm */
   --gutter: clamp(24px, 4vw, 64px);

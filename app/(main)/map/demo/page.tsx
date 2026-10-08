@@ -10,7 +10,7 @@ import { Heading } from "@/app/components/ui/Heading";
 // editing. Reachable in `next dev`; in production only when MAP_DEMO=1.
 // Remove this route once real locations are geocoded in Studio.
 export const metadata: Metadata = {
-  title: "Map Demo — Looking Up Art",
+  title: "Map Demo — Looking Up Arts",
   robots: { index: false, follow: false },
 };
 

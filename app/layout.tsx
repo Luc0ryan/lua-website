@@ -23,8 +23,16 @@ const archivoNarrow = Archivo_Narrow({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL ?? "http://localhost:3000"),
   title: "Looking Up Arts",
   description: "Interactive art built to bring people together.",
+  // Defaults for every page; project pages override with their own image.
+  openGraph: {
+    siteName: "Looking Up Arts",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default async function RootLayout({

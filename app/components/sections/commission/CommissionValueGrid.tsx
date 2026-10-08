@@ -10,7 +10,7 @@ type ValueCard = {
 const cards: ValueCard[] = [
   {
     image: "/images/commission/value-1.png",
-    alt: "A fabricator welding a large-scale sculpture in the Looking Up Art workshop",
+    alt: "A fabricator welding a large-scale sculpture in the Looking Up Arts workshop",
     title: "We know how cities work",
     body: "Codes, public-safety review, stakeholder approvals, and civic art calls from finalist round to installation, plus the faster worlds of festivals and private events.",
   },
@@ -22,7 +22,7 @@ const cards: ValueCard[] = [
   },
   {
     image: "/images/commission/value-3.jpg",
-    alt: "An illuminated Looking Up Art installation at night on a city street",
+    alt: "An illuminated Looking Up Arts installation at night on a city street",
     title: "You hear it from us first",
     body: "We ask the questions clients hesitate to raise, plan for the unknowns every install uncovers, and deliver hard news the day we learn it.",
   },

@@ -2,13 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { urlFor } from "@/sanity/lib/image";
 import type { HeroProject } from "@/lib/heroProjects";
 
 const CYCLE_MS = 7000;
 
 type Props = { projects: HeroProject[] };
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
 
 export default function StageIndex({ projects }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -17,7 +25,11 @@ export default function StageIndex({ projects }: Props) {
   const [loaded, setLoaded] = useState<ReadonlySet<number>>(new Set());
   const loadedRef = useRef<ReadonlySet<number>>(new Set());
   const [stopped, setStopped] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
+    () => false
+  );
   const lastPointerTypeRef = useRef("");
 
   const markLoaded = useCallback((i: number) => {
@@ -30,19 +42,11 @@ export default function StageIndex({ projects }: Props) {
     });
   }, []);
 
-  useEffect(() => {
-    if (requested !== committed && loaded.has(requested)) {
-      setCommitted(requested);
-    }
-  }, [requested, committed, loaded]);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  // Swap the visible slide only once its image has loaded. Adjusted during
+  // render (not in an effect) so there is no extra committed frame.
+  if (requested !== committed && loaded.has(requested)) {
+    setCommitted(requested);
+  }
 
   // Any interaction with the hero kills the auto-cycle for the session.
   useEffect(() => {

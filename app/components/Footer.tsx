@@ -27,7 +27,6 @@ function InstagramIcon({ size = 16 }: { size?: number }) {
 
 const exploreLinks = [
   { label: "PROJECTS", href: "/projects" },
-  { label: "CATALOGUE", href: "/catalogue" },
   { label: "COMMISSION", href: "/commission" },
   { label: "WHERE WE WORK", href: "/map" },
 ];

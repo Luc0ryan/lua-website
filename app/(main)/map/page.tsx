@@ -4,8 +4,8 @@ import ProjectMap from "@/app/components/ProjectMap";
 import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
-  title: "Where We Work — Looking Up Art",
-  description: "Explore where Looking Up Art's projects are showing, have toured, and call home.",
+  title: "Where We Work — Looking Up Arts",
+  description: "Explore where Looking Up Arts' projects are showing, have toured, and call home.",
 };
 
 export default async function MapPage() {

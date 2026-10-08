@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Heading } from "@/app/components/ui/Heading";
 
 export const metadata: Metadata = {
-  title: "About — Looking Up Art",
+  title: "About — Looking Up Arts",
   description:
     "Looking Up Arts Foundation is a San Francisco-based non-profit dedicated to large scale art installations.",
 };
