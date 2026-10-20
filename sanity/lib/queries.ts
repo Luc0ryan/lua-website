@@ -157,17 +157,21 @@ export type MapLocation = {
     _id: string;
     title: string;
     slug?: string;
+    placement?: "permanent" | "exhibition" | "touring";
     image?: { asset: { _ref: string }; hotspot?: object };
   };
 };
 
 // `defined(geopoint)` filters at the query layer — locations with a venue
 // name but no coordinates yet (not geocoded in Studio) never reach the map.
+// `past` only applies to touring projects; permanent and exhibition projects
+// are always `current`, whatever the stored value says.
 export async function getMapLocations(): Promise<MapLocation[]> {
   return client.fetch(
     `*[_type == "location" && defined(geopoint)]{
-      _id, venueName, city, year, geopoint, locationState,
-      "project": project->{ _id, title, "slug": slug.current, "image": image }
+      _id, venueName, city, year, geopoint,
+      "locationState": select(project->placement == "touring" => locationState, "current"),
+      "project": project->{ _id, title, "slug": slug.current, placement, "image": image }
     }`
   );
 }

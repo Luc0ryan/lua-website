@@ -24,6 +24,7 @@ type LocationProperties = {
   locationId: string;
   projectRef: string;
   locationState: "current" | "past";
+  placement: string | null;
   title: string;
   year: number | null;
   venueName: string | null;
@@ -31,7 +32,35 @@ type LocationProperties = {
   thumb: string | null;
 };
 
-type Props = { locations: MapLocation[]; className?: string; leftInset?: number };
+type Props = {
+  /** One location per project — the pin each project gets on the map. */
+  locations: MapLocation[];
+  /** Earlier stops of the active project, revealed as hollow pins plus a route. */
+  pastStops?: MapLocation[];
+  activeProjectId?: string | null;
+  hoveredProjectId?: string | null;
+  onActiveProjectChange?: (id: string | null) => void;
+  /** Fires on every pan/zoom with the projects whose pin is in view. */
+  onVisibleProjectsChange?: (ids: string[]) => void;
+  /** Bump to re-frame every pin. */
+  fitSignal?: number;
+  className?: string;
+  leftInset?: number;
+};
+
+function locationProps(loc: MapLocation): LocationProperties {
+  return {
+    locationId: loc._id,
+    projectRef: loc.project._id,
+    locationState: loc.locationState,
+    placement: loc.project.placement ?? null,
+    title: loc.project.title,
+    year: loc.year ?? null,
+    venueName: loc.venueName ?? null,
+    city: loc.city ?? null,
+    thumb: loc.project.image ? urlFor(loc.project.image).width(120).height(120).fit("crop").url() : null,
+  };
+}
 
 function toFeatureCollection(
   locations: MapLocation[]
@@ -41,16 +70,7 @@ function toFeatureCollection(
     features: locations.map((loc) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [loc.geopoint.lng, loc.geopoint.lat] },
-      properties: {
-        locationId: loc._id,
-        projectRef: loc.project._id,
-        locationState: loc.locationState,
-        title: loc.project.title,
-        year: loc.year ?? null,
-        venueName: loc.venueName ?? null,
-        city: loc.city ?? null,
-        thumb: loc.project.image ? urlFor(loc.project.image).width(120).height(120).fit("crop").url() : null,
-      },
+      properties: locationProps(loc),
     })),
   };
 }
@@ -147,15 +167,34 @@ function buildClusterPopup(leaves: LocationProperties[], onSelect: (projectRef: 
 }
 
 // Frame every pin. Called on load, with the map's real container size known.
-function fitToLocations(map: mapboxgl.Map, locations: MapLocation[], leftInset: number) {
+function fitToLocations(map: mapboxgl.Map, locations: MapLocation[], leftInset: number, animate = false) {
   if (locations.length === 0) return;
   const bounds = new mapboxgl.LngLatBounds();
   for (const loc of locations) bounds.extend([loc.geopoint.lng, loc.geopoint.lat]);
   map.fitBounds(bounds, {
     padding: { ...FIT_PADDING, left: FIT_PADDING.left + leftInset },
     maxZoom: 9,
-    animate: false,
+    animate,
   });
+}
+
+function openPopup(
+  map: mapboxgl.Map,
+  popupRef: { current: mapboxgl.Popup | null },
+  lngLat: mapboxgl.LngLatLike,
+  content: HTMLElement,
+  offset = POPUP_OFFSET
+) {
+  popupRef.current?.remove();
+  popupRef.current = new mapboxgl.Popup({
+    className: "lua-popup",
+    closeButton: false,
+    maxWidth: "none",
+    offset,
+  })
+    .setLngLat(lngLat)
+    .setDOMContent(content)
+    .addTo(map);
 }
 
 // ── Marker DOM builders ──────────────────────────────────────────────────────
@@ -166,11 +205,33 @@ function fitToLocations(map: mapboxgl.Map, locations: MapLocation[], leftInset: 
 const HALFTONE =
   "radial-gradient(circle, var(--fg) 1.2px, transparent 1.6px) 0 0 / 6px 6px, var(--pink)";
 
+// Pin states: solid pink = on view now; solid with a black dot = permanent
+// install; hollow = not on view (last known stop, or an earlier stop of the
+// selected project). Shape and fill carry the meaning, not just the hue.
 function buildSingleMarker(props: LocationProperties): HTMLButtonElement {
+  const hollow = props.locationState === "past";
+  const permanent = !hollow && props.placement === "permanent";
   const btn = el("button", "block w-4 h-4 cursor-pointer p-0 border-0 bg-transparent");
   btn.type = "button";
   btn.setAttribute("aria-label", props.title);
-  btn.appendChild(el("span", "block w-full h-full bg-pink border-2 border-black rounded-[2px] shadow-[3px_3px_0_#000]"));
+  const shape = el(
+    "span",
+    `relative flex items-center justify-center w-full h-full rounded-[2px] shadow-[3px_3px_0_#000] transition-transform duration-150 ${
+      hollow ? "bg-white border-[3px] border-pink" : "bg-pink border-2 border-black"
+    }`
+  );
+  if (permanent) shape.appendChild(el("span", "block w-1.5 h-1.5 rounded-full bg-black"));
+  btn.appendChild(shape);
+  return btn;
+}
+
+function buildPastMarker(props: LocationProperties): HTMLButtonElement {
+  const btn = el("button", "block w-3.5 h-3.5 cursor-pointer p-0 border-0 bg-transparent");
+  btn.type = "button";
+  btn.setAttribute("aria-label", `${props.title}, ${locationSubtitle(props)}`);
+  btn.appendChild(
+    el("span", "block w-full h-full bg-white border-[3px] border-pink rounded-[2px] shadow-[2px_2px_0_#000]")
+  );
   return btn;
 }
 
@@ -194,14 +255,45 @@ function buildClusterMarker(count: number, label: string): HTMLButtonElement {
 
 type MarkerEntry = { marker: mapboxgl.Marker; el: HTMLElement; props?: LocationProperties };
 
-export default function ProjectMap({ locations, className = "", leftInset = 0 }: Props) {
+const ROUTE_SOURCE = "active-route";
+const ROUTE_LAYER = "active-route-line";
+
+function chronological(locs: MapLocation[]): MapLocation[] {
+  return [...locs].sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
+}
+
+export default function ProjectMap({
+  locations,
+  pastStops,
+  activeProjectId = null,
+  hoveredProjectId = null,
+  onActiveProjectChange,
+  onVisibleProjectsChange,
+  fitSignal = 0,
+  className = "",
+  leftInset = 0,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
+  const popupProjectRef = useRef<string | null>(null);
   const activeProjectRef = useRef<string | null>(null);
+  const hoveredProjectRef = useRef<string | null>(null);
   const locationsRef = useRef(locations);
+  const pastMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const readyRef = useRef(false);
+  const applyAllRef = useRef<() => void>(() => {});
+  const emitVisibleRef = useRef<() => void>(() => {});
+  const revealRef = useRef<() => void>(() => {});
+  const onActiveRef = useRef(onActiveProjectChange);
+  const onVisibleRef = useRef(onVisibleProjectsChange);
 
   const [missingToken] = useState(() => !process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
+
+  useEffect(() => {
+    onActiveRef.current = onActiveProjectChange;
+    onVisibleRef.current = onVisibleProjectsChange;
+  });
 
   useEffect(() => {
     if (missingToken || !containerRef.current) return;
@@ -215,36 +307,37 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
       zoom: 3,
     });
     mapRef.current = map;
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "bottom-right");
 
     const markers = new Map<string, MarkerEntry>();
 
-    // Past locations are intentionally drawn at 55% (a state, not a bug);
-    // while a project is active, every other project's pins drop to 30%.
+    // While a project is active, every other project's pins drop to 30%; the
+    // hovered project's pin (from the sidebar list) swells.
     function applyMarkerState(entry: MarkerEntry) {
       const props = entry.props;
       if (!props) return;
       const active = activeProjectRef.current;
       const dimmed = active !== null && props.projectRef !== active;
-      entry.el.style.opacity = dimmed ? "0.3" : props.locationState === "past" ? "0.55" : "1";
+      entry.el.style.opacity = dimmed ? "0.3" : "1";
+      const shape = entry.el.firstElementChild as HTMLElement | null;
+      if (shape) shape.style.transform = hoveredProjectRef.current === props.projectRef ? "scale(1.5)" : "";
     }
+    applyAllRef.current = () => markers.forEach(applyMarkerState);
 
     function setActiveProject(projectRef: string | null) {
       activeProjectRef.current = projectRef;
       markers.forEach(applyMarkerState);
+      onActiveRef.current?.(projectRef);
     }
 
-    function openPopupAt(lngLat: mapboxgl.LngLatLike, content: HTMLElement, offset = POPUP_OFFSET) {
-      popupRef.current?.remove();
-      popupRef.current = new mapboxgl.Popup({
-        className: "lua-popup",
-        closeButton: false,
-        maxWidth: "none",
-        offset,
-      })
-        .setLngLat(lngLat)
-        .setDOMContent(content)
-        .addTo(map);
+    function openPopupAt(
+      lngLat: mapboxgl.LngLatLike,
+      content: HTMLElement,
+      projectRef: string | null,
+      offset = POPUP_OFFSET
+    ) {
+      popupProjectRef.current = projectRef;
+      openPopup(map, popupRef, lngLat, content, offset);
     }
 
     function openCluster(clusterId: number, coordinates: [number, number], radius: number) {
@@ -257,6 +350,7 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
           buildClusterPopup(leafProps, (projectRef) => {
             setActiveProject(activeProjectRef.current === projectRef ? null : projectRef);
           }),
+          null,
           radius + POPUP_OFFSET
         );
       });
@@ -294,7 +388,7 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
             ev.stopPropagation();
             const next = activeProjectRef.current === props!.projectRef ? null : props!.projectRef;
             setActiveProject(next);
-            openPopupAt(coords, buildSingleLocationPopup(props!));
+            openPopupAt(coords, buildSingleLocationPopup(props!), props!.projectRef);
           });
         }
         const entry: MarkerEntry = {
@@ -312,6 +406,16 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
         }
       });
     }
+
+    function emitVisible() {
+      const bounds = map.getBounds();
+      if (!bounds) return;
+      const ids = locationsRef.current
+        .filter((l) => bounds.contains([l.geopoint.lng, l.geopoint.lat]))
+        .map((l) => l.project._id);
+      onVisibleRef.current?.(ids);
+    }
+    emitVisibleRef.current = emitVisible;
 
     map.on("load", () => {
       fitToLocations(map, locationsRef.current, leftInset);
@@ -331,7 +435,21 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
         paint: { "circle-radius": 1, "circle-opacity": 0 },
       });
 
+      // Dashed route through the active project's stops, oldest to newest.
+      map.addSource(ROUTE_SOURCE, {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] },
+      });
+      map.addLayer({
+        id: ROUTE_LAYER,
+        type: "line",
+        source: ROUTE_SOURCE,
+        layout: { "line-cap": "round" },
+        paint: { "line-color": "#111", "line-width": 1.5, "line-dasharray": [2, 2], "line-opacity": 0.55 },
+      });
+
       map.on("render", syncMarkers);
+      map.on("moveend", emitVisible);
 
       // Marker clicks stopPropagation, so any click that reaches the map is
       // on the background: clear the active project and close the popup.
@@ -339,10 +457,17 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
         setActiveProject(null);
         popupRef.current?.remove();
       });
+
+      readyRef.current = true;
+      emitVisible();
+      revealRef.current();
     });
 
     return () => {
+      readyRef.current = false;
       markers.forEach((entry) => entry.marker.remove());
+      pastMarkersRef.current.forEach((m) => m.remove());
+      pastMarkersRef.current = [];
       popupRef.current?.remove();
       map.remove();
       mapRef.current = null;
@@ -358,7 +483,98 @@ export default function ProjectMap({ locations, className = "", leftInset = 0 }:
     const map = mapRef.current;
     const source = map?.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource | undefined;
     source?.setData(toFeatureCollection(locations));
+    emitVisibleRef.current();
   }, [locations]);
+
+  useEffect(() => {
+    hoveredProjectRef.current = hoveredProjectId;
+    applyAllRef.current();
+  }, [hoveredProjectId]);
+
+  // Reveal the active project's earlier stops: hollow pins, a dashed route,
+  // and a camera move that frames the whole run. Selecting from the sidebar
+  // and clicking a pin both land here.
+  const lastFramedRef = useRef<string | null>(null);
+  useEffect(() => {
+    activeProjectRef.current = activeProjectId;
+    applyAllRef.current();
+
+    const reveal = () => {
+      const map = mapRef.current;
+      if (!map || !readyRef.current) return;
+
+      pastMarkersRef.current.forEach((m) => m.remove());
+      pastMarkersRef.current = [];
+
+      const primary = activeProjectId
+        ? locations.find((l) => l.project._id === activeProjectId)
+        : undefined;
+      const stops = primary ? chronological([...(pastStops ?? []), primary]) : [];
+
+      const route = map.getSource(ROUTE_SOURCE) as mapboxgl.GeoJSONSource | undefined;
+      route?.setData({
+        type: "FeatureCollection",
+        features:
+          stops.length > 1
+            ? [
+                {
+                  type: "Feature",
+                  properties: {},
+                  geometry: {
+                    type: "LineString",
+                    coordinates: stops.map((s) => [s.geopoint.lng, s.geopoint.lat]),
+                  },
+                },
+              ]
+            : [],
+      });
+
+      for (const loc of pastStops ?? []) {
+        const props = locationProps(loc);
+        const node = buildPastMarker(props);
+        const coords: [number, number] = [loc.geopoint.lng, loc.geopoint.lat];
+        node.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          popupProjectRef.current = props.projectRef;
+          openPopup(map, popupRef, coords, buildSingleLocationPopup(props));
+        });
+        pastMarkersRef.current.push(new mapboxgl.Marker({ element: node }).setLngLat(coords).addTo(map));
+      }
+
+      // Drop a popup that belongs to a different project than the selection.
+      if (popupProjectRef.current !== activeProjectId) popupRef.current?.remove();
+
+      if (!primary) {
+        lastFramedRef.current = null;
+        return;
+      }
+      if (lastFramedRef.current === activeProjectId) return;
+      lastFramedRef.current = activeProjectId;
+
+      if (stops.length > 1) {
+        const bounds = new mapboxgl.LngLatBounds();
+        for (const s of stops) bounds.extend([s.geopoint.lng, s.geopoint.lat]);
+        map.fitBounds(bounds, {
+          padding: { ...FIT_PADDING, left: FIT_PADDING.left + leftInset },
+          maxZoom: 9,
+        });
+      } else {
+        map.easeTo({
+          center: [primary.geopoint.lng, primary.geopoint.lat],
+          zoom: Math.max(map.getZoom(), 5),
+        });
+      }
+    };
+
+    revealRef.current = reveal;
+    reveal();
+  }, [activeProjectId, pastStops, locations, leftInset]);
+
+  useEffect(() => {
+    if (fitSignal === 0) return;
+    const map = mapRef.current;
+    if (map && readyRef.current) fitToLocations(map, locationsRef.current, leftInset, true);
+  }, [fitSignal, leftInset]);
 
   if (missingToken) {
     return (

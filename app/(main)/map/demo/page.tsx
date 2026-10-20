@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import type { MapLocation } from "@/sanity/lib/queries";
-import ProjectMap from "@/app/components/ProjectMap";
-import { Heading } from "@/app/components/ui/Heading";
+import MapExplorer from "@/app/components/MapExplorer";
 
 // Client-demo map with fixture locations. Does not read `location` documents
 // and does not touch the Google Maps key, so it is independent of Studio
@@ -57,17 +56,5 @@ export default async function MapDemoPage() {
   if (process.env.NODE_ENV === "production" && process.env.MAP_DEMO !== "1") notFound();
   const locations = await getDemoLocations();
 
-  return (
-    <main className="relative h-svh w-full overflow-hidden">
-      <ProjectMap locations={locations} className="absolute inset-0 h-full w-full" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 mx-auto w-full max-w-screen-2xl px-gutter pt-8">
-        <Heading
-          level="h1"
-          className="pointer-events-auto inline-block bg-white px-5 py-4 uppercase shadow-[inset_0_0_0_2px_var(--fg)]"
-        >
-          Where We Work
-        </Heading>
-      </div>
-    </main>
-  );
+  return <MapExplorer locations={locations} />;
 }

@@ -7,9 +7,9 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import NavOverlay from "./NavOverlay";
 
-// Routes whose first section is a full-bleed hero image/video the nav should
-// float over. This is the ONLY thing that decides overlay vs solid styling —
-// deliberately route-based, not scroll-based, so it can never flicker.
+// Photo hero routes: a full-bleed image/video sits under the nav, so chrome
+// goes light (white logo/icons) with a scrim. Deliberately route-based, not
+// scroll-based, so it can never flicker.
 function isHeroRoute(pathname: string): boolean {
   return (
     pathname === "/" ||
@@ -20,11 +20,28 @@ function isHeroRoute(pathname: string): boolean {
   );
 }
 
+// The map is a full-viewport app-style page: sidebar on the left, map on the
+// right, and the nav floats over both.
+function isMapRoute(pathname: string): boolean {
+  return pathname === "/map" || pathname.startsWith("/map/");
+}
+
+// Nav floats transparent over these routes instead of sitting on a solid bar.
+// The map floats over a light basemap, so it keeps dark chrome and no scrim.
+function isFloatingRoute(pathname: string): boolean {
+  return isHeroRoute(pathname) || isMapRoute(pathname);
+}
+
 export default function HomeNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
-  const overlay = isHeroRoute(pathname);
+  const overlay = isFloatingRoute(pathname);
+  const lightChrome = isHeroRoute(pathname);
+  // On the map the nav spans the full viewport edge to edge (logo over the
+  // sidebar) and only its own controls take clicks, so it never blocks
+  // dragging the map beneath it.
+  const mapRoute = isMapRoute(pathname);
 
   // Prevent body scroll while the overlay is open.
   // Compensate for the scrollbar width so the content doesn't shift right when
@@ -69,21 +86,25 @@ export default function HomeNav() {
       <nav
         className={`absolute top-0 z-nav w-full pt-6 pb-4 ${
           overlay ? "bg-transparent" : "bg-bg border-b border-black/10"
-        }`}
+        } ${mapRoute ? "pointer-events-none" : ""}`}
       >
         {/* Scrim — keeps the white logo/icons legible over any hero image,
             without needing a hard-edged solid bar. Overlay mode only. */}
-        {overlay && (
+        {lightChrome && (
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/35 to-transparent"
           />
         )}
 
-        <div className="relative w-full max-w-screen-2xl mx-auto px-gutter flex items-start justify-between">
-          <Link href="/" className="flex h-16 shrink-0 cursor-pointer">
+        <div
+          className={`relative w-full px-gutter flex items-start justify-between ${
+            mapRoute ? "" : "max-w-screen-2xl mx-auto"
+          }`}
+        >
+          <Link href="/" className="pointer-events-auto flex h-16 shrink-0 cursor-pointer">
             <Image
-              src={overlay ? "/logos/logo-opaque-1000.png" : "/logos/logo-black-1000.png"}
+              src={lightChrome ? "/logos/logo-opaque-1000.png" : "/logos/logo-black-1000.png"}
               alt="Looking Up Arts"
               width={1000}
               height={863}
@@ -93,7 +114,7 @@ export default function HomeNav() {
             />
           </Link>
 
-          <div className="flex items-center gap-5">
+          <div className="pointer-events-auto flex items-center gap-5">
             <button
               ref={menuButtonRef}
               type="button"
@@ -110,7 +131,7 @@ export default function HomeNav() {
 
               {/* Desktop */}
               <span className="hidden md:flex items-center justify-center p-1">
-                {overlay ? (
+                {lightChrome ? (
                   <Menu size={40} strokeWidth={2.5} className="text-white transition-opacity duration-150 group-hover:opacity-60" />
                 ) : (
                   <Menu size={34} strokeWidth={2} className="text-fg transition-opacity duration-150 group-hover:opacity-60" />

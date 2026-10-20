@@ -133,10 +133,10 @@ export default async function ProjectPage({ params }: Props) {
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
           {/* Metadata — cols 1-2, "Category value" with a bold category */}
           {metadata.length > 0 && (
-            <dl className="col-span-12 grid grid-cols-[6rem_1fr] gap-x-4 gap-y-2 font-body text-base md:col-span-2 md:grid-cols-[5.5rem_1fr]">
+            <dl className="col-span-12 self-start border-t-2 border-fg pt-3 font-body text-base leading-snug md:col-span-3">
               {metadata.map((m) => (
-                <div key={m.label} className="contents">
-                  <dt className="font-semibold text-fg">{m.label}</dt>
+                <div key={m.label} className="flex flex-col py-1.5">
+                  <dt className="text-xs font-semibold uppercase tracking-widest text-fg">{m.label}</dt>
                   <dd className="text-text-muted">{m.value}</dd>
                 </div>
               ))}

@@ -40,7 +40,7 @@ export const locationSchema = defineType({
       title: "State",
       type: "string",
       description:
-        "Setting this to Current automatically moves this project's previous current location (if any) to Past.",
+        "Setting this to Current automatically moves this project's previous current location (if any) to Past. Past only applies to touring projects; permanent and exhibition locations always show as Current.",
       options: {
         list: [
           { title: "Current", value: "current" },
