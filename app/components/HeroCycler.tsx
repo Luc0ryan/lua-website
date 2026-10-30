@@ -74,6 +74,17 @@ export default function HeroCycler({ projects }: Props) {
     };
   }, [paused, projects.length]);
 
+  // Only put a slide's image on the page once the cycle is about to reach
+  // it: the current slide plus the next one, which downloads in the
+  // background while the current one shows. Previously every slide loaded
+  // at full width on page load. Updating state during render (not in an
+  // effect) is React's recommended way to derive state from a prop/state change.
+  const [mounted, setMounted] = useState<ReadonlySet<number>>(() => new Set([0, 1]));
+  const upNext = projects.length ? (index + 1) % projects.length : 0;
+  if (!mounted.has(index) || !mounted.has(upNext)) {
+    setMounted(new Set([...mounted, index, upNext]));
+  }
+
   if (!projects.length) return null;
   const active = projects[index];
 
@@ -81,7 +92,7 @@ export default function HeroCycler({ projects }: Props) {
     <section className="relative -mt-28 flex h-[90svh] flex-col justify-end overflow-hidden">
       {/* Cycling background — layered crossfade */}
       <div className="absolute inset-0">
-        {projects.map((p, i) => (
+        {projects.map((p, i) => mounted.has(i) && (
           <Image
             key={p.key}
             src={urlFor(p.image).url()}

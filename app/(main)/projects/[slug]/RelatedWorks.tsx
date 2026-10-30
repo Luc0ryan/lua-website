@@ -13,7 +13,7 @@ export default function RelatedWorks({ artworks }: { artworks: Artwork[] }) {
       </Heading>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {artworks.map((artwork) => (
-          <ArtworkCard key={artwork._id} artwork={artwork} featured={false} />
+          <ArtworkCard key={artwork._id} artwork={artwork} />
         ))}
       </div>
     </div>

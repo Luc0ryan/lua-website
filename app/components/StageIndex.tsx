@@ -86,7 +86,7 @@ export default function StageIndex({ projects }: Props) {
       <div className="relative aspect-3/2 w-full md:aspect-[4/3] md:h-full md:w-auto md:shrink-0">
         <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-xs bg-fg" aria-hidden="true" />
         <Link
-          href={active.href}
+          href={active.href ?? "/projects"}
           aria-label={`View ${active.title}`}
           className="relative block h-full w-full overflow-hidden rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink"
         >
@@ -117,7 +117,7 @@ export default function StageIndex({ projects }: Props) {
               <li key={p.key}>
                 {i > 0 && <hr className="border-fg/10" />}
                 <Link
-                  href={p.href}
+                  href={p.href ?? "/projects"}
                   aria-current={isActive ? "true" : undefined}
                   onPointerEnter={(e) => { if (e.pointerType !== "touch") setRequested(i); }}
                   onFocus={() => { if (lastPointerTypeRef.current !== "touch") setRequested(i); }}

@@ -4,7 +4,7 @@ const siteUrl = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/+$/
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/api/", "/map/demo"] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/api/", "/map/demo", "/design", "/ben-day"] },
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

@@ -1,4 +1,5 @@
 import { getMarqueeArtworks, type Artwork } from "@/sanity/lib/queries";
+import { projectSubtitle } from "@/lib/projectSubtitle";
 
 /**
  * Marquee frame shape, isolated here so the hero components never touch
@@ -7,47 +8,21 @@ import { getMarqueeArtworks, type Artwork } from "@/sanity/lib/queries";
 export type HeroProject = {
   key: string;
   title: string;
-  href: string;
+  /** Project page, or null when the project has no slug yet. */
+  href: string | null;
   image: Artwork["image"];
-  /** One-line metadata, rendered before the title: "Jackson // 2024" or "Touring". */
+  /** One-line metadata above the title: "Jackson, TN · 2024" or "Touring". */
   meta: string;
 };
 
-function slugify(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 function toHeroProject(artwork: Artwork): HeroProject {
-  const meta =
-    artwork.placement === "touring"
-      ? // TODO real data: venue count not in schema yet — "Touring · N venues" once it is
-        "Touring"
-      : [artwork.city, artwork.year].filter(Boolean).join(" // ");
-
   return {
     key: artwork._id,
     title: artwork.title,
-    href: `/projects/${slugify(artwork.title)}`,
+    href: artwork.slug?.current ? `/projects/${artwork.slug.current}` : null,
     image: artwork.image,
-    meta,
+    meta: projectSubtitle(artwork),
   };
-}
-
-/**
- * Title (case-insensitive) to surface first regardless of CMS order — lets us
- * test a specific project's imagery at hero scale. No-op if it isn't present.
- */
-const PINNED_FIRST = "Spider Trap";
-
-function pinFirst(projects: HeroProject[], title: string): HeroProject[] {
-  const i = projects.findIndex(
-    (p) => p.title.toLowerCase() === title.toLowerCase()
-  );
-  if (i <= 0) return projects;
-  return [projects[i], ...projects.slice(0, i), ...projects.slice(i + 1)];
 }
 
 /** Alternate permanent/touring in the data order; leftovers append in CMS order. */
@@ -66,8 +41,5 @@ function interleaveByPlacement(artworks: Artwork[]): Artwork[] {
 
 export async function getHeroProjects(): Promise<HeroProject[]> {
   const artworks = await getMarqueeArtworks().catch(() => [] as Artwork[]);
-  const projects = interleaveByPlacement(artworks.filter((a) => a.image)).map(
-    toHeroProject
-  );
-  return pinFirst(projects, PINNED_FIRST);
+  return interleaveByPlacement(artworks.filter((a) => a.image)).map(toHeroProject);
 }

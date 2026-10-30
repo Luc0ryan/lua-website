@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/client";
 import type { MapLocation } from "@/sanity/lib/queries";
 import MapExplorer from "@/app/components/MapExplorer";
 
@@ -37,7 +37,7 @@ const SEEDS: Seed[] = [
 
 async function getDemoLocations(): Promise<MapLocation[]> {
   // Borrow real projects (title + image) so popups look like the finished map.
-  const projects = await client.fetch<MapLocation["project"][]>(
+  const projects = await sanityFetch<MapLocation["project"][]>(
     `*[_type == "project" && defined(image)]{ _id, title, "slug": slug.current, "image": image }`
   );
   if (projects.length === 0) return [];

@@ -6,10 +6,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Design Conventions
 
-## Gallery card overlay
-Artwork cards in the homepage gallery use a white box overlay on the image, anchored bottom-right — not text below the image.
-- Style: `bg-white px-5 py-4 shadow-[5px_5px_0_#111]` matching the hero project card
-- Subtitle: permanent/exhibition → `city · year`; touring → `materials[0]` or `"Touring"` if unset
+## Project cards
+Every project card is `app/components/ArtworkCard.tsx` — the Projects grid, homepage gallery, Commission "Selected Works", Related Works and Donate all use it. Don't build a new card; pass `size`, `aspect` and `sizes` instead. Pass the Sanity project as-is, and include `slug` in the query so the card links to its page.
+- Overlay: a white box on the image, anchored bottom-right — not text below the image. `border-2 border-fg bg-bg shadow-[5px_5px_0_var(--fg)]`
+- `size="md"` (grids, default) vs `size="lg"` (homepage, Commission) only changes the chip's padding and type scale
+- Subtitle: `projectSubtitle()` in `lib/projectSubtitle.ts` — touring → `"Touring"`; permanent/exhibition → `city · year`. Also used by the hero and the project page.
+
+## Homepage gallery layout
 - Layout: 7:5 alternating columns (rows 1 & 3: 7-left/5-right; row 2: 5-left/7-right)
 - 5-col is always `aspect-square`; 7-col uses `absolute inset-0` so the square drives row height
 - Gap: `gap-4` (16px) for both column and row gutters
