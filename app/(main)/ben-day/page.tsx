@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { DotField } from "@/app/components/dot-system";
 import { Heading } from "@/app/components/ui/Heading";
@@ -29,7 +30,9 @@ function DotSwatch({
   );
 }
 
+// Internal reference page: available in `next dev`, 404 in production.
 export default function BenDayPage() {
+  if (process.env.NODE_ENV === "production") notFound();
   return (
     <main className="px-gutter py-20 md:py-32 max-w-6xl mx-auto w-full">
       <header className="max-w-2xl mb-16">

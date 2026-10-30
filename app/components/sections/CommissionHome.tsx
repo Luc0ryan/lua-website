@@ -1,8 +1,8 @@
 import HomeGallery from "./HomeGallery";
-import { getCommissionGalleryProjects } from "@/lib/galleryProjects";
+import { getCommissionArtworks } from "@/sanity/lib/queries";
 
 export default async function CommissionHome() {
-  const projects = await getCommissionGalleryProjects();
+  const projects = await getCommissionArtworks().catch(() => []);
   if (!projects.length) return null;
 
   return (

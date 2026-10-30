@@ -47,6 +47,9 @@ const getInvolvedLinks = [
 const PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
 const NEWSLETTER_FORM_ID = process.env.NEXT_PUBLIC_HUBSPOT_NEWSLETTER_FORM_ID;
 const HUBSPOT_CONTACT_TYPE_ID = "0-1";
+// NEXT_PUBLIC_* values are baked in at build time, so server and browser
+// agree on this and the form never renders as a button that does nothing.
+const newsletterReady = Boolean(PORTAL_ID && NEWSLETTER_FORM_ID);
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -55,13 +58,7 @@ export default function Footer() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!PORTAL_ID || !NEWSLETTER_FORM_ID) {
-      // Not configured yet — see TODO above.
-      console.warn(
-        "HubSpot newsletter form is not configured. Add NEXT_PUBLIC_HUBSPOT_NEWSLETTER_FORM_ID to .env.local."
-      );
-      return;
-    }
+    if (!newsletterReady) return;
 
     setStatus("loading");
 
@@ -140,9 +137,7 @@ export default function Footer() {
                 San Francisco, CA 94103
                 <br />
                 <a
-                  href="https://www.google.com/search?q=upside+artspace"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="tel:+14159671333"
                   className="underline underline-offset-2 hover:text-fg transition-colors"
                 >
                   (415) 967-1333
@@ -163,10 +158,16 @@ export default function Footer() {
             <p className="text-xl font-heading font-bold text-fg tracking-tight mb-3">
               NEWSLETTER
             </p>
+            {newsletterReady ? (
             <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
               <div className="flex items-stretch w-full">
+                <label htmlFor="footer-newsletter-email" className="sr-only">
+                  Email address
+                </label>
                 <input
+                  id="footer-newsletter-email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -189,6 +190,20 @@ export default function Footer() {
                     : "New projects, workshops and stories to your inbox!"}
               </p>
             </form>
+            ) : (
+              <p className="text-base font-sans text-fg">
+                Newsletter coming soon. For now, follow new projects on{" "}
+                <a
+                  href="https://www.instagram.com/lookinguparts/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-lua-pink transition-colors"
+                >
+                  Instagram
+                </a>
+                .
+              </p>
+            )}
           </div>
         </div>
 
@@ -227,9 +242,8 @@ export default function Footer() {
           </p>
           <p className="text-sm font-sans text-text-muted">
             Built By{" "}
-            {/* TODO: swap in Lucas Ryan's real portfolio URL before launch */}
             <a
-              href="https://luc0ryan.github.io/my-react-portfolio/#/"
+              href="https://luc0ryan.github.io"
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-2 hover:text-fg transition-colors"

@@ -2,55 +2,65 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import type { Artwork } from "@/sanity/lib/queries";
+import { projectSubtitle } from "@/lib/projectSubtitle";
 
-// Subtitle rule: touring → "Touring"; exhibition → "City · Exhibition" (city
-// first, tag second — e.g. Burning Man pieces like SIRSANA); permanent → city.
-function subtitleLine(a: Artwork) {
-  if (a.placement === "touring") return "Touring";
-  if (a.placement === "exhibition") {
-    return [a.city, "Exhibition"].filter(Boolean).join(" · ");
-  }
-  return a.city ?? "";
-}
+// The one project card used everywhere: the Projects grid, homepage gallery,
+// Commission "Selected Works", Related Works and Donate. Pass the Sanity
+// project as-is (include `slug` in the query so the card links).
+//
+// `size` only changes the chip's scale; data, link and behavior are identical.
+const CHIP = {
+  md: { wrap: "m-3 px-4 py-3", subtitle: "text-xs leading-snug", title: "text-base leading-snug" },
+  lg: { wrap: "m-4 p-3", subtitle: "text-sm leading-normal", title: "text-xl leading-normal" },
+} as const;
+
+type Props = {
+  artwork: Artwork;
+  size?: keyof typeof CHIP;
+  /** Tailwind aspect class for the image box. */
+  aspect?: string;
+  /** `sizes` for next/image — how wide the card renders at each breakpoint. */
+  sizes?: string;
+  priority?: boolean;
+};
 
 export function ArtworkCard({
   artwork,
-  featured,
+  size = "md",
+  aspect = "aspect-4/3",
+  sizes = "(max-width: 768px) 100vw, 33vw",
   priority,
-}: {
-  artwork: Artwork;
-  featured: boolean;
-  priority?: boolean;
-}) {
+}: Props) {
   const imgUrl = artwork.image ? urlFor(artwork.image).url() : null;
-
-  const subtitle = subtitleLine(artwork);
+  const subtitle = projectSubtitle(artwork);
   const href = artwork.slug?.current ? `/projects/${artwork.slug.current}` : null;
+  const chip = CHIP[size];
 
   const card = (
-    <div className="group relative aspect-4/3 overflow-hidden rounded-[2px] bg-neutral-200">
+    <div className={`group relative ${aspect} overflow-hidden rounded-[2px] bg-neutral-200`}>
       {imgUrl ? (
         <Image
           src={imgUrl}
           alt={artwork.title ?? ""}
           fill
           priority={priority}
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+          sizes={sizes}
+          // Hover zoom only when the card is a link (AGENTS.md).
+          className={`object-cover ${
+            href ? "transition-transform duration-500 ease-out group-hover:scale-[1.03]" : ""
+          }`}
         />
       ) : (
         <div className="absolute inset-0 bg-neutral-300" />
       )}
 
-      {/* Overlay chip — matches the homepage gallery drop-shadow card, scaled
-          down for the tighter grid tiles */}
-      <div className="absolute bottom-3 right-3 flex max-w-[85%] flex-col items-start overflow-clip border-2 border-fg bg-bg px-4 py-3 shadow-[5px_5px_0_var(--fg)]">
+      <div
+        className={`absolute bottom-0 right-0 flex max-w-[85%] flex-col items-start overflow-clip border-2 border-fg bg-bg shadow-[5px_5px_0_var(--fg)] ${chip.wrap}`}
+      >
         {subtitle && (
-          <span className="font-body text-xs font-normal leading-snug text-fg">
-            {subtitle}
-          </span>
+          <span className={`font-body font-normal text-fg ${chip.subtitle}`}>{subtitle}</span>
         )}
-        <span className="font-body text-base font-semibold project-title leading-snug text-fg">
+        <span className={`font-body font-semibold project-title text-fg ${chip.title}`}>
           {artwork.title}
         </span>
       </div>

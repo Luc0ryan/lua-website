@@ -1,8 +1,8 @@
 import HomeGallery from "./HomeGallery";
-import { getTouringGalleryProjects } from "@/lib/galleryProjects";
+import { getTouringArtworks } from "@/sanity/lib/queries";
 
 export default async function TouringHome() {
-  const projects = await getTouringGalleryProjects();
+  const projects = await getTouringArtworks().catch(() => []);
   if (!projects.length) return null;
 
   return (

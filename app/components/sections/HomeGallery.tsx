@@ -1,13 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Heading } from "@/app/components/ui/Heading";
+import { ArtworkCard } from "@/app/components/ArtworkCard";
+import type { Artwork } from "@/sanity/lib/queries";
 
 /**
  * Single source of truth for the homepage gallery sections (Figma 1140:1604 /
  * 1145). Owns the 12-col desktop grid, the tiles, and the desktop/mobile
- * order logic. The `touringHome` / `commissionHome` wrappers are thin — they
- * only vary `featuredSide` and the CTA target.
+ * order logic. Tiles are the shared <ArtworkCard size="lg">, so they link to
+ * the project page exactly like the Projects grid. The TouringHome /
+ * CommissionHome wrappers only vary `featuredSide` and the CTA target.
  *
  * Layout (desktop): a 7/5 split over two rows.
  *  - Top row: featured (wide, 7) + text cell (narrow, 5); `featuredSide` swaps
@@ -15,20 +17,11 @@ import { Heading } from "@/app/components/ui/Heading";
  *  - Bottom row: wide image (7, left) + square image (5, right) — fixed.
  */
 
-export type GalleryProject = {
-  key: string;
-  title: string;
-  /** Small label line above the title, e.g. "TOURING" / "LAS VEGAS". */
-  subtitle: string;
-  /** Resolved image URL, or null for a gray placeholder. */
-  image?: string | null;
-};
-
 type Props = {
   title: string;
   body: string;
   cta: { label: string; href: string };
-  projects: GalleryProject[];
+  projects: Artwork[];
   featuredSide: "left" | "right";
 };
 
@@ -36,53 +29,9 @@ type Props = {
  * Schema guard: always render exactly 3 projects. If more/fewer are declared or
  * the order is malformed, fall back to the most-recent 3 (last in source order).
  */
-function exactlyThree(projects: GalleryProject[]): GalleryProject[] {
-  const valid = (projects ?? []).filter((p): p is GalleryProject => !!p && !!p.key);
+function exactlyThree(projects: Artwork[]): Artwork[] {
+  const valid = (projects ?? []).filter((p): p is Artwork => !!p && !!p._id);
   return valid.length === 3 ? valid : valid.slice(-3);
-}
-
-function Chip({ project }: { project: GalleryProject }) {
-  return (
-    <div className="absolute bottom-0 right-0 m-4 max-w-[85%]">
-      <div className="flex flex-col items-start overflow-clip border-2 border-fg bg-bg p-3 shadow-[8px_8px_0_var(--fg)]">
-        {project.subtitle && (
-          <span className="font-body text-sm font-normal leading-normal text-fg">
-            {project.subtitle}
-          </span>
-        )}
-        <span className="font-body text-xl font-semibold project-title leading-normal text-fg">
-          {project.title}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function Tile({
-  project,
-  aspect,
-  sizes,
-}: {
-  project: GalleryProject;
-  aspect: string;
-  sizes: string;
-}) {
-  return (
-    <div className={`group relative ${aspect} overflow-hidden rounded-[2px] bg-neutral-200`}>
-      {project.image ? (
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          sizes={sizes}
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-neutral-300" />
-      )}
-      <Chip project={project} />
-    </div>
-  );
 }
 
 export default function HomeGallery({ title, body, cta, projects, featuredSide }: Props) {
@@ -133,19 +82,19 @@ export default function HomeGallery({ title, body, cta, projects, featuredSide }
         {/* Featured cell */}
         {featured && (
           <div className={featuredPlacement}>
-            <Tile project={featured} aspect={wideAspect} sizes={wideSizes} />
+            <ArtworkCard artwork={featured} size="lg" aspect={wideAspect} sizes={wideSizes} />
           </div>
         )}
 
         {/* Bottom row — wide image left, square right (fixed) */}
         {tile2 && (
           <div className="md:col-start-1 md:col-span-7 md:row-start-2">
-            <Tile project={tile2} aspect={wideAspect} sizes={wideSizes} />
+            <ArtworkCard artwork={tile2} size="lg" aspect={wideAspect} sizes={wideSizes} />
           </div>
         )}
         {tile3 && (
           <div className="md:col-start-8 md:col-span-5 md:row-start-2">
-            <Tile project={tile3} aspect="aspect-square" sizes={squareSizes} />
+            <ArtworkCard artwork={tile3} size="lg" aspect="aspect-square" sizes={squareSizes} />
           </div>
         )}
       </div>

@@ -18,7 +18,11 @@ export default function ArtworkGrid({ artworks }: Props) {
             <ArtworkCard
               key={artwork._id}
               artwork={artwork}
-              featured={row.columns === 2}
+              sizes={
+                row.columns === 2
+                  ? "(max-width: 768px) 100vw, 50vw"
+                  : "(max-width: 768px) 100vw, 33vw"
+              }
               priority={i === 0}
             />
           ))}

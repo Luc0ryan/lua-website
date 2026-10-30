@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { Badge } from "@/app/components/ui/Badge";
 import { Button } from "@/app/components/ui/Button";
 import { Heading } from "@/app/components/ui/Heading";
@@ -21,7 +22,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+// Internal reference page: available in `next dev`, 404 in production.
 export default function DesignPage() {
+  if (process.env.NODE_ENV === "production") notFound();
   return (
     <main className="px-gutter max-w-5xl mx-auto pb-24">
       <div className="pt-16 pb-10">

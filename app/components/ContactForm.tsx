@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
 import { Heading } from "@/app/components/ui/Heading";
 
@@ -19,6 +18,11 @@ interface ContactFormProps {
   sanityImage?: SanityImageSource;
   /** Contact email shown above the heading. Defaults to info@lookingup.art */
   email?: string;
+  /**
+   * Set from `?title=` by the contact page (server-side) when a visitor
+   * arrives from a project's "Inquire about booking this piece" link.
+   */
+  pieceTitle?: string;
 }
 
 // Set via .env.local — NEXT_PUBLIC_ so the browser can POST directly to HubSpot.
@@ -26,16 +30,24 @@ const PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
 const FORM_ID = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID;
 const HUBSPOT_CONTACT_TYPE_ID = "0-1";
 
+// Loose on purpose: catches typos like a missing "@" or ".com", without
+// rejecting unusual-but-valid addresses.
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validate(form: { name: string; email: string; reason: string; message: string }) {
+  if (!form.name.trim()) return "Please add your name.";
+  if (!EMAIL_SHAPE.test(form.email.trim())) return "Please enter a valid email address.";
+  if (!form.reason) return "Please choose what you're looking to do.";
+  if (!form.message.trim()) return "Please add a short message.";
+  return null;
+}
+
 export default function ContactForm({
   sanityImage,
   email = "info@lookingup.art",
+  pieceTitle,
 }: ContactFormProps) {
-  // ?piece=<slug>&title=<name> is set by the project detail page's "Inquire
-  // about booking this piece" link — prefills (not locks) the message so the
-  // visitor can still edit it before sending.
-  const searchParams = useSearchParams();
-  const pieceTitle = searchParams.get("title");
-
+  // Prefills (not locks) the message so the visitor can still edit it.
   const [form, setForm] = useState(() => ({
     name: "",
     email: "",
@@ -54,15 +66,26 @@ export default function ContactForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Check before sending: HubSpot's own errors for missing fields are
+    // cryptic, and an empty submission shouldn't reach the CRM at all.
+    const problem = validate(form);
+    if (problem) {
+      setStatus("error");
+      setErrorMsg(problem);
+      return;
+    }
+
     setStatus("loading");
     setErrorMsg("");
 
     try {
       if (!PORTAL_ID || !FORM_ID) {
-        throw new Error(
-          "HubSpot credentials are not configured. " +
-            "Add NEXT_PUBLIC_HUBSPOT_PORTAL_ID and NEXT_PUBLIC_HUBSPOT_FORM_ID to .env.local."
+        // Developer-facing detail stays in the console; visitors get a way out.
+        console.error(
+          "HubSpot is not configured: set NEXT_PUBLIC_HUBSPOT_PORTAL_ID and NEXT_PUBLIC_HUBSPOT_FORM_ID."
         );
+        throw new Error(`The form isn't available right now. Please email us at ${email}.`);
       }
 
       // HubSpot Forms Submissions API v3.

@@ -33,6 +33,7 @@ export function wrapPublishForLocationAutoSwap(
 ): DocumentActionComponent {
   const AutoSwapPublish: DocumentActionComponent = (props) => {
     const client = useClient({ apiVersion: API_VERSION });
+    const toast = useToast();
     const [isSwapping, setIsSwapping] = useState(false);
     const original = originalPublish(props);
 
@@ -52,18 +53,30 @@ export function wrapPublishForLocationAutoSwap(
       disabled: original.disabled || isSwapping,
       onHandle: async () => {
         setIsSwapping(true);
-        const siblingIds: string[] = await client.fetch(
-          `*[_type == "location" && !(_id in path("drafts.**")) && project._ref == $projectId && locationState == "current" && _id != $selfId]._id`,
-          { projectId: project._ref, selfId: props.id }
-        );
-        if (siblingIds.length > 0) {
-          const tx = client.transaction();
-          for (const id of siblingIds) {
-            tx.patch(id, (p) => p.set({ locationState: "past" }));
+        try {
+          const siblingIds: string[] = await client.fetch(
+            `*[_type == "location" && !(_id in path("drafts.**")) && project._ref == $projectId && locationState == "current" && _id != $selfId]._id`,
+            { projectId: project._ref, selfId: props.id }
+          );
+          if (siblingIds.length > 0) {
+            const tx = client.transaction();
+            for (const id of siblingIds) {
+              tx.patch(id, (p) => p.set({ locationState: "past" }));
+            }
+            await tx.commit();
           }
-          await tx.commit();
+        } catch (err) {
+          // Don't publish if the swap failed — two "current" stops would
+          // show the project in two places on the map.
+          toast.push({
+            status: "error",
+            title: "Couldn't update this project's other locations",
+            description: err instanceof Error ? err.message : "Please try publishing again.",
+          });
+          return;
+        } finally {
+          setIsSwapping(false);
         }
-        setIsSwapping(false);
         original.onHandle?.();
       },
     };
@@ -176,6 +189,7 @@ function ResolveToPermanentDialog({
 
 export const ResolveToPermanentAction: DocumentActionComponent = (props) => {
   const client = useClient({ apiVersion: API_VERSION });
+  const toast = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [locations, setLocations] = useState<LocationSummary[] | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -194,21 +208,39 @@ export const ResolveToPermanentAction: DocumentActionComponent = (props) => {
       .then((results) => {
         setLocations(results);
         setSelectedId(results.find((l) => l.locationState === "current")?._id ?? results[0]?._id ?? null);
+      })
+      .catch(() => {
+        setDialogOpen(false);
+        toast.push({ status: "error", title: "Couldn't load this project's locations" });
       });
-  }, [client, props.id]);
+  }, [client, props.id, toast]);
 
   const confirm = useCallback(async () => {
     if (!selectedId || !locations) return;
     setIsResolving(true);
-    const tx = client.transaction();
-    for (const loc of locations) {
-      tx.patch(loc._id, (p) => p.set({ locationState: loc._id === selectedId ? "current" : "past" }));
+    try {
+      const tx = client.transaction();
+      for (const loc of locations) {
+        tx.patch(loc._id, (p) => p.set({ locationState: loc._id === selectedId ? "current" : "past" }));
+      }
+      // Patch the published project AND any open draft. Patching only the
+      // published copy let a later publish of the draft put the old
+      // placement back.
+      if (props.published) tx.patch(props.id, (p) => p.set({ placement: "permanent" }));
+      if (props.draft) tx.patch(`drafts.${props.id}`, (p) => p.set({ placement: "permanent" }));
+      await tx.commit();
+      setDialogOpen(false);
+      toast.push({ status: "success", title: "Resolved to permanent" });
+    } catch (err) {
+      toast.push({
+        status: "error",
+        title: "Couldn't resolve to permanent",
+        description: err instanceof Error ? err.message : "Nothing was changed. Please try again.",
+      });
+    } finally {
+      setIsResolving(false);
     }
-    tx.patch(props.id, (p) => p.set({ placement: "permanent" }));
-    await tx.commit();
-    setIsResolving(false);
-    setDialogOpen(false);
-  }, [client, locations, selectedId, props.id]);
+  }, [client, locations, selectedId, props.id, props.published, props.draft, toast]);
 
   return {
     label: "Resolve to permanent",

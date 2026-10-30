@@ -1,6 +1,6 @@
 import type { PortableTextBlock } from "@portabletext/react";
 import { cache } from "react";
-import { client } from "./client";
+import { sanityFetch } from "./client";
 
 export type ProjectSection = {
   image: { asset: { _ref: string }; hotspot?: object };
@@ -39,7 +39,7 @@ export type Artwork = {
 
 // cache() dedupes the fetch between generateMetadata and the page render.
 export const getArtworkBySlug = cache(async (slug: string): Promise<Artwork | null> => {
-  return client.fetch(
+  return sanityFetch<Artwork | null>(
     `*[_type == "project" && slug.current == $slug][0]{
       _id, title, slug, image, city, year, placement, materials,
       description, footprint, typology, status, quote, sections, crew, press,
@@ -50,7 +50,7 @@ export const getArtworkBySlug = cache(async (slug: string): Promise<Artwork | nu
 });
 
 export async function getProjectSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
-  return client.fetch(
+  return sanityFetch<{ slug: string; updatedAt: string }[]>(
     `*[_type == "project" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }`
   );
 }
@@ -59,25 +59,25 @@ export async function getProjectSlugs(): Promise<{ slug: string; updatedAt: stri
 // created yet in Studio — without it, `[0].field` on a missing document
 // resolves to `null` (not an empty array), which breaks .map/.filter callers.
 export async function getMarqueeArtworks(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `coalesce(*[_type == "homepage"][0].heroProjects[]-> {
-      _id, title, city, year, placement, image
+      _id, title, slug, city, year, placement, image
     }, [])`
   );
 }
 
 export async function getTouringArtworks(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `coalesce(*[_type == "homepage"][0].touringProjects[0...3]-> {
-      _id, title, city, year, placement, materials, image
+      _id, title, slug, city, year, placement, materials, image
     }, [])`
   );
 }
 
 export async function getCommissionArtworks(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `coalesce(*[_type == "homepage"][0].commissionProjects[0...3]-> {
-      _id, title, city, year, placement, materials, image
+      _id, title, slug, city, year, placement, materials, image
     }, [])`
   );
 }
@@ -87,10 +87,10 @@ export async function getCommissionArtworks(): Promise<Artwork[]> {
 // site-specific commissions). Newest first, so this is literally "the last
 // 3 commissioned projects uploaded."
 export async function getRecentCommissionedArtworks(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `*[_type == "project" && placement == "permanent"]
       | order(_createdAt desc)[0...3] {
-        _id, title, slug, city, year, image
+        _id, title, slug, city, year, placement, image
       }`
   );
 }
@@ -99,7 +99,7 @@ export async function getRecentCommissionedArtworks(): Promise<Artwork[]> {
 // grant-funded festival works — permanent pieces are paid commissions, so
 // showing them next to a donate form would overclaim what gifts fund.
 export async function getDonorFundedArtworks(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `*[_type == "project" && placement == "exhibition" && defined(image)]
       | order(_createdAt desc)[0...3] {
         _id, title, slug, city, year, placement, image
@@ -108,10 +108,10 @@ export async function getDonorFundedArtworks(): Promise<Artwork[]> {
 }
 
 export async function getArtworksIndex(): Promise<Artwork[]> {
-  return client.fetch(
+  return sanityFetch<Artwork[]>(
     `*[_type == "project"]
       | order(_createdAt asc) {
-        _id, title, slug, image, city, interactive, placement, materials
+        _id, title, slug, image, city, year, interactive, placement, materials
       }`
   );
 }
@@ -127,7 +127,7 @@ export async function getRelatedArtworks(
   const projection = `_id, title, slug, image, city, year, placement, materials`;
 
   const primary = placement
-    ? await client.fetch<Artwork[]>(
+    ? await sanityFetch<Artwork[]>(
         `*[_type == "project" && _id != $id && placement == $placement]
           | order(_createdAt desc)[0...3]{${projection}}`,
         { id: currentId, placement }
@@ -137,7 +137,7 @@ export async function getRelatedArtworks(
   if (primary.length >= 3) return primary;
 
   const excludeIds = [currentId, ...primary.map((p) => p._id)];
-  const fallback = await client.fetch<Artwork[]>(
+  const fallback = await sanityFetch<Artwork[]>(
     `*[_type == "project" && !(_id in $excludeIds)]
       | order(_createdAt desc)[0...3]{${projection}}`,
     { excludeIds }
@@ -167,7 +167,7 @@ export type MapLocation = {
 // `past` only applies to touring projects; permanent and exhibition projects
 // are always `current`, whatever the stored value says.
 export async function getMapLocations(): Promise<MapLocation[]> {
-  return client.fetch(
+  return sanityFetch<MapLocation[]>(
     `*[_type == "location" && defined(geopoint)]{
       _id, venueName, city, year, geopoint,
       "locationState": select(project->placement == "touring" => locationState, "current"),
@@ -185,7 +185,7 @@ export type StaffMember = {
 };
 
 export async function getStaffMembers(): Promise<StaffMember[]> {
-  return client.fetch(
+  return sanityFetch<StaffMember[]>(
     `*[_type == "staffMember"]
       | order(displayOrder asc, _createdAt asc) {
         _id, name, role, photo, displayOrder
@@ -202,10 +202,8 @@ export type SiteSettings = {
 // designed out of the box.
 export async function getSiteSettings(): Promise<SiteSettings> {
   try {
-    const res = await client.fetch<{ uppercaseTitles?: boolean } | null>(
-      `*[_type == "siteSettings"][0]{ uppercaseTitles }`,
-      {},
-      { next: { revalidate: 60 } }
+    const res = await sanityFetch<{ uppercaseTitles?: boolean } | null>(
+      `*[_type == "siteSettings"][0]{ uppercaseTitles }`
     );
     return { uppercaseTitles: res?.uppercaseTitles ?? true };
   } catch {

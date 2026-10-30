@@ -3,11 +3,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { getArtworkBySlug, getRelatedArtworks, type Artwork } from "@/sanity/lib/queries";
+import { getArtworkBySlug, getProjectSlugs, getRelatedArtworks } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { buildGalleryRows } from "./buildGalleryRows";
 import RelatedWorks from "./RelatedWorks";
 import { Heading } from "@/app/components/ui/Heading";
+import { projectSubtitle } from "@/lib/projectSubtitle";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,11 +36,12 @@ const sectionBodyComponents: PortableTextComponents = {
   },
 };
 
-// Same rule as the gallery card overlay: touring → "Touring";
-// permanent/exhibition → "city · year".
-function subtitleLine(artwork: Artwork): string {
-  if (artwork.placement === "touring") return "Touring";
-  return [artwork.city, artwork.year].filter(Boolean).join(" · ");
+// Pre-build every published project at deploy. Projects published later
+// still work: Next renders them on first visit, then caches them too. Either
+// way pages re-check Sanity every 60s (see sanityFetch).
+export async function generateStaticParams() {
+  const projects = await getProjectSlugs().catch(() => []);
+  return projects.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description =
     artwork.description?.trim() ||
-    [artwork.title, subtitleLine(artwork)].filter(Boolean).join(" — ");
+    [artwork.title, projectSubtitle(artwork)].filter(Boolean).join(" — ");
   const image = artwork.image
     ? urlFor(artwork.image).width(1200).height(630).fit("crop").url()
     : undefined;
@@ -76,7 +78,7 @@ export default async function ProjectPage({ params }: Props) {
   const related = await getRelatedArtworks(artwork._id, artwork.placement);
 
   const heroUrl = artwork.image ? urlFor(artwork.image).url() : null;
-  const subtitle = subtitleLine(artwork);
+  const subtitle = projectSubtitle(artwork);
   const canBook = artwork.status !== "retired";
   const contactHref = `/contact?piece=${encodeURIComponent(
     artwork.slug?.current ?? slug
